@@ -5,8 +5,10 @@
 package shop.terminal.services.blocking
 
 import shop.terminal.core.RequestOptions
-import shop.terminal.models.CartListParams
-import shop.terminal.models.CartListResponse
+import shop.terminal.models.CartConvertParams
+import shop.terminal.models.CartConvertResponse
+import shop.terminal.models.CartGetParams
+import shop.terminal.models.CartGetResponse
 import shop.terminal.models.CartSetAddressParams
 import shop.terminal.models.CartSetAddressResponse
 import shop.terminal.models.CartSetCardParams
@@ -16,12 +18,19 @@ import shop.terminal.models.CartSetItemResponse
 
 interface CartService {
 
+    /** Convert the current user's cart to an order. */
+    @JvmOverloads
+    fun convert(
+        params: CartConvertParams,
+        requestOptions: RequestOptions = RequestOptions.none()
+    ): CartConvertResponse
+
     /** Get the current user's cart. */
     @JvmOverloads
-    fun list(
-        params: CartListParams,
+    fun get(
+        params: CartGetParams,
         requestOptions: RequestOptions = RequestOptions.none()
-    ): CartListResponse
+    ): CartGetResponse
 
     /** Set the shipping address for the current user's cart. */
     @JvmOverloads
