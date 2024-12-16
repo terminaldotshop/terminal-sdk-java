@@ -14,27 +14,27 @@ import shop.terminal.core.JsonValue
 import shop.terminal.core.NoAutoDetect
 import shop.terminal.core.toImmutable
 
-@JsonDeserialize(builder = CartListResponse.Builder::class)
+@JsonDeserialize(builder = ProfileUpdateResponse.Builder::class)
 @NoAutoDetect
-class CartListResponse
+class ProfileUpdateResponse
 private constructor(
-    private val data: JsonField<Cart>,
+    private val data: JsonField<Profile>,
     private val additionalProperties: Map<String, JsonValue>,
 ) {
 
     private var validated: Boolean = false
 
-    /** The current Terminal shop user's cart. */
-    fun data(): Cart = data.getRequired("data")
+    /** A Terminal shop user's profile. (We have users, btw.) */
+    fun data(): Profile = data.getRequired("data")
 
-    /** The current Terminal shop user's cart. */
+    /** A Terminal shop user's profile. (We have users, btw.) */
     @JsonProperty("data") @ExcludeMissing fun _data() = data
 
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
 
-    fun validate(): CartListResponse = apply {
+    fun validate(): ProfileUpdateResponse = apply {
         if (!validated) {
             data().validate()
             validated = true
@@ -50,22 +50,22 @@ private constructor(
 
     class Builder {
 
-        private var data: JsonField<Cart> = JsonMissing.of()
+        private var data: JsonField<Profile> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(cartListResponse: CartListResponse) = apply {
-            this.data = cartListResponse.data
-            additionalProperties(cartListResponse.additionalProperties)
+        internal fun from(profileUpdateResponse: ProfileUpdateResponse) = apply {
+            this.data = profileUpdateResponse.data
+            additionalProperties(profileUpdateResponse.additionalProperties)
         }
 
-        /** The current Terminal shop user's cart. */
-        fun data(data: Cart) = data(JsonField.of(data))
+        /** A Terminal shop user's profile. (We have users, btw.) */
+        fun data(data: Profile) = data(JsonField.of(data))
 
-        /** The current Terminal shop user's cart. */
+        /** A Terminal shop user's profile. (We have users, btw.) */
         @JsonProperty("data")
         @ExcludeMissing
-        fun data(data: JsonField<Cart>) = apply { this.data = data }
+        fun data(data: JsonField<Profile>) = apply { this.data = data }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -81,7 +81,8 @@ private constructor(
             this.additionalProperties.putAll(additionalProperties)
         }
 
-        fun build(): CartListResponse = CartListResponse(data, additionalProperties.toImmutable())
+        fun build(): ProfileUpdateResponse =
+            ProfileUpdateResponse(data, additionalProperties.toImmutable())
     }
 
     override fun equals(other: Any?): Boolean {
@@ -89,7 +90,7 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is CartListResponse && data == other.data && additionalProperties == other.additionalProperties /* spotless:on */
+        return /* spotless:off */ other is ProfileUpdateResponse && data == other.data && additionalProperties == other.additionalProperties /* spotless:on */
     }
 
     /* spotless:off */
@@ -99,5 +100,5 @@ private constructor(
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "CartListResponse{data=$data, additionalProperties=$additionalProperties}"
+        "ProfileUpdateResponse{data=$data, additionalProperties=$additionalProperties}"
 }

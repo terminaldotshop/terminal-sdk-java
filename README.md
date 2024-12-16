@@ -1,6 +1,10 @@
 # Terminal Java API Library
 
+<!-- x-release-please-start-version -->
+
 [![Maven Central](https://img.shields.io/maven-central/v/shop.terminal/terminal-java)](https://central.sonatype.com/artifact/shop.terminal/terminal-java/0.0.1-alpha.0)
+
+<!-- x-release-please-end -->
 
 The Terminal Java SDK provides convenient access to the Terminal REST API from applications written in Java. It includes helper classes with helpful types and documentation for every request and response property.
 
@@ -20,6 +24,8 @@ The REST API documentation can be found on [terminal.shop](https://terminal.sho
 
 #### Gradle
 
+<!-- x-release-please-start-version -->
+
 ```kotlin
 implementation("shop.terminal:terminal-java:0.0.1-alpha.0")
 ```
@@ -33,6 +39,8 @@ implementation("shop.terminal:terminal-java:0.0.1-alpha.0")
     <version>0.0.1-alpha.0</version>
 </dependency>
 ```
+
+<!-- x-release-please-end -->
 
 ### Configure the client
 
@@ -70,14 +78,14 @@ Read the documentation for more configuration options.
 ### Example: creating a resource
 
 To create a new product, first use the `ProductListParams` builder to specify attributes,
-then pass that to the `list` method of the `products` service.
+then pass that to the `list` method of the `product` service.
 
 ```java
 import shop.terminal.models.ProductListParams;
 import shop.terminal.models.ProductListResponse;
 
 ProductListParams params = ProductListParams.builder().build();
-ProductListResponse product = client.products().list(params);
+ProductListResponse product = client.product().list(params);
 ```
 
 ---
@@ -89,7 +97,7 @@ ProductListResponse product = client.products().list(params);
 To make a request to the Terminal API, you generally build an instance of the appropriate `Params` class.
 
 In [Example: creating a resource](#example-creating-a-resource) above, we used the `ProductListParams.builder()` to pass to
-the `list` method of the `products` service.
+the `list` method of the `product` service.
 
 Sometimes, the API may support other properties that are not yet supported in the Java SDK types. In that case,
 you can attach them using the `putAdditionalProperty` method.
@@ -109,7 +117,7 @@ ProductListParams params = ProductListParams.builder()
 When receiving a response, the Terminal Java SDK will deserialize it into instances of the typed model classes. In rare cases, the API may return a response property that doesn't match the expected Java type. If you directly access the mistaken property, the SDK will throw an unchecked `TerminalInvalidDataException` at runtime. If you would prefer to check in advance that that response is completely well-typed, call `.validate()` on the returned model.
 
 ```java
-ProductListResponse product = client.products().list().validate();
+ProductListResponse product = client.product().list().validate();
 ```
 
 ### Response properties as JSON
@@ -268,7 +276,7 @@ This package generally follows [SemVer](https://semver.org/spec/v2.0.0.html) con
 
 We take backwards-compatibility seriously and work hard to ensure you can rely on a smooth upgrade experience.
 
-We are keen for your feedback; please open an [issue](https://www.github.com/stainless-sdks/terminal-java/issues) with questions, bugs, or suggestions.
+We are keen for your feedback; please open an [issue](https://www.github.com/terminaldotshop/terminal-sdk-java/issues) with questions, bugs, or suggestions.
 
 ## Requirements
 

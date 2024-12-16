@@ -15,7 +15,7 @@ import shop.terminal.core.http.Headers
 import shop.terminal.core.http.QueryParams
 import shop.terminal.core.toImmutable
 
-class UserUpdateParams
+class ProfileUpdateParams
 constructor(
     private val email: String?,
     private val name: String?,
@@ -35,8 +35,8 @@ constructor(
     fun _additionalBodyProperties(): Map<String, JsonValue> = additionalBodyProperties
 
     @JvmSynthetic
-    internal fun getBody(): UserUpdateBody {
-        return UserUpdateBody(
+    internal fun getBody(): ProfileUpdateBody {
+        return ProfileUpdateBody(
             email,
             name,
             additionalBodyProperties,
@@ -47,10 +47,10 @@ constructor(
 
     @JvmSynthetic internal fun getQueryParams(): QueryParams = additionalQueryParams
 
-    /** The user's updated information. */
-    @JsonDeserialize(builder = UserUpdateBody.Builder::class)
+    /** The user's updated profile information. */
+    @JsonDeserialize(builder = ProfileUpdateBody.Builder::class)
     @NoAutoDetect
-    class UserUpdateBody
+    class ProfileUpdateBody
     internal constructor(
         private val email: String?,
         private val name: String?,
@@ -81,10 +81,10 @@ constructor(
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
-            internal fun from(userUpdateBody: UserUpdateBody) = apply {
-                this.email = userUpdateBody.email
-                this.name = userUpdateBody.name
-                additionalProperties(userUpdateBody.additionalProperties)
+            internal fun from(profileUpdateBody: ProfileUpdateBody) = apply {
+                this.email = profileUpdateBody.email
+                this.name = profileUpdateBody.name
+                additionalProperties(profileUpdateBody.additionalProperties)
             }
 
             /** Email address of the user. */
@@ -107,8 +107,8 @@ constructor(
                 this.additionalProperties.putAll(additionalProperties)
             }
 
-            fun build(): UserUpdateBody =
-                UserUpdateBody(
+            fun build(): ProfileUpdateBody =
+                ProfileUpdateBody(
                     email,
                     name,
                     additionalProperties.toImmutable(),
@@ -120,7 +120,7 @@ constructor(
                 return true
             }
 
-            return /* spotless:off */ other is UserUpdateBody && email == other.email && name == other.name && additionalProperties == other.additionalProperties /* spotless:on */
+            return /* spotless:off */ other is ProfileUpdateBody && email == other.email && name == other.name && additionalProperties == other.additionalProperties /* spotless:on */
         }
 
         /* spotless:off */
@@ -130,7 +130,7 @@ constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "UserUpdateBody{email=$email, name=$name, additionalProperties=$additionalProperties}"
+            "ProfileUpdateBody{email=$email, name=$name, additionalProperties=$additionalProperties}"
     }
 
     fun toBuilder() = Builder().from(this)
@@ -150,12 +150,12 @@ constructor(
         private var additionalBodyProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(userUpdateParams: UserUpdateParams) = apply {
-            email = userUpdateParams.email
-            name = userUpdateParams.name
-            additionalHeaders = userUpdateParams.additionalHeaders.toBuilder()
-            additionalQueryParams = userUpdateParams.additionalQueryParams.toBuilder()
-            additionalBodyProperties = userUpdateParams.additionalBodyProperties.toMutableMap()
+        internal fun from(profileUpdateParams: ProfileUpdateParams) = apply {
+            email = profileUpdateParams.email
+            name = profileUpdateParams.name
+            additionalHeaders = profileUpdateParams.additionalHeaders.toBuilder()
+            additionalQueryParams = profileUpdateParams.additionalQueryParams.toBuilder()
+            additionalBodyProperties = profileUpdateParams.additionalBodyProperties.toMutableMap()
         }
 
         /** Email address of the user. */
@@ -284,8 +284,8 @@ constructor(
             keys.forEach(::removeAdditionalBodyProperty)
         }
 
-        fun build(): UserUpdateParams =
-            UserUpdateParams(
+        fun build(): ProfileUpdateParams =
+            ProfileUpdateParams(
                 email,
                 name,
                 additionalHeaders.build(),
@@ -299,11 +299,11 @@ constructor(
             return true
         }
 
-        return /* spotless:off */ other is UserUpdateParams && email == other.email && name == other.name && additionalHeaders == other.additionalHeaders && additionalQueryParams == other.additionalQueryParams && additionalBodyProperties == other.additionalBodyProperties /* spotless:on */
+        return /* spotless:off */ other is ProfileUpdateParams && email == other.email && name == other.name && additionalHeaders == other.additionalHeaders && additionalQueryParams == other.additionalQueryParams && additionalBodyProperties == other.additionalBodyProperties /* spotless:on */
     }
 
     override fun hashCode(): Int = /* spotless:off */ Objects.hash(email, name, additionalHeaders, additionalQueryParams, additionalBodyProperties) /* spotless:on */
 
     override fun toString() =
-        "UserUpdateParams{email=$email, name=$name, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams, additionalBodyProperties=$additionalBodyProperties}"
+        "ProfileUpdateParams{email=$email, name=$name, additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams, additionalBodyProperties=$additionalBodyProperties}"
 }
