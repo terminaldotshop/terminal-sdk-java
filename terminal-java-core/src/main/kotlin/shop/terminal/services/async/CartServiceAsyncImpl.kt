@@ -13,8 +13,10 @@ import shop.terminal.core.http.HttpRequest
 import shop.terminal.core.http.HttpResponse.Handler
 import shop.terminal.core.json
 import shop.terminal.errors.TerminalError
-import shop.terminal.models.CartListParams
-import shop.terminal.models.CartListResponse
+import shop.terminal.models.CartConvertParams
+import shop.terminal.models.CartConvertResponse
+import shop.terminal.models.CartGetParams
+import shop.terminal.models.CartGetResponse
 import shop.terminal.models.CartSetAddressParams
 import shop.terminal.models.CartSetAddressResponse
 import shop.terminal.models.CartSetCardParams
@@ -29,14 +31,44 @@ constructor(
 
     private val errorHandler: Handler<TerminalError> = errorHandler(clientOptions.jsonMapper)
 
-    private val listHandler: Handler<CartListResponse> =
-        jsonHandler<CartListResponse>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
+    private val convertHandler: Handler<CartConvertResponse> =
+        jsonHandler<CartConvertResponse>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
+
+    /** Convert the current user's cart to an order. */
+    override fun convert(
+        params: CartConvertParams,
+        requestOptions: RequestOptions
+    ): CompletableFuture<CartConvertResponse> {
+        val request =
+            HttpRequest.builder()
+                .method(HttpMethod.POST)
+                .addPathSegments("cart", "convert")
+                .putAllQueryParams(clientOptions.queryParams)
+                .replaceAllQueryParams(params.getQueryParams())
+                .putAllHeaders(clientOptions.headers)
+                .replaceAllHeaders(params.getHeaders())
+                .apply { params.getBody().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
+                .build()
+        return clientOptions.httpClient.executeAsync(request, requestOptions).thenApply { response
+            ->
+            response
+                .use { convertHandler.handle(it) }
+                .apply {
+                    if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
+                        validate()
+                    }
+                }
+        }
+    }
+
+    private val getHandler: Handler<CartGetResponse> =
+        jsonHandler<CartGetResponse>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
 
     /** Get the current user's cart. */
-    override fun list(
-        params: CartListParams,
+    override fun get(
+        params: CartGetParams,
         requestOptions: RequestOptions
-    ): CompletableFuture<CartListResponse> {
+    ): CompletableFuture<CartGetResponse> {
         val request =
             HttpRequest.builder()
                 .method(HttpMethod.GET)
@@ -49,7 +81,7 @@ constructor(
         return clientOptions.httpClient.executeAsync(request, requestOptions).thenApply { response
             ->
             response
-                .use { listHandler.handle(it) }
+                .use { getHandler.handle(it) }
                 .apply {
                     if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
                         validate()

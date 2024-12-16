@@ -13,32 +13,30 @@ import shop.terminal.core.http.HttpRequest
 import shop.terminal.core.http.HttpResponse.Handler
 import shop.terminal.core.json
 import shop.terminal.errors.TerminalError
-import shop.terminal.models.UserInitParams
-import shop.terminal.models.UserInitResponse
-import shop.terminal.models.UserMeParams
-import shop.terminal.models.UserMeResponse
-import shop.terminal.models.UserUpdateParams
-import shop.terminal.models.UserUpdateResponse
+import shop.terminal.models.ProfileMeParams
+import shop.terminal.models.ProfileMeResponse
+import shop.terminal.models.ProfileUpdateParams
+import shop.terminal.models.ProfileUpdateResponse
 
-class UserServiceAsyncImpl
+class ProfileServiceAsyncImpl
 constructor(
     private val clientOptions: ClientOptions,
-) : UserServiceAsync {
+) : ProfileServiceAsync {
 
     private val errorHandler: Handler<TerminalError> = errorHandler(clientOptions.jsonMapper)
 
-    private val updateHandler: Handler<UserUpdateResponse> =
-        jsonHandler<UserUpdateResponse>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
+    private val updateHandler: Handler<ProfileUpdateResponse> =
+        jsonHandler<ProfileUpdateResponse>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
 
-    /** Update the current user. */
+    /** Update the current user's profile. */
     override fun update(
-        params: UserUpdateParams,
+        params: ProfileUpdateParams,
         requestOptions: RequestOptions
-    ): CompletableFuture<UserUpdateResponse> {
+    ): CompletableFuture<ProfileUpdateResponse> {
         val request =
             HttpRequest.builder()
                 .method(HttpMethod.PUT)
-                .addPathSegments("users", "me")
+                .addPathSegments("profile")
                 .putAllQueryParams(clientOptions.queryParams)
                 .replaceAllQueryParams(params.getQueryParams())
                 .putAllHeaders(clientOptions.headers)
@@ -57,50 +55,18 @@ constructor(
         }
     }
 
-    private val initHandler: Handler<UserInitResponse> =
-        jsonHandler<UserInitResponse>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
+    private val meHandler: Handler<ProfileMeResponse> =
+        jsonHandler<ProfileMeResponse>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
 
-    /**
-     * Get initial app data, including user, products, cart, addresses, cards, subscriptions, and
-     * orders.
-     */
-    override fun init(
-        params: UserInitParams,
-        requestOptions: RequestOptions
-    ): CompletableFuture<UserInitResponse> {
-        val request =
-            HttpRequest.builder()
-                .method(HttpMethod.GET)
-                .addPathSegments("users", "init")
-                .putAllQueryParams(clientOptions.queryParams)
-                .replaceAllQueryParams(params.getQueryParams())
-                .putAllHeaders(clientOptions.headers)
-                .replaceAllHeaders(params.getHeaders())
-                .build()
-        return clientOptions.httpClient.executeAsync(request, requestOptions).thenApply { response
-            ->
-            response
-                .use { initHandler.handle(it) }
-                .apply {
-                    if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
-                        validate()
-                    }
-                }
-        }
-    }
-
-    private val meHandler: Handler<UserMeResponse> =
-        jsonHandler<UserMeResponse>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
-
-    /** Get the current user. */
+    /** Get the current user's profile. */
     override fun me(
-        params: UserMeParams,
+        params: ProfileMeParams,
         requestOptions: RequestOptions
-    ): CompletableFuture<UserMeResponse> {
+    ): CompletableFuture<ProfileMeResponse> {
         val request =
             HttpRequest.builder()
                 .method(HttpMethod.GET)
-                .addPathSegments("users", "me")
+                .addPathSegments("profile")
                 .putAllQueryParams(clientOptions.queryParams)
                 .replaceAllQueryParams(params.getQueryParams())
                 .putAllHeaders(clientOptions.headers)
