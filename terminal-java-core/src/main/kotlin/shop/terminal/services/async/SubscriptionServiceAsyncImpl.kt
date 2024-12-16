@@ -39,7 +39,7 @@ constructor(
         val request =
             HttpRequest.builder()
                 .method(HttpMethod.PUT)
-                .addPathSegments("subscriptions")
+                .addPathSegments("subscription")
                 .putAllQueryParams(clientOptions.queryParams)
                 .replaceAllQueryParams(params.getQueryParams())
                 .putAllHeaders(clientOptions.headers)
@@ -70,7 +70,7 @@ constructor(
         val request =
             HttpRequest.builder()
                 .method(HttpMethod.GET)
-                .addPathSegments("subscriptions")
+                .addPathSegments("subscription")
                 .putAllQueryParams(clientOptions.queryParams)
                 .replaceAllQueryParams(params.getQueryParams())
                 .putAllHeaders(clientOptions.headers)
@@ -100,7 +100,7 @@ constructor(
         val request =
             HttpRequest.builder()
                 .method(HttpMethod.DELETE)
-                .addPathSegments("subscriptions", params.getPathParam(0))
+                .addPathSegments("subscription", params.getPathParam(0))
                 .putAllQueryParams(clientOptions.queryParams)
                 .replaceAllQueryParams(params.getQueryParams())
                 .putAllHeaders(clientOptions.headers)

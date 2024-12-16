@@ -6,21 +6,12 @@ package shop.terminal.services.async
 
 import java.util.concurrent.CompletableFuture
 import shop.terminal.core.RequestOptions
-import shop.terminal.models.OrderCreateParams
-import shop.terminal.models.OrderCreateResponse
 import shop.terminal.models.OrderGetParams
 import shop.terminal.models.OrderGetResponse
 import shop.terminal.models.OrderListParams
 import shop.terminal.models.OrderListResponse
 
 interface OrderServiceAsync {
-
-    /** Create an order from the current user's cart. */
-    @JvmOverloads
-    fun create(
-        params: OrderCreateParams,
-        requestOptions: RequestOptions = RequestOptions.none()
-    ): CompletableFuture<OrderCreateResponse>
 
     /** List the orders associated with the current user. */
     @JvmOverloads

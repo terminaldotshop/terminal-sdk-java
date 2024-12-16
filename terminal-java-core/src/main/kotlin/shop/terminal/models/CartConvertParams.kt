@@ -3,19 +3,30 @@
 package shop.terminal.models
 
 import java.util.Objects
+import java.util.Optional
+import shop.terminal.core.JsonValue
 import shop.terminal.core.NoAutoDetect
 import shop.terminal.core.http.Headers
 import shop.terminal.core.http.QueryParams
+import shop.terminal.core.toImmutable
 
-class CartListParams
+class CartConvertParams
 constructor(
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
+    private val additionalBodyProperties: Map<String, JsonValue>,
 ) {
 
     fun _additionalHeaders(): Headers = additionalHeaders
 
     fun _additionalQueryParams(): QueryParams = additionalQueryParams
+
+    fun _additionalBodyProperties(): Map<String, JsonValue> = additionalBodyProperties
+
+    @JvmSynthetic
+    internal fun getBody(): Optional<Map<String, JsonValue>> {
+        return Optional.ofNullable(additionalBodyProperties.ifEmpty { null })
+    }
 
     @JvmSynthetic internal fun getHeaders(): Headers = additionalHeaders
 
@@ -33,11 +44,13 @@ constructor(
 
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
+        private var additionalBodyProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(cartListParams: CartListParams) = apply {
-            additionalHeaders = cartListParams.additionalHeaders.toBuilder()
-            additionalQueryParams = cartListParams.additionalQueryParams.toBuilder()
+        internal fun from(cartConvertParams: CartConvertParams) = apply {
+            additionalHeaders = cartConvertParams.additionalHeaders.toBuilder()
+            additionalQueryParams = cartConvertParams.additionalQueryParams.toBuilder()
+            additionalBodyProperties = cartConvertParams.additionalBodyProperties.toMutableMap()
         }
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
@@ -138,8 +151,34 @@ constructor(
             additionalQueryParams.removeAll(keys)
         }
 
-        fun build(): CartListParams =
-            CartListParams(additionalHeaders.build(), additionalQueryParams.build())
+        fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {
+            this.additionalBodyProperties.clear()
+            putAllAdditionalBodyProperties(additionalBodyProperties)
+        }
+
+        fun putAdditionalBodyProperty(key: String, value: JsonValue) = apply {
+            additionalBodyProperties.put(key, value)
+        }
+
+        fun putAllAdditionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalBodyProperties.putAll(additionalBodyProperties)
+            }
+
+        fun removeAdditionalBodyProperty(key: String) = apply {
+            additionalBodyProperties.remove(key)
+        }
+
+        fun removeAllAdditionalBodyProperties(keys: Set<String>) = apply {
+            keys.forEach(::removeAdditionalBodyProperty)
+        }
+
+        fun build(): CartConvertParams =
+            CartConvertParams(
+                additionalHeaders.build(),
+                additionalQueryParams.build(),
+                additionalBodyProperties.toImmutable(),
+            )
     }
 
     override fun equals(other: Any?): Boolean {
@@ -147,11 +186,11 @@ constructor(
             return true
         }
 
-        return /* spotless:off */ other is CartListParams && additionalHeaders == other.additionalHeaders && additionalQueryParams == other.additionalQueryParams /* spotless:on */
+        return /* spotless:off */ other is CartConvertParams && additionalHeaders == other.additionalHeaders && additionalQueryParams == other.additionalQueryParams && additionalBodyProperties == other.additionalBodyProperties /* spotless:on */
     }
 
-    override fun hashCode(): Int = /* spotless:off */ Objects.hash(additionalHeaders, additionalQueryParams) /* spotless:on */
+    override fun hashCode(): Int = /* spotless:off */ Objects.hash(additionalHeaders, additionalQueryParams, additionalBodyProperties) /* spotless:on */
 
     override fun toString() =
-        "CartListParams{additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams}"
+        "CartConvertParams{additionalHeaders=$additionalHeaders, additionalQueryParams=$additionalQueryParams, additionalBodyProperties=$additionalBodyProperties}"
 }
