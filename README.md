@@ -2,7 +2,7 @@
 
 <!-- x-release-please-start-version -->
 
-[![Maven Central](https://img.shields.io/maven-central/v/shop.terminal/terminal-java)](https://central.sonatype.com/artifact/shop.terminal/terminal-java/0.0.1-alpha.0)
+[![Maven Central](https://img.shields.io/maven-central/v/shop.terminal.api/terminal-java)](https://central.sonatype.com/artifact/shop.terminal.api/terminal-java/0.0.1-alpha.0)
 
 <!-- x-release-please-end -->
 
@@ -27,14 +27,14 @@ The REST API documentation can be found on [terminal.shop](https://terminal.sho
 <!-- x-release-please-start-version -->
 
 ```kotlin
-implementation("shop.terminal:terminal-java:0.0.1-alpha.0")
+implementation("shop.terminal.api:terminal-java:0.0.1-alpha.0")
 ```
 
 #### Maven
 
 ```xml
 <dependency>
-    <groupId>shop.terminal</groupId>
+    <groupId>shop.terminal.api</groupId>
     <artifactId>terminal-java</artifactId>
     <version>0.0.1-alpha.0</version>
 </dependency>
@@ -47,8 +47,8 @@ implementation("shop.terminal:terminal-java:0.0.1-alpha.0")
 Use `TerminalOkHttpClient.builder()` to configure the client. At a minimum you need to set `.bearerToken()`:
 
 ```java
-import shop.terminal.client.TerminalClient;
-import shop.terminal.client.okhttp.TerminalOkHttpClient;
+import shop.terminal.api.client.TerminalClient;
+import shop.terminal.api.client.okhttp.TerminalOkHttpClient;
 
 TerminalClient client = TerminalOkHttpClient.builder()
     .bearerToken("My Bearer Token")
@@ -81,8 +81,8 @@ To create a new product, first use the `ProductListParams` builder to specify at
 then pass that to the `list` method of the `product` service.
 
 ```java
-import shop.terminal.models.ProductListParams;
-import shop.terminal.models.ProductListResponse;
+import shop.terminal.api.models.ProductListParams;
+import shop.terminal.api.models.ProductListResponse;
 
 ProductListParams params = ProductListParams.builder().build();
 ProductListResponse product = client.product().list(params);
@@ -103,7 +103,7 @@ Sometimes, the API may support other properties that are not yet supported in th
 you can attach them using the `putAdditionalProperty` method.
 
 ```java
-import shop.terminal.models.core.JsonValue;
+import shop.terminal.api.models.core.JsonValue;
 ProductListParams params = ProductListParams.builder()
     // ... normal properties
     .putAdditionalProperty("secret_param", JsonValue.from("4242"))
