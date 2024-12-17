@@ -38,7 +38,7 @@ interface TokenServiceAsync {
         requestOptions: RequestOptions = RequestOptions.none()
     ): CompletableFuture<TokenDeleteResponse>
 
-    /** Get the personal token with the given ID. */
+    /** Get the personal access token with the given ID. */
     @JvmOverloads
     fun get(
         params: TokenGetParams,
