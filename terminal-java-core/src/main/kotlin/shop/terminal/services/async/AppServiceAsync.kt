@@ -6,6 +6,8 @@ package shop.terminal.services.async
 
 import java.util.concurrent.CompletableFuture
 import shop.terminal.core.RequestOptions
+import shop.terminal.models.AppCreateParams
+import shop.terminal.models.AppCreateResponse
 import shop.terminal.models.AppDeleteParams
 import shop.terminal.models.AppDeleteResponse
 import shop.terminal.models.AppGetParams
@@ -14,6 +16,13 @@ import shop.terminal.models.AppListParams
 import shop.terminal.models.AppListResponse
 
 interface AppServiceAsync {
+
+    /** Create an app. */
+    @JvmOverloads
+    fun create(
+        params: AppCreateParams,
+        requestOptions: RequestOptions = RequestOptions.none()
+    ): CompletableFuture<AppCreateResponse>
 
     /** List the current user's registered apps. */
     @JvmOverloads

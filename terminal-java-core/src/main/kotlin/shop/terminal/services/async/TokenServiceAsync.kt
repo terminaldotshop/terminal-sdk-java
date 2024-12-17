@@ -6,6 +6,8 @@ package shop.terminal.services.async
 
 import java.util.concurrent.CompletableFuture
 import shop.terminal.core.RequestOptions
+import shop.terminal.models.TokenCreateParams
+import shop.terminal.models.TokenCreateResponse
 import shop.terminal.models.TokenDeleteParams
 import shop.terminal.models.TokenDeleteResponse
 import shop.terminal.models.TokenGetParams
@@ -14,6 +16,13 @@ import shop.terminal.models.TokenListParams
 import shop.terminal.models.TokenListResponse
 
 interface TokenServiceAsync {
+
+    /** Create a personal access token. */
+    @JvmOverloads
+    fun create(
+        params: TokenCreateParams,
+        requestOptions: RequestOptions = RequestOptions.none()
+    ): CompletableFuture<TokenCreateResponse>
 
     /** List the current user's personal access tokens. */
     @JvmOverloads
