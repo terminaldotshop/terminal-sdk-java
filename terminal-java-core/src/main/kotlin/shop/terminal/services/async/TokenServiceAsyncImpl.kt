@@ -13,6 +13,8 @@ import shop.terminal.core.http.HttpRequest
 import shop.terminal.core.http.HttpResponse.Handler
 import shop.terminal.core.json
 import shop.terminal.errors.TerminalError
+import shop.terminal.models.TokenCreateParams
+import shop.terminal.models.TokenCreateResponse
 import shop.terminal.models.TokenDeleteParams
 import shop.terminal.models.TokenDeleteResponse
 import shop.terminal.models.TokenGetParams
@@ -26,6 +28,36 @@ constructor(
 ) : TokenServiceAsync {
 
     private val errorHandler: Handler<TerminalError> = errorHandler(clientOptions.jsonMapper)
+
+    private val createHandler: Handler<TokenCreateResponse> =
+        jsonHandler<TokenCreateResponse>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
+
+    /** Create a personal access token. */
+    override fun create(
+        params: TokenCreateParams,
+        requestOptions: RequestOptions
+    ): CompletableFuture<TokenCreateResponse> {
+        val request =
+            HttpRequest.builder()
+                .method(HttpMethod.POST)
+                .addPathSegments("token")
+                .putAllQueryParams(clientOptions.queryParams)
+                .replaceAllQueryParams(params.getQueryParams())
+                .putAllHeaders(clientOptions.headers)
+                .replaceAllHeaders(params.getHeaders())
+                .apply { params.getBody().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
+                .build()
+        return clientOptions.httpClient.executeAsync(request, requestOptions).thenApply { response
+            ->
+            response
+                .use { createHandler.handle(it) }
+                .apply {
+                    if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
+                        validate()
+                    }
+                }
+        }
+    }
 
     private val listHandler: Handler<TokenListResponse> =
         jsonHandler<TokenListResponse>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
