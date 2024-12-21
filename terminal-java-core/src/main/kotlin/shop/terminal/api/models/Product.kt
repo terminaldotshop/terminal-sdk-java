@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import java.util.Objects
 import java.util.Optional
 import shop.terminal.api.core.Enum
@@ -14,30 +15,25 @@ import shop.terminal.api.core.JsonField
 import shop.terminal.api.core.JsonMissing
 import shop.terminal.api.core.JsonValue
 import shop.terminal.api.core.NoAutoDetect
-import shop.terminal.api.core.immutableEmptyMap
 import shop.terminal.api.core.toImmutable
 import shop.terminal.api.errors.TerminalInvalidDataException
 
 /** Product sold in the Terminal shop. */
+@JsonDeserialize(builder = Product.Builder::class)
 @NoAutoDetect
 class Product
-@JsonCreator
 private constructor(
-    @JsonProperty("id") @ExcludeMissing private val id: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("name") @ExcludeMissing private val name: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("description")
-    @ExcludeMissing
-    private val description: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("variants")
-    @ExcludeMissing
-    private val variants: JsonField<List<ProductVariant>> = JsonMissing.of(),
-    @JsonProperty("order") @ExcludeMissing private val order: JsonField<Long> = JsonMissing.of(),
-    @JsonProperty("subscription")
-    @ExcludeMissing
-    private val subscription: JsonField<Subscription> = JsonMissing.of(),
-    @JsonProperty("tags") @ExcludeMissing private val tags: JsonField<Tags> = JsonMissing.of(),
-    @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
+    private val id: JsonField<String>,
+    private val name: JsonField<String>,
+    private val description: JsonField<String>,
+    private val variants: JsonField<List<ProductVariant>>,
+    private val order: JsonField<Long>,
+    private val subscription: JsonField<Subscription>,
+    private val tags: JsonField<Tags>,
+    private val additionalProperties: Map<String, JsonValue>,
 ) {
+
+    private var validated: Boolean = false
 
     /** Unique object identifier. The format and length of IDs may change over time. */
     fun id(): String = id.getRequired("id")
@@ -86,8 +82,6 @@ private constructor(
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
 
-    private var validated: Boolean = false
-
     fun validate(): Product = apply {
         if (!validated) {
             id()
@@ -121,50 +115,60 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(product: Product) = apply {
-            id = product.id
-            name = product.name
-            description = product.description
-            variants = product.variants
-            order = product.order
-            subscription = product.subscription
-            tags = product.tags
-            additionalProperties = product.additionalProperties.toMutableMap()
+            this.id = product.id
+            this.name = product.name
+            this.description = product.description
+            this.variants = product.variants
+            this.order = product.order
+            this.subscription = product.subscription
+            this.tags = product.tags
+            additionalProperties(product.additionalProperties)
         }
 
         /** Unique object identifier. The format and length of IDs may change over time. */
         fun id(id: String) = id(JsonField.of(id))
 
         /** Unique object identifier. The format and length of IDs may change over time. */
-        fun id(id: JsonField<String>) = apply { this.id = id }
+        @JsonProperty("id") @ExcludeMissing fun id(id: JsonField<String>) = apply { this.id = id }
 
         /** Name of the product. */
         fun name(name: String) = name(JsonField.of(name))
 
         /** Name of the product. */
+        @JsonProperty("name")
+        @ExcludeMissing
         fun name(name: JsonField<String>) = apply { this.name = name }
 
         /** Description of the product. */
         fun description(description: String) = description(JsonField.of(description))
 
         /** Description of the product. */
+        @JsonProperty("description")
+        @ExcludeMissing
         fun description(description: JsonField<String>) = apply { this.description = description }
 
         /** List of variants of the product. */
         fun variants(variants: List<ProductVariant>) = variants(JsonField.of(variants))
 
         /** List of variants of the product. */
+        @JsonProperty("variants")
+        @ExcludeMissing
         fun variants(variants: JsonField<List<ProductVariant>>) = apply { this.variants = variants }
 
         /** Order of the product used when displaying a sorted list of products. */
         fun order(order: Long) = order(JsonField.of(order))
 
         /** Order of the product used when displaying a sorted list of products. */
+        @JsonProperty("order")
+        @ExcludeMissing
         fun order(order: JsonField<Long>) = apply { this.order = order }
 
         /** Whether the product must be or can be subscribed to. */
         fun subscription(subscription: Subscription) = subscription(JsonField.of(subscription))
 
         /** Whether the product must be or can be subscribed to. */
+        @JsonProperty("subscription")
+        @ExcludeMissing
         fun subscription(subscription: JsonField<Subscription>) = apply {
             this.subscription = subscription
         }
@@ -173,25 +177,22 @@ private constructor(
         fun tags(tags: Tags) = tags(JsonField.of(tags))
 
         /** Tags for the product. */
+        @JsonProperty("tags")
+        @ExcludeMissing
         fun tags(tags: JsonField<Tags>) = apply { this.tags = tags }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
+            this.additionalProperties.putAll(additionalProperties)
         }
 
+        @JsonAnySetter
         fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
+            this.additionalProperties.put(key, value)
         }
 
         fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.putAll(additionalProperties)
-        }
-
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
-
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
         }
 
         fun build(): Product =
@@ -265,19 +266,18 @@ private constructor(
     }
 
     /** Tags for the product. */
+    @JsonDeserialize(builder = Tags.Builder::class)
     @NoAutoDetect
     class Tags
-    @JsonCreator
     private constructor(
-        @JsonAnySetter
-        private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
+        private val additionalProperties: Map<String, JsonValue>,
     ) {
+
+        private var validated: Boolean = false
 
         @JsonAnyGetter
         @ExcludeMissing
         fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-        private var validated: Boolean = false
 
         fun validate(): Tags = apply {
             if (!validated) {
@@ -298,26 +298,21 @@ private constructor(
 
             @JvmSynthetic
             internal fun from(tags: Tags) = apply {
-                additionalProperties = tags.additionalProperties.toMutableMap()
+                additionalProperties(tags.additionalProperties)
             }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
+                this.additionalProperties.putAll(additionalProperties)
             }
 
+            @JsonAnySetter
             fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
+                this.additionalProperties.put(key, value)
             }
 
             fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.putAll(additionalProperties)
-            }
-
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
-
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
             }
 
             fun build(): Tags = Tags(additionalProperties.toImmutable())
