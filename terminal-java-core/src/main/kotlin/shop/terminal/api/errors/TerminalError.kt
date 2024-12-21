@@ -4,23 +4,19 @@ package shop.terminal.api.errors
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
-import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import java.util.Objects
-import shop.terminal.api.core.ExcludeMissing
 import shop.terminal.api.core.JsonValue
 import shop.terminal.api.core.NoAutoDetect
-import shop.terminal.api.core.immutableEmptyMap
 import shop.terminal.api.core.toImmutable
 
+@JsonDeserialize(builder = TerminalError.Builder::class)
 @NoAutoDetect
 class TerminalError
-@JsonCreator
 private constructor(
     @JsonAnyGetter
-    @ExcludeMissing
-    @JsonAnySetter
     @get:JvmName("additionalProperties")
-    val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
+    val additionalProperties: Map<String, JsonValue>,
 ) {
 
     fun toBuilder() = Builder().from(this)
@@ -44,6 +40,7 @@ private constructor(
             putAllAdditionalProperties(additionalProperties)
         }
 
+        @JsonAnySetter
         fun putAdditionalProperty(key: String, value: JsonValue) = apply {
             additionalProperties.put(key, value)
         }

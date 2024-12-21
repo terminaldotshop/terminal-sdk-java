@@ -4,26 +4,25 @@ package shop.terminal.api.models
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
-import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import java.util.Objects
 import shop.terminal.api.core.ExcludeMissing
 import shop.terminal.api.core.JsonField
 import shop.terminal.api.core.JsonMissing
 import shop.terminal.api.core.JsonValue
 import shop.terminal.api.core.NoAutoDetect
-import shop.terminal.api.core.immutableEmptyMap
 import shop.terminal.api.core.toImmutable
 
+@JsonDeserialize(builder = SubscriptionListResponse.Builder::class)
 @NoAutoDetect
 class SubscriptionListResponse
-@JsonCreator
 private constructor(
-    @JsonProperty("data")
-    @ExcludeMissing
-    private val data: JsonField<List<Subscription>> = JsonMissing.of(),
-    @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
+    private val data: JsonField<List<Subscription>>,
+    private val additionalProperties: Map<String, JsonValue>,
 ) {
+
+    private var validated: Boolean = false
 
     /** List of subscriptions. */
     fun data(): List<Subscription> = data.getRequired("data")
@@ -34,8 +33,6 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-    private var validated: Boolean = false
 
     fun validate(): SubscriptionListResponse = apply {
         if (!validated) {
@@ -58,33 +55,30 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(subscriptionListResponse: SubscriptionListResponse) = apply {
-            data = subscriptionListResponse.data
-            additionalProperties = subscriptionListResponse.additionalProperties.toMutableMap()
+            this.data = subscriptionListResponse.data
+            additionalProperties(subscriptionListResponse.additionalProperties)
         }
 
         /** List of subscriptions. */
         fun data(data: List<Subscription>) = data(JsonField.of(data))
 
         /** List of subscriptions. */
+        @JsonProperty("data")
+        @ExcludeMissing
         fun data(data: JsonField<List<Subscription>>) = apply { this.data = data }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
+            this.additionalProperties.putAll(additionalProperties)
         }
 
+        @JsonAnySetter
         fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
+            this.additionalProperties.put(key, value)
         }
 
         fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.putAll(additionalProperties)
-        }
-
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
-
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
         }
 
         fun build(): SubscriptionListResponse =

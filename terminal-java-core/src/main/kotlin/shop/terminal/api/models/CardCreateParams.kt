@@ -4,15 +4,14 @@ package shop.terminal.api.models
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
-import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import java.util.Objects
 import shop.terminal.api.core.ExcludeMissing
 import shop.terminal.api.core.JsonValue
 import shop.terminal.api.core.NoAutoDetect
 import shop.terminal.api.core.http.Headers
 import shop.terminal.api.core.http.QueryParams
-import shop.terminal.api.core.immutableEmptyMap
 import shop.terminal.api.core.toImmutable
 
 class CardCreateParams
@@ -40,20 +39,19 @@ constructor(
 
     @JvmSynthetic internal fun getQueryParams(): QueryParams = additionalQueryParams
 
+    @JsonDeserialize(builder = CardCreateBody.Builder::class)
     @NoAutoDetect
     class CardCreateBody
-    @JsonCreator
     internal constructor(
-        @JsonProperty("token") private val token: String,
-        @JsonAnySetter
-        private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
+        private val token: String?,
+        private val additionalProperties: Map<String, JsonValue>,
     ) {
 
         /**
          * Stripe card token. Learn how to
          * [create one here](https://docs.stripe.com/api/tokens/create_card).
          */
-        @JsonProperty("token") fun token(): String = token
+        @JsonProperty("token") fun token(): String? = token
 
         @JsonAnyGetter
         @ExcludeMissing
@@ -73,33 +71,28 @@ constructor(
 
             @JvmSynthetic
             internal fun from(cardCreateBody: CardCreateBody) = apply {
-                token = cardCreateBody.token
-                additionalProperties = cardCreateBody.additionalProperties.toMutableMap()
+                this.token = cardCreateBody.token
+                additionalProperties(cardCreateBody.additionalProperties)
             }
 
             /**
              * Stripe card token. Learn how to
              * [create one here](https://docs.stripe.com/api/tokens/create_card).
              */
-            fun token(token: String) = apply { this.token = token }
+            @JsonProperty("token") fun token(token: String) = apply { this.token = token }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
+                this.additionalProperties.putAll(additionalProperties)
             }
 
+            @JsonAnySetter
             fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
+                this.additionalProperties.put(key, value)
             }
 
             fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.putAll(additionalProperties)
-            }
-
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
-
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
             }
 
             fun build(): CardCreateBody =
