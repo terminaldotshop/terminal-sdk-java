@@ -41,9 +41,9 @@ class AddressCreateParamsTest {
         assertThat(body.name()).isEqualTo("John Doe")
         assertThat(body.street1()).isEqualTo("123 Main St")
         assertThat(body.zip()).isEqualTo("12345")
-        assertThat(body.phone()).isEqualTo("5555555555")
-        assertThat(body.province()).isEqualTo("CA")
-        assertThat(body.street2()).isEqualTo("Apt 1")
+        assertThat(body.phone()).contains("5555555555")
+        assertThat(body.province()).contains("CA")
+        assertThat(body.street2()).contains("Apt 1")
     }
 
     @Test
