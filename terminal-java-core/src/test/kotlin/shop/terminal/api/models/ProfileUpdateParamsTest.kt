@@ -18,8 +18,8 @@ class ProfileUpdateParamsTest {
             ProfileUpdateParams.builder().email("john@example.com").name("John Doe").build()
         val body = params.getBody()
         assertThat(body).isNotNull
-        assertThat(body.email()).isEqualTo("john@example.com")
-        assertThat(body.name()).isEqualTo("John Doe")
+        assertThat(body.email()).contains("john@example.com")
+        assertThat(body.name()).contains("John Doe")
     }
 
     @Test
