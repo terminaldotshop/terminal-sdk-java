@@ -4,24 +4,25 @@ package shop.terminal.api.models
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
-import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import java.util.Objects
 import shop.terminal.api.core.ExcludeMissing
 import shop.terminal.api.core.JsonField
 import shop.terminal.api.core.JsonMissing
 import shop.terminal.api.core.JsonValue
 import shop.terminal.api.core.NoAutoDetect
-import shop.terminal.api.core.immutableEmptyMap
 import shop.terminal.api.core.toImmutable
 
+@JsonDeserialize(builder = CartConvertResponse.Builder::class)
 @NoAutoDetect
 class CartConvertResponse
-@JsonCreator
 private constructor(
-    @JsonProperty("data") @ExcludeMissing private val data: JsonField<Order> = JsonMissing.of(),
-    @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
+    private val data: JsonField<Order>,
+    private val additionalProperties: Map<String, JsonValue>,
 ) {
+
+    private var validated: Boolean = false
 
     /** An order from the Terminal shop. */
     fun data(): Order = data.getRequired("data")
@@ -32,8 +33,6 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-    private var validated: Boolean = false
 
     fun validate(): CartConvertResponse = apply {
         if (!validated) {
@@ -56,33 +55,30 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(cartConvertResponse: CartConvertResponse) = apply {
-            data = cartConvertResponse.data
-            additionalProperties = cartConvertResponse.additionalProperties.toMutableMap()
+            this.data = cartConvertResponse.data
+            additionalProperties(cartConvertResponse.additionalProperties)
         }
 
         /** An order from the Terminal shop. */
         fun data(data: Order) = data(JsonField.of(data))
 
         /** An order from the Terminal shop. */
+        @JsonProperty("data")
+        @ExcludeMissing
         fun data(data: JsonField<Order>) = apply { this.data = data }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
+            this.additionalProperties.putAll(additionalProperties)
         }
 
+        @JsonAnySetter
         fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
+            this.additionalProperties.put(key, value)
         }
 
         fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.putAll(additionalProperties)
-        }
-
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
-
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
         }
 
         fun build(): CartConvertResponse =
