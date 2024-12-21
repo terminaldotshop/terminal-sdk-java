@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import java.util.Objects
 import shop.terminal.api.core.Enum
 import shop.terminal.api.core.ExcludeMissing
@@ -13,17 +14,18 @@ import shop.terminal.api.core.JsonField
 import shop.terminal.api.core.JsonMissing
 import shop.terminal.api.core.JsonValue
 import shop.terminal.api.core.NoAutoDetect
-import shop.terminal.api.core.immutableEmptyMap
 import shop.terminal.api.core.toImmutable
 import shop.terminal.api.errors.TerminalInvalidDataException
 
+@JsonDeserialize(builder = AddressDeleteResponse.Builder::class)
 @NoAutoDetect
 class AddressDeleteResponse
-@JsonCreator
 private constructor(
-    @JsonProperty("data") @ExcludeMissing private val data: JsonField<Data> = JsonMissing.of(),
-    @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
+    private val data: JsonField<Data>,
+    private val additionalProperties: Map<String, JsonValue>,
 ) {
+
+    private var validated: Boolean = false
 
     fun data(): Data = data.getRequired("data")
 
@@ -32,8 +34,6 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-    private var validated: Boolean = false
 
     fun validate(): AddressDeleteResponse = apply {
         if (!validated) {
@@ -56,31 +56,28 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(addressDeleteResponse: AddressDeleteResponse) = apply {
-            data = addressDeleteResponse.data
-            additionalProperties = addressDeleteResponse.additionalProperties.toMutableMap()
+            this.data = addressDeleteResponse.data
+            additionalProperties(addressDeleteResponse.additionalProperties)
         }
 
         fun data(data: Data) = data(JsonField.of(data))
 
+        @JsonProperty("data")
+        @ExcludeMissing
         fun data(data: JsonField<Data>) = apply { this.data = data }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
+            this.additionalProperties.putAll(additionalProperties)
         }
 
+        @JsonAnySetter
         fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
+            this.additionalProperties.put(key, value)
         }
 
         fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.putAll(additionalProperties)
-        }
-
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
-
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
         }
 
         fun build(): AddressDeleteResponse =

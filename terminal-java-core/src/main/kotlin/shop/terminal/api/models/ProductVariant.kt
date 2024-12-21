@@ -4,27 +4,28 @@ package shop.terminal.api.models
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
-import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import java.util.Objects
 import shop.terminal.api.core.ExcludeMissing
 import shop.terminal.api.core.JsonField
 import shop.terminal.api.core.JsonMissing
 import shop.terminal.api.core.JsonValue
 import shop.terminal.api.core.NoAutoDetect
-import shop.terminal.api.core.immutableEmptyMap
 import shop.terminal.api.core.toImmutable
 
 /** Variant of a product in the Terminal shop. */
+@JsonDeserialize(builder = ProductVariant.Builder::class)
 @NoAutoDetect
 class ProductVariant
-@JsonCreator
 private constructor(
-    @JsonProperty("id") @ExcludeMissing private val id: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("name") @ExcludeMissing private val name: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("price") @ExcludeMissing private val price: JsonField<Long> = JsonMissing.of(),
-    @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
+    private val id: JsonField<String>,
+    private val name: JsonField<String>,
+    private val price: JsonField<Long>,
+    private val additionalProperties: Map<String, JsonValue>,
 ) {
+
+    private var validated: Boolean = false
 
     /** Unique object identifier. The format and length of IDs may change over time. */
     fun id(): String = id.getRequired("id")
@@ -47,8 +48,6 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-    private var validated: Boolean = false
 
     fun validate(): ProductVariant = apply {
         if (!validated) {
@@ -75,47 +74,46 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(productVariant: ProductVariant) = apply {
-            id = productVariant.id
-            name = productVariant.name
-            price = productVariant.price
-            additionalProperties = productVariant.additionalProperties.toMutableMap()
+            this.id = productVariant.id
+            this.name = productVariant.name
+            this.price = productVariant.price
+            additionalProperties(productVariant.additionalProperties)
         }
 
         /** Unique object identifier. The format and length of IDs may change over time. */
         fun id(id: String) = id(JsonField.of(id))
 
         /** Unique object identifier. The format and length of IDs may change over time. */
-        fun id(id: JsonField<String>) = apply { this.id = id }
+        @JsonProperty("id") @ExcludeMissing fun id(id: JsonField<String>) = apply { this.id = id }
 
         /** Name of the product variant. */
         fun name(name: String) = name(JsonField.of(name))
 
         /** Name of the product variant. */
+        @JsonProperty("name")
+        @ExcludeMissing
         fun name(name: JsonField<String>) = apply { this.name = name }
 
         /** Price of the product variant in cents (USD). */
         fun price(price: Long) = price(JsonField.of(price))
 
         /** Price of the product variant in cents (USD). */
+        @JsonProperty("price")
+        @ExcludeMissing
         fun price(price: JsonField<Long>) = apply { this.price = price }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
+            this.additionalProperties.putAll(additionalProperties)
         }
 
+        @JsonAnySetter
         fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
+            this.additionalProperties.put(key, value)
         }
 
         fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.putAll(additionalProperties)
-        }
-
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
-
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
         }
 
         fun build(): ProductVariant =

@@ -4,8 +4,8 @@ package shop.terminal.api.models
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
-import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import java.util.Objects
 import java.util.Optional
 import shop.terminal.api.core.ExcludeMissing
@@ -13,17 +13,18 @@ import shop.terminal.api.core.JsonField
 import shop.terminal.api.core.JsonMissing
 import shop.terminal.api.core.JsonValue
 import shop.terminal.api.core.NoAutoDetect
-import shop.terminal.api.core.immutableEmptyMap
 import shop.terminal.api.core.toImmutable
 
 /** A Terminal shop user's profile. (We have users, btw.) */
+@JsonDeserialize(builder = Profile.Builder::class)
 @NoAutoDetect
 class Profile
-@JsonCreator
 private constructor(
-    @JsonProperty("user") @ExcludeMissing private val user: JsonField<User> = JsonMissing.of(),
-    @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
+    private val user: JsonField<User>,
+    private val additionalProperties: Map<String, JsonValue>,
 ) {
+
+    private var validated: Boolean = false
 
     /** A Terminal shop user. (We have users, btw.) */
     fun user(): User = user.getRequired("user")
@@ -34,8 +35,6 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-    private var validated: Boolean = false
 
     fun validate(): Profile = apply {
         if (!validated) {
@@ -58,59 +57,49 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(profile: Profile) = apply {
-            user = profile.user
-            additionalProperties = profile.additionalProperties.toMutableMap()
+            this.user = profile.user
+            additionalProperties(profile.additionalProperties)
         }
 
         /** A Terminal shop user. (We have users, btw.) */
         fun user(user: User) = user(JsonField.of(user))
 
         /** A Terminal shop user. (We have users, btw.) */
+        @JsonProperty("user")
+        @ExcludeMissing
         fun user(user: JsonField<User>) = apply { this.user = user }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
+            this.additionalProperties.putAll(additionalProperties)
         }
 
+        @JsonAnySetter
         fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
+            this.additionalProperties.put(key, value)
         }
 
         fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.putAll(additionalProperties)
         }
 
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
-
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
-        }
-
         fun build(): Profile = Profile(user, additionalProperties.toImmutable())
     }
 
     /** A Terminal shop user. (We have users, btw.) */
+    @JsonDeserialize(builder = User.Builder::class)
     @NoAutoDetect
     class User
-    @JsonCreator
     private constructor(
-        @JsonProperty("id") @ExcludeMissing private val id: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("name")
-        @ExcludeMissing
-        private val name: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("email")
-        @ExcludeMissing
-        private val email: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("fingerprint")
-        @ExcludeMissing
-        private val fingerprint: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("stripeCustomerID")
-        @ExcludeMissing
-        private val stripeCustomerId: JsonField<String> = JsonMissing.of(),
-        @JsonAnySetter
-        private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
+        private val id: JsonField<String>,
+        private val name: JsonField<String>,
+        private val email: JsonField<String>,
+        private val fingerprint: JsonField<String>,
+        private val stripeCustomerId: JsonField<String>,
+        private val additionalProperties: Map<String, JsonValue>,
     ) {
+
+        private var validated: Boolean = false
 
         /** Unique object identifier. The format and length of IDs may change over time. */
         fun id(): String = id.getRequired("id")
@@ -147,8 +136,6 @@ private constructor(
         @ExcludeMissing
         fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
 
-        private var validated: Boolean = false
-
         fun validate(): User = apply {
             if (!validated) {
                 id()
@@ -178,36 +165,44 @@ private constructor(
 
             @JvmSynthetic
             internal fun from(user: User) = apply {
-                id = user.id
-                name = user.name
-                email = user.email
-                fingerprint = user.fingerprint
-                stripeCustomerId = user.stripeCustomerId
-                additionalProperties = user.additionalProperties.toMutableMap()
+                this.id = user.id
+                this.name = user.name
+                this.email = user.email
+                this.fingerprint = user.fingerprint
+                this.stripeCustomerId = user.stripeCustomerId
+                additionalProperties(user.additionalProperties)
             }
 
             /** Unique object identifier. The format and length of IDs may change over time. */
             fun id(id: String) = id(JsonField.of(id))
 
             /** Unique object identifier. The format and length of IDs may change over time. */
+            @JsonProperty("id")
+            @ExcludeMissing
             fun id(id: JsonField<String>) = apply { this.id = id }
 
             /** Name of the user. */
             fun name(name: String) = name(JsonField.of(name))
 
             /** Name of the user. */
+            @JsonProperty("name")
+            @ExcludeMissing
             fun name(name: JsonField<String>) = apply { this.name = name }
 
             /** Email address of the user. */
             fun email(email: String) = email(JsonField.of(email))
 
             /** Email address of the user. */
+            @JsonProperty("email")
+            @ExcludeMissing
             fun email(email: JsonField<String>) = apply { this.email = email }
 
             /** The user's fingerprint, derived from their public SSH key. */
             fun fingerprint(fingerprint: String) = fingerprint(JsonField.of(fingerprint))
 
             /** The user's fingerprint, derived from their public SSH key. */
+            @JsonProperty("fingerprint")
+            @ExcludeMissing
             fun fingerprint(fingerprint: JsonField<String>) = apply {
                 this.fingerprint = fingerprint
             }
@@ -217,27 +212,24 @@ private constructor(
                 stripeCustomerId(JsonField.of(stripeCustomerId))
 
             /** Stripe customer ID of the user. */
+            @JsonProperty("stripeCustomerID")
+            @ExcludeMissing
             fun stripeCustomerId(stripeCustomerId: JsonField<String>) = apply {
                 this.stripeCustomerId = stripeCustomerId
             }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
-                putAllAdditionalProperties(additionalProperties)
+                this.additionalProperties.putAll(additionalProperties)
             }
 
+            @JsonAnySetter
             fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                additionalProperties.put(key, value)
+                this.additionalProperties.put(key, value)
             }
 
             fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.putAll(additionalProperties)
-            }
-
-            fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
-
-            fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                keys.forEach(::removeAdditionalProperty)
             }
 
             fun build(): User =

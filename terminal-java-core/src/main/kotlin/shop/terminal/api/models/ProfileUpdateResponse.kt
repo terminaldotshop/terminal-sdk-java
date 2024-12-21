@@ -4,24 +4,25 @@ package shop.terminal.api.models
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
-import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import java.util.Objects
 import shop.terminal.api.core.ExcludeMissing
 import shop.terminal.api.core.JsonField
 import shop.terminal.api.core.JsonMissing
 import shop.terminal.api.core.JsonValue
 import shop.terminal.api.core.NoAutoDetect
-import shop.terminal.api.core.immutableEmptyMap
 import shop.terminal.api.core.toImmutable
 
+@JsonDeserialize(builder = ProfileUpdateResponse.Builder::class)
 @NoAutoDetect
 class ProfileUpdateResponse
-@JsonCreator
 private constructor(
-    @JsonProperty("data") @ExcludeMissing private val data: JsonField<Profile> = JsonMissing.of(),
-    @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
+    private val data: JsonField<Profile>,
+    private val additionalProperties: Map<String, JsonValue>,
 ) {
+
+    private var validated: Boolean = false
 
     /** A Terminal shop user's profile. (We have users, btw.) */
     fun data(): Profile = data.getRequired("data")
@@ -32,8 +33,6 @@ private constructor(
     @JsonAnyGetter
     @ExcludeMissing
     fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-    private var validated: Boolean = false
 
     fun validate(): ProfileUpdateResponse = apply {
         if (!validated) {
@@ -56,33 +55,30 @@ private constructor(
 
         @JvmSynthetic
         internal fun from(profileUpdateResponse: ProfileUpdateResponse) = apply {
-            data = profileUpdateResponse.data
-            additionalProperties = profileUpdateResponse.additionalProperties.toMutableMap()
+            this.data = profileUpdateResponse.data
+            additionalProperties(profileUpdateResponse.additionalProperties)
         }
 
         /** A Terminal shop user's profile. (We have users, btw.) */
         fun data(data: Profile) = data(JsonField.of(data))
 
         /** A Terminal shop user's profile. (We have users, btw.) */
+        @JsonProperty("data")
+        @ExcludeMissing
         fun data(data: JsonField<Profile>) = apply { this.data = data }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
+            this.additionalProperties.putAll(additionalProperties)
         }
 
+        @JsonAnySetter
         fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
+            this.additionalProperties.put(key, value)
         }
 
         fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.putAll(additionalProperties)
-        }
-
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
-
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
         }
 
         fun build(): ProfileUpdateResponse =

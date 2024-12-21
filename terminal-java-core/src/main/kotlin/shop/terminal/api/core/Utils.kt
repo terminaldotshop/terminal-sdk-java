@@ -16,9 +16,7 @@ internal fun <T> List<T>.toImmutable(): List<T> =
 
 @JvmSynthetic
 internal fun <K, V> Map<K, V>.toImmutable(): Map<K, V> =
-    if (isEmpty()) immutableEmptyMap() else Collections.unmodifiableMap(toMap())
-
-@JvmSynthetic internal fun <K, V> immutableEmptyMap(): Map<K, V> = Collections.emptyMap()
+    if (isEmpty()) Collections.emptyMap() else Collections.unmodifiableMap(toMap())
 
 @JvmSynthetic
 internal fun <K : Comparable<K>, V> SortedMap<K, V>.toImmutable(): SortedMap<K, V> =
