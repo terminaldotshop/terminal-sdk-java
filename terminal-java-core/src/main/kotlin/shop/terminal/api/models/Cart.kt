@@ -21,6 +21,9 @@ import shop.terminal.api.core.toImmutable
 class Cart
 @JsonCreator
 private constructor(
+    @JsonProperty("amount")
+    @ExcludeMissing
+    private val amount: JsonField<Amount> = JsonMissing.of(),
     @JsonProperty("items")
     @ExcludeMissing
     private val items: JsonField<List<Item>> = JsonMissing.of(),
@@ -33,14 +36,14 @@ private constructor(
     @JsonProperty("cardID")
     @ExcludeMissing
     private val cardId: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("amount")
-    @ExcludeMissing
-    private val amount: JsonField<Amount> = JsonMissing.of(),
     @JsonProperty("shipping")
     @ExcludeMissing
     private val shipping: JsonField<Shipping> = JsonMissing.of(),
     @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
 ) {
+
+    /** The subtotal and shipping amounts for the current user's cart. */
+    fun amount(): Amount = amount.getRequired("amount")
 
     /** An array of items in the current user's cart. */
     fun items(): List<Item> = items.getRequired("items")
@@ -54,11 +57,11 @@ private constructor(
     /** ID of the card selected on the current user's cart. */
     fun cardId(): Optional<String> = Optional.ofNullable(cardId.getNullable("cardID"))
 
-    /** The subtotal and shipping amounts for the current user's cart. */
-    fun amount(): Amount = amount.getRequired("amount")
-
     /** Shipping information for the current user's cart. */
     fun shipping(): Optional<Shipping> = Optional.ofNullable(shipping.getNullable("shipping"))
+
+    /** The subtotal and shipping amounts for the current user's cart. */
+    @JsonProperty("amount") @ExcludeMissing fun _amount() = amount
 
     /** An array of items in the current user's cart. */
     @JsonProperty("items") @ExcludeMissing fun _items() = items
@@ -72,9 +75,6 @@ private constructor(
     /** ID of the card selected on the current user's cart. */
     @JsonProperty("cardID") @ExcludeMissing fun _cardId() = cardId
 
-    /** The subtotal and shipping amounts for the current user's cart. */
-    @JsonProperty("amount") @ExcludeMissing fun _amount() = amount
-
     /** Shipping information for the current user's cart. */
     @JsonProperty("shipping") @ExcludeMissing fun _shipping() = shipping
 
@@ -86,11 +86,11 @@ private constructor(
 
     fun validate(): Cart = apply {
         if (!validated) {
+            amount().validate()
             items().forEach { it.validate() }
             subtotal()
             addressId()
             cardId()
-            amount().validate()
             shipping().map { it.validate() }
             validated = true
         }
@@ -105,24 +105,30 @@ private constructor(
 
     class Builder {
 
+        private var amount: JsonField<Amount> = JsonMissing.of()
         private var items: JsonField<List<Item>> = JsonMissing.of()
         private var subtotal: JsonField<Long> = JsonMissing.of()
         private var addressId: JsonField<String> = JsonMissing.of()
         private var cardId: JsonField<String> = JsonMissing.of()
-        private var amount: JsonField<Amount> = JsonMissing.of()
         private var shipping: JsonField<Shipping> = JsonMissing.of()
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(cart: Cart) = apply {
+            amount = cart.amount
             items = cart.items
             subtotal = cart.subtotal
             addressId = cart.addressId
             cardId = cart.cardId
-            amount = cart.amount
             shipping = cart.shipping
             additionalProperties = cart.additionalProperties.toMutableMap()
         }
+
+        /** The subtotal and shipping amounts for the current user's cart. */
+        fun amount(amount: Amount) = amount(JsonField.of(amount))
+
+        /** The subtotal and shipping amounts for the current user's cart. */
+        fun amount(amount: JsonField<Amount>) = apply { this.amount = amount }
 
         /** An array of items in the current user's cart. */
         fun items(items: List<Item>) = items(JsonField.of(items))
@@ -147,12 +153,6 @@ private constructor(
 
         /** ID of the card selected on the current user's cart. */
         fun cardId(cardId: JsonField<String>) = apply { this.cardId = cardId }
-
-        /** The subtotal and shipping amounts for the current user's cart. */
-        fun amount(amount: Amount) = amount(JsonField.of(amount))
-
-        /** The subtotal and shipping amounts for the current user's cart. */
-        fun amount(amount: JsonField<Amount>) = apply { this.amount = amount }
 
         /** Shipping information for the current user's cart. */
         fun shipping(shipping: Shipping) = shipping(JsonField.of(shipping))
@@ -181,11 +181,11 @@ private constructor(
 
         fun build(): Cart =
             Cart(
+                amount,
                 items.map { it.toImmutable() },
                 subtotal,
                 addressId,
                 cardId,
-                amount,
                 shipping,
                 additionalProperties.toImmutable(),
             )
@@ -589,15 +589,15 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is Cart && items == other.items && subtotal == other.subtotal && addressId == other.addressId && cardId == other.cardId && amount == other.amount && shipping == other.shipping && additionalProperties == other.additionalProperties /* spotless:on */
+        return /* spotless:off */ other is Cart && amount == other.amount && items == other.items && subtotal == other.subtotal && addressId == other.addressId && cardId == other.cardId && shipping == other.shipping && additionalProperties == other.additionalProperties /* spotless:on */
     }
 
     /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(items, subtotal, addressId, cardId, amount, shipping, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(amount, items, subtotal, addressId, cardId, shipping, additionalProperties) }
     /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Cart{items=$items, subtotal=$subtotal, addressId=$addressId, cardId=$cardId, amount=$amount, shipping=$shipping, additionalProperties=$additionalProperties}"
+        "Cart{amount=$amount, items=$items, subtotal=$subtotal, addressId=$addressId, cardId=$cardId, shipping=$shipping, additionalProperties=$additionalProperties}"
 }
