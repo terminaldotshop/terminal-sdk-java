@@ -152,13 +152,22 @@ constructor(
             fun zip(zip: String) = apply { this.zip = zip }
 
             /** Phone number of the recipient. */
-            fun phone(phone: String) = apply { this.phone = phone }
+            fun phone(phone: String?) = apply { this.phone = phone }
+
+            /** Phone number of the recipient. */
+            fun phone(phone: Optional<String>) = phone(phone.orElse(null))
 
             /** Province or state of the address. */
-            fun province(province: String) = apply { this.province = province }
+            fun province(province: String?) = apply { this.province = province }
+
+            /** Province or state of the address. */
+            fun province(province: Optional<String>) = province(province.orElse(null))
 
             /** Apartment, suite, etc. of the address. */
-            fun street2(street2: String) = apply { this.street2 = street2 }
+            fun street2(street2: String?) = apply { this.street2 = street2 }
+
+            /** Apartment, suite, etc. of the address. */
+            fun street2(street2: Optional<String>) = street2(street2.orElse(null))
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                 this.additionalProperties.clear()
@@ -248,13 +257,22 @@ constructor(
         fun zip(zip: String) = apply { body.zip(zip) }
 
         /** Phone number of the recipient. */
-        fun phone(phone: String) = apply { body.phone(phone) }
+        fun phone(phone: String?) = apply { body.phone(phone) }
+
+        /** Phone number of the recipient. */
+        fun phone(phone: Optional<String>) = phone(phone.orElse(null))
 
         /** Province or state of the address. */
-        fun province(province: String) = apply { body.province(province) }
+        fun province(province: String?) = apply { body.province(province) }
+
+        /** Province or state of the address. */
+        fun province(province: Optional<String>) = province(province.orElse(null))
 
         /** Apartment, suite, etc. of the address. */
-        fun street2(street2: String) = apply { body.street2(street2) }
+        fun street2(street2: String?) = apply { body.street2(street2) }
+
+        /** Apartment, suite, etc. of the address. */
+        fun street2(street2: Optional<String>) = street2(street2.orElse(null))
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
