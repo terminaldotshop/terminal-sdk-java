@@ -25,7 +25,7 @@ private constructor(
 
     fun data(): Data = data.getRequired("data")
 
-    @JsonProperty("data") @ExcludeMissing fun _data() = data
+    @JsonProperty("data") @ExcludeMissing fun _data(): JsonField<Data> = data
 
     @JsonAnyGetter
     @ExcludeMissing
@@ -49,7 +49,7 @@ private constructor(
 
     class Builder {
 
-        private var data: JsonField<Data> = JsonMissing.of()
+        private var data: JsonField<Data>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -81,7 +81,11 @@ private constructor(
             keys.forEach(::removeAdditionalProperty)
         }
 
-        fun build(): AppCreateResponse = AppCreateResponse(data, additionalProperties.toImmutable())
+        fun build(): AppCreateResponse =
+            AppCreateResponse(
+                checkNotNull(data) { "`data` is required but was not set" },
+                additionalProperties.toImmutable()
+            )
     }
 
     @NoAutoDetect
@@ -103,10 +107,10 @@ private constructor(
         fun secret(): String = secret.getRequired("secret")
 
         /** OAuth 2.0 client ID. */
-        @JsonProperty("id") @ExcludeMissing fun _id() = id
+        @JsonProperty("id") @ExcludeMissing fun _id(): JsonField<String> = id
 
         /** OAuth 2.0 client secret. */
-        @JsonProperty("secret") @ExcludeMissing fun _secret() = secret
+        @JsonProperty("secret") @ExcludeMissing fun _secret(): JsonField<String> = secret
 
         @JsonAnyGetter
         @ExcludeMissing
@@ -131,8 +135,8 @@ private constructor(
 
         class Builder {
 
-            private var id: JsonField<String> = JsonMissing.of()
-            private var secret: JsonField<String> = JsonMissing.of()
+            private var id: JsonField<String>? = null
+            private var secret: JsonField<String>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
@@ -175,8 +179,8 @@ private constructor(
 
             fun build(): Data =
                 Data(
-                    id,
-                    secret,
+                    checkNotNull(id) { "`id` is required but was not set" },
+                    checkNotNull(secret) { "`secret` is required but was not set" },
                     additionalProperties.toImmutable(),
                 )
         }

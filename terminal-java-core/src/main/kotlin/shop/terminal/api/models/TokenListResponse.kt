@@ -29,7 +29,7 @@ private constructor(
     fun data(): List<Token> = data.getRequired("data")
 
     /** List of personal access tokens. */
-    @JsonProperty("data") @ExcludeMissing fun _data() = data
+    @JsonProperty("data") @ExcludeMissing fun _data(): JsonField<List<Token>> = data
 
     @JsonAnyGetter
     @ExcludeMissing
@@ -53,12 +53,12 @@ private constructor(
 
     class Builder {
 
-        private var data: JsonField<List<Token>> = JsonMissing.of()
+        private var data: JsonField<MutableList<Token>>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(tokenListResponse: TokenListResponse) = apply {
-            data = tokenListResponse.data
+            data = tokenListResponse.data.map { it.toMutableList() }
             additionalProperties = tokenListResponse.additionalProperties.toMutableMap()
         }
 
@@ -66,7 +66,23 @@ private constructor(
         fun data(data: List<Token>) = data(JsonField.of(data))
 
         /** List of personal access tokens. */
-        fun data(data: JsonField<List<Token>>) = apply { this.data = data }
+        fun data(data: JsonField<List<Token>>) = apply {
+            this.data = data.map { it.toMutableList() }
+        }
+
+        /** List of personal access tokens. */
+        fun addData(data: Token) = apply {
+            this.data =
+                (this.data ?: JsonField.of(mutableListOf())).apply {
+                    asKnown()
+                        .orElseThrow {
+                            IllegalStateException(
+                                "Field was set to non-list type: ${javaClass.simpleName}"
+                            )
+                        }
+                        .add(data)
+                }
+        }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -88,7 +104,11 @@ private constructor(
         }
 
         fun build(): TokenListResponse =
-            TokenListResponse(data.map { it.toImmutable() }, additionalProperties.toImmutable())
+            TokenListResponse(
+                checkNotNull(data) { "`data` is required but was not set" }
+                    .map { it.toImmutable() },
+                additionalProperties.toImmutable()
+            )
     }
 
     override fun equals(other: Any?): Boolean {
