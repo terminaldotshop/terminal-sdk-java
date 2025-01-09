@@ -27,7 +27,7 @@ private constructor(
     fun data(): Profile = data.getRequired("data")
 
     /** A Terminal shop user's profile. (We have users, btw.) */
-    @JsonProperty("data") @ExcludeMissing fun _data() = data
+    @JsonProperty("data") @ExcludeMissing fun _data(): JsonField<Profile> = data
 
     @JsonAnyGetter
     @ExcludeMissing
@@ -51,7 +51,7 @@ private constructor(
 
     class Builder {
 
-        private var data: JsonField<Profile> = JsonMissing.of()
+        private var data: JsonField<Profile>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -86,7 +86,10 @@ private constructor(
         }
 
         fun build(): ProfileUpdateResponse =
-            ProfileUpdateResponse(data, additionalProperties.toImmutable())
+            ProfileUpdateResponse(
+                checkNotNull(data) { "`data` is required but was not set" },
+                additionalProperties.toImmutable()
+            )
     }
 
     override fun equals(other: Any?): Boolean {

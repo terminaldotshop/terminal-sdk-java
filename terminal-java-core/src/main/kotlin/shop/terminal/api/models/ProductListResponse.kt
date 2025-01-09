@@ -29,7 +29,7 @@ private constructor(
     fun data(): List<Product> = data.getRequired("data")
 
     /** A list of products. */
-    @JsonProperty("data") @ExcludeMissing fun _data() = data
+    @JsonProperty("data") @ExcludeMissing fun _data(): JsonField<List<Product>> = data
 
     @JsonAnyGetter
     @ExcludeMissing
@@ -53,12 +53,12 @@ private constructor(
 
     class Builder {
 
-        private var data: JsonField<List<Product>> = JsonMissing.of()
+        private var data: JsonField<MutableList<Product>>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
         internal fun from(productListResponse: ProductListResponse) = apply {
-            data = productListResponse.data
+            data = productListResponse.data.map { it.toMutableList() }
             additionalProperties = productListResponse.additionalProperties.toMutableMap()
         }
 
@@ -66,7 +66,23 @@ private constructor(
         fun data(data: List<Product>) = data(JsonField.of(data))
 
         /** A list of products. */
-        fun data(data: JsonField<List<Product>>) = apply { this.data = data }
+        fun data(data: JsonField<List<Product>>) = apply {
+            this.data = data.map { it.toMutableList() }
+        }
+
+        /** A list of products. */
+        fun addData(data: Product) = apply {
+            this.data =
+                (this.data ?: JsonField.of(mutableListOf())).apply {
+                    asKnown()
+                        .orElseThrow {
+                            IllegalStateException(
+                                "Field was set to non-list type: ${javaClass.simpleName}"
+                            )
+                        }
+                        .add(data)
+                }
+        }
 
         fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
             this.additionalProperties.clear()
@@ -88,7 +104,11 @@ private constructor(
         }
 
         fun build(): ProductListResponse =
-            ProductListResponse(data.map { it.toImmutable() }, additionalProperties.toImmutable())
+            ProductListResponse(
+                checkNotNull(data) { "`data` is required but was not set" }
+                    .map { it.toImmutable() },
+                additionalProperties.toImmutable()
+            )
     }
 
     override fun equals(other: Any?): Boolean {
