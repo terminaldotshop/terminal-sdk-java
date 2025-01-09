@@ -27,7 +27,7 @@ private constructor(
 
     fun data(): Data = data.getRequired("data")
 
-    @JsonProperty("data") @ExcludeMissing fun _data() = data
+    @JsonProperty("data") @ExcludeMissing fun _data(): JsonField<Data> = data
 
     @JsonAnyGetter
     @ExcludeMissing
@@ -51,7 +51,7 @@ private constructor(
 
     class Builder {
 
-        private var data: JsonField<Data> = JsonMissing.of()
+        private var data: JsonField<Data>? = null
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
@@ -83,7 +83,11 @@ private constructor(
             keys.forEach(::removeAdditionalProperty)
         }
 
-        fun build(): AppDeleteResponse = AppDeleteResponse(data, additionalProperties.toImmutable())
+        fun build(): AppDeleteResponse =
+            AppDeleteResponse(
+                checkNotNull(data) { "`data` is required but was not set" },
+                additionalProperties.toImmutable()
+            )
     }
 
     class Data
