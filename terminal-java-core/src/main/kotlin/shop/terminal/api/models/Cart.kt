@@ -85,15 +85,17 @@ private constructor(
     private var validated: Boolean = false
 
     fun validate(): Cart = apply {
-        if (!validated) {
-            amount().validate()
-            items().forEach { it.validate() }
-            subtotal()
-            addressId()
-            cardId()
-            shipping().map { it.validate() }
-            validated = true
+        if (validated) {
+            return@apply
         }
+
+        amount().validate()
+        items().forEach { it.validate() }
+        subtotal()
+        addressId()
+        cardId()
+        shipping().ifPresent { it.validate() }
+        validated = true
     }
 
     fun toBuilder() = Builder().from(this)
@@ -242,11 +244,13 @@ private constructor(
         private var validated: Boolean = false
 
         fun validate(): Amount = apply {
-            if (!validated) {
-                subtotal()
-                shipping()
-                validated = true
+            if (validated) {
+                return@apply
             }
+
+            subtotal()
+            shipping()
+            validated = true
         }
 
         fun toBuilder() = Builder().from(this)
@@ -378,13 +382,15 @@ private constructor(
         private var validated: Boolean = false
 
         fun validate(): Item = apply {
-            if (!validated) {
-                id()
-                productVariantId()
-                quantity()
-                subtotal()
-                validated = true
+            if (validated) {
+                return@apply
             }
+
+            id()
+            productVariantId()
+            quantity()
+            subtotal()
+            validated = true
         }
 
         fun toBuilder() = Builder().from(this)
@@ -521,11 +527,13 @@ private constructor(
         private var validated: Boolean = false
 
         fun validate(): Shipping = apply {
-            if (!validated) {
-                service()
-                timeframe()
-                validated = true
+            if (validated) {
+                return@apply
             }
+
+            service()
+            timeframe()
+            validated = true
         }
 
         fun toBuilder() = Builder().from(this)
