@@ -14,6 +14,7 @@ import shop.terminal.api.core.JsonField
 import shop.terminal.api.core.JsonMissing
 import shop.terminal.api.core.JsonValue
 import shop.terminal.api.core.NoAutoDetect
+import shop.terminal.api.core.checkRequired
 import shop.terminal.api.core.immutableEmptyMap
 import shop.terminal.api.core.toImmutable
 import shop.terminal.api.errors.TerminalInvalidDataException
@@ -218,11 +219,10 @@ private constructor(
 
         fun build(): Product =
             Product(
-                checkNotNull(id) { "`id` is required but was not set" },
-                checkNotNull(description) { "`description` is required but was not set" },
-                checkNotNull(name) { "`name` is required but was not set" },
-                checkNotNull(variants) { "`variants` is required but was not set" }
-                    .map { it.toImmutable() },
+                checkRequired("id", id),
+                checkRequired("description", description),
+                checkRequired("name", name),
+                checkRequired("variants", variants).map { it.toImmutable() },
                 order,
                 subscription,
                 tags,
