@@ -463,6 +463,7 @@ constructor(
             )
     }
 
+    /** Frequency of the subscription. */
     class Frequency
     @JsonCreator
     private constructor(
