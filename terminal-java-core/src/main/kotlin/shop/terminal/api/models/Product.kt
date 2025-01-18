@@ -230,6 +230,7 @@ private constructor(
             )
     }
 
+    /** Whether the product must be or can be subscribed to. */
     class Subscription
     @JsonCreator
     private constructor(
