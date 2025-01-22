@@ -21,7 +21,7 @@ import shop.terminal.api.models.SubscriptionListParams
 import shop.terminal.api.models.SubscriptionListResponse
 
 class SubscriptionServiceAsyncImpl
-constructor(
+internal constructor(
     private val clientOptions: ClientOptions,
 ) : SubscriptionServiceAsync {
 
