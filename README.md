@@ -6,31 +6,25 @@
 
 <!-- x-release-please-end -->
 
-The Terminal Java SDK provides convenient access to the Terminal REST API from applications written in Java. It includes helper classes with helpful types and documentation for every request and response property.
+The Terminal Java SDK provides convenient access to the Terminal REST API from applications written in Java.
 
 The Terminal Java SDK is similar to the Terminal Kotlin SDK but with minor differences that make it more ergonomic for use in Java, such as `Optional` instead of nullable values, `Stream` instead of `Sequence`, and `CompletableFuture` instead of suspend functions.
 
 It is generated with [Stainless](https://www.stainlessapi.com/).
 
-## Documentation
+The REST API documentation can be found on [terminal.shop](https://terminal.shop/docs).
 
-The REST API documentation can be found on [terminal.shop](https://terminal.shop/docs).
-
----
-
-## Getting started
-
-### Install dependencies
-
-#### Gradle
+## Installation
 
 <!-- x-release-please-start-version -->
+
+### Gradle
 
 ```kotlin
 implementation("shop.terminal.api:terminal-java:0.1.0-alpha.1")
 ```
 
-#### Maven
+### Maven
 
 ```xml
 <dependency>
@@ -41,6 +35,12 @@ implementation("shop.terminal.api:terminal-java:0.1.0-alpha.1")
 ```
 
 <!-- x-release-please-end -->
+
+## Requirements
+
+This library requires Java 8 or later.
+
+## Usage
 
 ### Configure the client
 
@@ -291,7 +291,3 @@ This package generally follows [SemVer](https://semver.org/spec/v2.0.0.html) con
 We take backwards-compatibility seriously and work hard to ensure you can rely on a smooth upgrade experience.
 
 We are keen for your feedback; please open an [issue](https://www.github.com/terminaldotshop/terminal-sdk-java/issues) with questions, bugs, or suggestions.
-
-## Requirements
-
-This library requires Java 8 or later.
