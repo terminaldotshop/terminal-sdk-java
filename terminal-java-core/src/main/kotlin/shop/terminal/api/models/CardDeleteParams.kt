@@ -6,10 +6,12 @@ import java.util.Objects
 import java.util.Optional
 import shop.terminal.api.core.JsonValue
 import shop.terminal.api.core.NoAutoDetect
+import shop.terminal.api.core.checkRequired
 import shop.terminal.api.core.http.Headers
 import shop.terminal.api.core.http.QueryParams
 import shop.terminal.api.core.toImmutable
 
+/** Delete a credit card associated with the current user. */
 class CardDeleteParams
 constructor(
     private val id: String,
@@ -18,6 +20,7 @@ constructor(
     private val additionalBodyProperties: Map<String, JsonValue>,
 ) {
 
+    /** ID of the card to delete. */
     fun id(): String = id
 
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -27,9 +30,8 @@ constructor(
     fun _additionalBodyProperties(): Map<String, JsonValue> = additionalBodyProperties
 
     @JvmSynthetic
-    internal fun getBody(): Optional<Map<String, JsonValue>> {
-        return Optional.ofNullable(additionalBodyProperties.ifEmpty { null })
-    }
+    internal fun getBody(): Optional<Map<String, JsonValue>> =
+        Optional.ofNullable(additionalBodyProperties.ifEmpty { null })
 
     @JvmSynthetic internal fun getHeaders(): Headers = additionalHeaders
 
@@ -190,7 +192,7 @@ constructor(
 
         fun build(): CardDeleteParams =
             CardDeleteParams(
-                checkNotNull(id) { "`id` is required but was not set" },
+                checkRequired("id", id),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
                 additionalBodyProperties.toImmutable(),

@@ -4,9 +4,11 @@ package shop.terminal.api.models
 
 import java.util.Objects
 import shop.terminal.api.core.NoAutoDetect
+import shop.terminal.api.core.checkRequired
 import shop.terminal.api.core.http.Headers
 import shop.terminal.api.core.http.QueryParams
 
+/** Get the order with the given ID. */
 class OrderGetParams
 constructor(
     private val id: String,
@@ -14,6 +16,7 @@ constructor(
     private val additionalQueryParams: QueryParams,
 ) {
 
+    /** ID of the order to get. */
     fun id(): String = id
 
     fun _additionalHeaders(): Headers = additionalHeaders
@@ -155,7 +158,7 @@ constructor(
 
         fun build(): OrderGetParams =
             OrderGetParams(
-                checkNotNull(id) { "`id` is required but was not set" },
+                checkRequired("id", id),
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )

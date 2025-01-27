@@ -70,6 +70,14 @@ private constructor(
 
         fun baseUrl(baseUrl: String) = apply { this.baseUrl = baseUrl }
 
+        fun responseValidation(responseValidation: Boolean) = apply {
+            this.responseValidation = responseValidation
+        }
+
+        fun maxRetries(maxRetries: Int) = apply { this.maxRetries = maxRetries }
+
+        fun bearerToken(bearerToken: String) = apply { this.bearerToken = bearerToken }
+
         fun headers(headers: Headers) = apply {
             this.headers.clear()
             putAllHeaders(headers)
@@ -150,19 +158,11 @@ private constructor(
 
         fun removeAllQueryParams(keys: Set<String>) = apply { queryParams.removeAll(keys) }
 
-        fun responseValidation(responseValidation: Boolean) = apply {
-            this.responseValidation = responseValidation
-        }
-
-        fun maxRetries(maxRetries: Int) = apply { this.maxRetries = maxRetries }
-
-        fun bearerToken(bearerToken: String) = apply { this.bearerToken = bearerToken }
-
         fun fromEnv() = apply { System.getenv("TERMINAL_BEARER_TOKEN")?.let { bearerToken(it) } }
 
         fun build(): ClientOptions {
-            checkNotNull(httpClient) { "`httpClient` is required but was not set" }
-            checkNotNull(bearerToken) { "`bearerToken` is required but was not set" }
+            val httpClient = checkRequired("httpClient", httpClient)
+            val bearerToken = checkRequired("bearerToken", bearerToken)
 
             val headers = Headers.builder()
             val queryParams = QueryParams.builder()
@@ -173,7 +173,7 @@ private constructor(
             headers.put("X-Stainless-Package-Version", getPackageVersion())
             headers.put("X-Stainless-Runtime", "JRE")
             headers.put("X-Stainless-Runtime-Version", getJavaVersion())
-            bearerToken?.let {
+            bearerToken.let {
                 if (!it.isEmpty()) {
                     headers.put("Authorization", "Bearer $it")
                 }
@@ -182,10 +182,10 @@ private constructor(
             queryParams.replaceAll(this.queryParams.build())
 
             return ClientOptions(
-                httpClient!!,
+                httpClient,
                 PhantomReachableClosingHttpClient(
                     RetryingHttpClient.builder()
-                        .httpClient(httpClient!!)
+                        .httpClient(httpClient)
                         .clock(clock)
                         .maxRetries(maxRetries)
                         .build()
@@ -197,7 +197,7 @@ private constructor(
                 queryParams.build(),
                 responseValidation,
                 maxRetries,
-                bearerToken!!,
+                bearerToken,
             )
         }
     }

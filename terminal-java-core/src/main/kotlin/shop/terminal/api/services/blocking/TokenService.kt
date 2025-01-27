@@ -37,7 +37,7 @@ interface TokenService {
         requestOptions: RequestOptions = RequestOptions.none()
     ): TokenDeleteResponse
 
-    /** Get the personal token with the given ID. */
+    /** Get the personal access token with the given ID. */
     @JvmOverloads
     fun get(
         params: TokenGetParams,

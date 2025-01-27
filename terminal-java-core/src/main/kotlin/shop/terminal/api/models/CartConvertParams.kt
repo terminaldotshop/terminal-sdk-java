@@ -10,6 +10,7 @@ import shop.terminal.api.core.http.Headers
 import shop.terminal.api.core.http.QueryParams
 import shop.terminal.api.core.toImmutable
 
+/** Convert the current user's cart to an order. */
 class CartConvertParams
 constructor(
     private val additionalHeaders: Headers,
@@ -24,9 +25,8 @@ constructor(
     fun _additionalBodyProperties(): Map<String, JsonValue> = additionalBodyProperties
 
     @JvmSynthetic
-    internal fun getBody(): Optional<Map<String, JsonValue>> {
-        return Optional.ofNullable(additionalBodyProperties.ifEmpty { null })
-    }
+    internal fun getBody(): Optional<Map<String, JsonValue>> =
+        Optional.ofNullable(additionalBodyProperties.ifEmpty { null })
 
     @JvmSynthetic internal fun getHeaders(): Headers = additionalHeaders
 

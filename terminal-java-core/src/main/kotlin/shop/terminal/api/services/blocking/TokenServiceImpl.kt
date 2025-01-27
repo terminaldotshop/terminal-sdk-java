@@ -22,7 +22,7 @@ import shop.terminal.api.models.TokenListParams
 import shop.terminal.api.models.TokenListResponse
 
 class TokenServiceImpl
-constructor(
+internal constructor(
     private val clientOptions: ClientOptions,
 ) : TokenService {
 
@@ -114,7 +114,7 @@ constructor(
     private val getHandler: Handler<TokenGetResponse> =
         jsonHandler<TokenGetResponse>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
 
-    /** Get the personal token with the given ID. */
+    /** Get the personal access token with the given ID. */
     override fun get(params: TokenGetParams, requestOptions: RequestOptions): TokenGetResponse {
         val request =
             HttpRequest.builder()
