@@ -1,5 +1,31 @@
 # Changelog
 
+## 0.1.0-alpha.3 (2025-01-28)
+
+Full Changelog: [v0.1.0-alpha.2...v0.1.0-alpha.3](https://github.com/terminaldotshop/terminal-sdk-java/compare/v0.1.0-alpha.2...v0.1.0-alpha.3)
+
+### Features
+
+* **client:** add `close` method ([#49](https://github.com/terminaldotshop/terminal-sdk-java/issues/49)) ([8c29b6f](https://github.com/terminaldotshop/terminal-sdk-java/commit/8c29b6ffed351b5782cecf6e7377d954994ecbdc))
+
+
+### Bug Fixes
+
+* **client:** make some classes and constructors non-public ([#52](https://github.com/terminaldotshop/terminal-sdk-java/issues/52)) ([38a443f](https://github.com/terminaldotshop/terminal-sdk-java/commit/38a443f487550900fb1f5892010e4ba5467384f7))
+
+
+### Chores
+
+* add max retries to test ([#48](https://github.com/terminaldotshop/terminal-sdk-java/issues/48)) ([dfca26d](https://github.com/terminaldotshop/terminal-sdk-java/commit/dfca26d25aeddf6e2419f1ecd5ba16b09c1593e0))
+* **internal:** codegen related update ([#46](https://github.com/terminaldotshop/terminal-sdk-java/issues/46)) ([d3be091](https://github.com/terminaldotshop/terminal-sdk-java/commit/d3be091d6e01607acd02cea5d98e4859b93993c0))
+* **internal:** remove some unnecessary `constructor` keywords ([38a443f](https://github.com/terminaldotshop/terminal-sdk-java/commit/38a443f487550900fb1f5892010e4ba5467384f7))
+
+
+### Documentation
+
+* `async` and `sync` method comments ([#51](https://github.com/terminaldotshop/terminal-sdk-java/issues/51)) ([c240add](https://github.com/terminaldotshop/terminal-sdk-java/commit/c240add3c5dcc32ea048d7d588a169f80400d678))
+* add client documentation ([#50](https://github.com/terminaldotshop/terminal-sdk-java/issues/50)) ([d12e35d](https://github.com/terminaldotshop/terminal-sdk-java/commit/d12e35d6c957df36cf6013d69da76c51007640dc))
+
 ## 0.1.0-alpha.2 (2025-01-24)
 
 Full Changelog: [v0.1.0-alpha.1...v0.1.0-alpha.2](https://github.com/terminaldotshop/terminal-sdk-java/compare/v0.1.0-alpha.1...v0.1.0-alpha.2)
