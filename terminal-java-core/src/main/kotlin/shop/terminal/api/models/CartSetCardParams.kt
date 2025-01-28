@@ -20,7 +20,7 @@ import shop.terminal.api.core.toImmutable
 
 /** Set the credit card for the current user's cart. */
 class CartSetCardParams
-constructor(
+private constructor(
     private val body: CartSetCardBody,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
@@ -83,7 +83,7 @@ constructor(
             @JvmStatic fun builder() = Builder()
         }
 
-        class Builder {
+        class Builder internal constructor() {
 
             private var cardId: JsonField<String>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
@@ -149,7 +149,7 @@ constructor(
     }
 
     @NoAutoDetect
-    class Builder {
+    class Builder internal constructor() {
 
         private var body: CartSetCardBody.Builder = CartSetCardBody.builder()
         private var additionalHeaders: Headers.Builder = Headers.builder()

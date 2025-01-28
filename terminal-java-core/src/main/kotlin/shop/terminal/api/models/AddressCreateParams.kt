@@ -21,7 +21,7 @@ import shop.terminal.api.core.toImmutable
 
 /** Create and add a shipping address to the current user. */
 class AddressCreateParams
-constructor(
+private constructor(
     private val body: AddressCreateBody,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
@@ -195,7 +195,7 @@ constructor(
             @JvmStatic fun builder() = Builder()
         }
 
-        class Builder {
+        class Builder internal constructor() {
 
             private var city: JsonField<String>? = null
             private var country: JsonField<String>? = null
@@ -327,7 +327,7 @@ constructor(
     }
 
     @NoAutoDetect
-    class Builder {
+    class Builder internal constructor() {
 
         private var body: AddressCreateBody.Builder = AddressCreateBody.builder()
         private var additionalHeaders: Headers.Builder = Headers.builder()
