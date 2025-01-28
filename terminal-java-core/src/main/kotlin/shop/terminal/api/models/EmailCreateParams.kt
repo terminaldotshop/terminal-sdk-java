@@ -83,6 +83,7 @@ private constructor(
             @JvmStatic fun builder() = Builder()
         }
 
+        /** A builder for [EmailCreateBody]. */
         class Builder internal constructor() {
 
             private var email: JsonField<String>? = null
@@ -148,6 +149,7 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
+    /** A builder for [EmailCreateParams]. */
     @NoAutoDetect
     class Builder internal constructor() {
 

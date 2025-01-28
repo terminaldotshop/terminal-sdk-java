@@ -54,6 +54,7 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
+    /** A builder for [ProductListResponse]. */
     class Builder internal constructor() {
 
         private var data: JsonField<MutableList<Product>>? = null

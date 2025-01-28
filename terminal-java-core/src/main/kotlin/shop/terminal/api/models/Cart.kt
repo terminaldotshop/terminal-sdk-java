@@ -106,6 +106,7 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
+    /** A builder for [Cart]. */
     class Builder internal constructor() {
 
         private var amount: JsonField<Amount>? = null
@@ -260,6 +261,7 @@ private constructor(
             @JvmStatic fun builder() = Builder()
         }
 
+        /** A builder for [Amount]. */
         class Builder internal constructor() {
 
             private var subtotal: JsonField<Long>? = null
@@ -400,6 +402,7 @@ private constructor(
             @JvmStatic fun builder() = Builder()
         }
 
+        /** A builder for [Item]. */
         class Builder internal constructor() {
 
             private var id: JsonField<String>? = null
@@ -541,6 +544,7 @@ private constructor(
             @JvmStatic fun builder() = Builder()
         }
 
+        /** A builder for [Shipping]. */
         class Builder internal constructor() {
 
             private var service: JsonField<String> = JsonMissing.of()
