@@ -52,6 +52,7 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
+    /** A builder for [CartGetResponse]. */
     class Builder internal constructor() {
 
         private var data: JsonField<Cart>? = null
