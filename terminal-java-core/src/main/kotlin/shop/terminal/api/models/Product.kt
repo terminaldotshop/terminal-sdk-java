@@ -115,7 +115,7 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
-    class Builder {
+    class Builder internal constructor() {
 
         private var id: JsonField<String>? = null
         private var description: JsonField<String>? = null
@@ -318,7 +318,7 @@ private constructor(
             @JvmStatic fun builder() = Builder()
         }
 
-        class Builder {
+        class Builder internal constructor() {
 
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
