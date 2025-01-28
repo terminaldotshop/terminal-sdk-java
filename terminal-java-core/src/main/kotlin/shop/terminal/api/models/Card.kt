@@ -81,6 +81,7 @@ private constructor(
         @JvmStatic fun builder() = Builder()
     }
 
+    /** A builder for [Card]. */
     class Builder internal constructor() {
 
         private var id: JsonField<String>? = null
@@ -199,6 +200,7 @@ private constructor(
             @JvmStatic fun builder() = Builder()
         }
 
+        /** A builder for [Expiration]. */
         class Builder internal constructor() {
 
             private var month: JsonField<Long>? = null
