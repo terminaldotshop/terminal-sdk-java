@@ -12,6 +12,7 @@ import shop.terminal.api.core.http.HttpMethod
 import shop.terminal.api.core.http.HttpRequest
 import shop.terminal.api.core.http.HttpResponse.Handler
 import shop.terminal.api.core.json
+import shop.terminal.api.core.prepareAsync
 import shop.terminal.api.errors.TerminalError
 import shop.terminal.api.models.CartConvertParams
 import shop.terminal.api.models.CartConvertResponse
@@ -43,22 +44,20 @@ internal constructor(
             HttpRequest.builder()
                 .method(HttpMethod.POST)
                 .addPathSegments("cart", "convert")
-                .putAllQueryParams(clientOptions.queryParams)
-                .replaceAllQueryParams(params.getQueryParams())
-                .putAllHeaders(clientOptions.headers)
-                .replaceAllHeaders(params.getHeaders())
-                .apply { params.getBody().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
+                .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                 .build()
-        return clientOptions.httpClient.executeAsync(request, requestOptions).thenApply { response
-            ->
-            response
-                .use { convertHandler.handle(it) }
-                .apply {
-                    if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
-                        validate()
+                .prepareAsync(clientOptions, params)
+        return request
+            .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+            .thenApply { response ->
+                response
+                    .use { convertHandler.handle(it) }
+                    .apply {
+                        if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
+                            validate()
+                        }
                     }
-                }
-        }
+            }
     }
 
     private val getHandler: Handler<CartGetResponse> =
@@ -73,21 +72,19 @@ internal constructor(
             HttpRequest.builder()
                 .method(HttpMethod.GET)
                 .addPathSegments("cart")
-                .putAllQueryParams(clientOptions.queryParams)
-                .replaceAllQueryParams(params.getQueryParams())
-                .putAllHeaders(clientOptions.headers)
-                .replaceAllHeaders(params.getHeaders())
                 .build()
-        return clientOptions.httpClient.executeAsync(request, requestOptions).thenApply { response
-            ->
-            response
-                .use { getHandler.handle(it) }
-                .apply {
-                    if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
-                        validate()
+                .prepareAsync(clientOptions, params)
+        return request
+            .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+            .thenApply { response ->
+                response
+                    .use { getHandler.handle(it) }
+                    .apply {
+                        if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
+                            validate()
+                        }
                     }
-                }
-        }
+            }
     }
 
     private val setAddressHandler: Handler<CartSetAddressResponse> =
@@ -102,22 +99,20 @@ internal constructor(
             HttpRequest.builder()
                 .method(HttpMethod.PUT)
                 .addPathSegments("cart", "address")
-                .putAllQueryParams(clientOptions.queryParams)
-                .replaceAllQueryParams(params.getQueryParams())
-                .putAllHeaders(clientOptions.headers)
-                .replaceAllHeaders(params.getHeaders())
-                .body(json(clientOptions.jsonMapper, params.getBody()))
+                .body(json(clientOptions.jsonMapper, params._body()))
                 .build()
-        return clientOptions.httpClient.executeAsync(request, requestOptions).thenApply { response
-            ->
-            response
-                .use { setAddressHandler.handle(it) }
-                .apply {
-                    if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
-                        validate()
+                .prepareAsync(clientOptions, params)
+        return request
+            .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+            .thenApply { response ->
+                response
+                    .use { setAddressHandler.handle(it) }
+                    .apply {
+                        if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
+                            validate()
+                        }
                     }
-                }
-        }
+            }
     }
 
     private val setCardHandler: Handler<CartSetCardResponse> =
@@ -132,22 +127,20 @@ internal constructor(
             HttpRequest.builder()
                 .method(HttpMethod.PUT)
                 .addPathSegments("cart", "card")
-                .putAllQueryParams(clientOptions.queryParams)
-                .replaceAllQueryParams(params.getQueryParams())
-                .putAllHeaders(clientOptions.headers)
-                .replaceAllHeaders(params.getHeaders())
-                .body(json(clientOptions.jsonMapper, params.getBody()))
+                .body(json(clientOptions.jsonMapper, params._body()))
                 .build()
-        return clientOptions.httpClient.executeAsync(request, requestOptions).thenApply { response
-            ->
-            response
-                .use { setCardHandler.handle(it) }
-                .apply {
-                    if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
-                        validate()
+                .prepareAsync(clientOptions, params)
+        return request
+            .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+            .thenApply { response ->
+                response
+                    .use { setCardHandler.handle(it) }
+                    .apply {
+                        if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
+                            validate()
+                        }
                     }
-                }
-        }
+            }
     }
 
     private val setItemHandler: Handler<CartSetItemResponse> =
@@ -162,21 +155,19 @@ internal constructor(
             HttpRequest.builder()
                 .method(HttpMethod.PUT)
                 .addPathSegments("cart", "item")
-                .putAllQueryParams(clientOptions.queryParams)
-                .replaceAllQueryParams(params.getQueryParams())
-                .putAllHeaders(clientOptions.headers)
-                .replaceAllHeaders(params.getHeaders())
-                .body(json(clientOptions.jsonMapper, params.getBody()))
+                .body(json(clientOptions.jsonMapper, params._body()))
                 .build()
-        return clientOptions.httpClient.executeAsync(request, requestOptions).thenApply { response
-            ->
-            response
-                .use { setItemHandler.handle(it) }
-                .apply {
-                    if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
-                        validate()
+                .prepareAsync(clientOptions, params)
+        return request
+            .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+            .thenApply { response ->
+                response
+                    .use { setItemHandler.handle(it) }
+                    .apply {
+                        if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
+                            validate()
+                        }
                     }
-                }
-        }
+            }
     }
 }
