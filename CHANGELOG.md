@@ -1,5 +1,33 @@
 # Changelog
 
+## 0.1.0-alpha.4 (2025-01-30)
+
+Full Changelog: [v0.1.0-alpha.3...v0.1.0-alpha.4](https://github.com/terminaldotshop/terminal-sdk-java/compare/v0.1.0-alpha.3...v0.1.0-alpha.4)
+
+### Features
+
+* **client:** add `_queryParams` and `_headers` methods ([#57](https://github.com/terminaldotshop/terminal-sdk-java/issues/57)) ([c0236ee](https://github.com/terminaldotshop/terminal-sdk-java/commit/c0236eeb02e547f4f980c51054906ba7104f99ba))
+
+
+### Bug Fixes
+
+* **client:** don't leak responses when retrying ([#59](https://github.com/terminaldotshop/terminal-sdk-java/issues/59)) ([7812702](https://github.com/terminaldotshop/terminal-sdk-java/commit/7812702fd8e246c4e351d814e3994d730b10455a))
+
+
+### Chores
+
+* **internal:** improve `RetryingHttpClientTest` ([#58](https://github.com/terminaldotshop/terminal-sdk-java/issues/58)) ([3bf7913](https://github.com/terminaldotshop/terminal-sdk-java/commit/3bf7913aed72f0a3d47061112f546e7d39835f8b))
+
+
+### Documentation
+
+* builder, enum, and union comments ([#55](https://github.com/terminaldotshop/terminal-sdk-java/issues/55)) ([a1f1edf](https://github.com/terminaldotshop/terminal-sdk-java/commit/a1f1edf3638c1dcacbf144c9f265c5c8c5c754ab))
+
+
+### Refactors
+
+* **internal:** extract request preparation logic ([c0236ee](https://github.com/terminaldotshop/terminal-sdk-java/commit/c0236eeb02e547f4f980c51054906ba7104f99ba))
+
 ## 0.1.0-alpha.3 (2025-01-28)
 
 Full Changelog: [v0.1.0-alpha.2...v0.1.0-alpha.3](https://github.com/terminaldotshop/terminal-sdk-java/compare/v0.1.0-alpha.2...v0.1.0-alpha.3)
