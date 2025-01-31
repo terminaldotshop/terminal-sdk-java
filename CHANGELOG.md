@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.0-alpha.5 (2025-01-31)
+
+Full Changelog: [v0.1.0-alpha.4...v0.1.0-alpha.5](https://github.com/terminaldotshop/terminal-sdk-java/compare/v0.1.0-alpha.4...v0.1.0-alpha.5)
+
+### Documentation
+
+* fix incorrect additional properties info ([#62](https://github.com/terminaldotshop/terminal-sdk-java/issues/62)) ([5948868](https://github.com/terminaldotshop/terminal-sdk-java/commit/59488684132b21f7dfb292e4389d471ea08e3319))
+
 ## 0.1.0-alpha.4 (2025-01-30)
 
 Full Changelog: [v0.1.0-alpha.3...v0.1.0-alpha.4](https://github.com/terminaldotshop/terminal-sdk-java/compare/v0.1.0-alpha.3...v0.1.0-alpha.4)
