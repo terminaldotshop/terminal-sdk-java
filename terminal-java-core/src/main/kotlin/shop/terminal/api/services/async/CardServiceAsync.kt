@@ -6,6 +6,8 @@ package shop.terminal.api.services.async
 
 import java.util.concurrent.CompletableFuture
 import shop.terminal.api.core.RequestOptions
+import shop.terminal.api.models.CardCollectParams
+import shop.terminal.api.models.CardCollectResponse
 import shop.terminal.api.models.CardCreateParams
 import shop.terminal.api.models.CardCreateResponse
 import shop.terminal.api.models.CardDeleteParams
@@ -35,4 +37,11 @@ interface CardServiceAsync {
         params: CardDeleteParams,
         requestOptions: RequestOptions = RequestOptions.none()
     ): CompletableFuture<CardDeleteResponse>
+
+    /** Create a temporary URL for collecting credit card information for the current user. */
+    @JvmOverloads
+    fun collect(
+        params: CardCollectParams,
+        requestOptions: RequestOptions = RequestOptions.none()
+    ): CompletableFuture<CardCollectResponse>
 }
