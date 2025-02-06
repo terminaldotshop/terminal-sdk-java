@@ -5,6 +5,8 @@
 package shop.terminal.api.services.blocking
 
 import shop.terminal.api.core.RequestOptions
+import shop.terminal.api.models.CardCollectParams
+import shop.terminal.api.models.CardCollectResponse
 import shop.terminal.api.models.CardCreateParams
 import shop.terminal.api.models.CardCreateResponse
 import shop.terminal.api.models.CardDeleteParams
@@ -34,4 +36,11 @@ interface CardService {
         params: CardDeleteParams,
         requestOptions: RequestOptions = RequestOptions.none()
     ): CardDeleteResponse
+
+    /** Create a temporary URL for collecting credit card information for the current user. */
+    @JvmOverloads
+    fun collect(
+        params: CardCollectParams,
+        requestOptions: RequestOptions = RequestOptions.none()
+    ): CardCollectResponse
 }
