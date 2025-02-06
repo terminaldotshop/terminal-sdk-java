@@ -14,6 +14,8 @@ import shop.terminal.api.core.http.HttpResponse.Handler
 import shop.terminal.api.core.json
 import shop.terminal.api.core.prepareAsync
 import shop.terminal.api.errors.TerminalError
+import shop.terminal.api.models.CardCollectParams
+import shop.terminal.api.models.CardCollectResponse
 import shop.terminal.api.models.CardCreateParams
 import shop.terminal.api.models.CardCreateResponse
 import shop.terminal.api.models.CardDeleteParams
@@ -103,6 +105,34 @@ internal constructor(
             .thenApply { response ->
                 response
                     .use { deleteHandler.handle(it) }
+                    .also {
+                        if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
+                            it.validate()
+                        }
+                    }
+            }
+    }
+
+    private val collectHandler: Handler<CardCollectResponse> =
+        jsonHandler<CardCollectResponse>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
+
+    /** Create a temporary URL for collecting credit card information for the current user. */
+    override fun collect(
+        params: CardCollectParams,
+        requestOptions: RequestOptions
+    ): CompletableFuture<CardCollectResponse> {
+        val request =
+            HttpRequest.builder()
+                .method(HttpMethod.POST)
+                .addPathSegments("card", "collect")
+                .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
+                .build()
+                .prepareAsync(clientOptions, params)
+        return request
+            .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+            .thenApply { response ->
+                response
+                    .use { collectHandler.handle(it) }
                     .also {
                         if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
                             it.validate()
