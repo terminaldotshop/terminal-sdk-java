@@ -52,9 +52,9 @@ internal constructor(
             .thenApply { response ->
                 response
                     .use { convertHandler.handle(it) }
-                    .apply {
+                    .also {
                         if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
-                            validate()
+                            it.validate()
                         }
                     }
             }
@@ -79,9 +79,9 @@ internal constructor(
             .thenApply { response ->
                 response
                     .use { getHandler.handle(it) }
-                    .apply {
+                    .also {
                         if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
-                            validate()
+                            it.validate()
                         }
                     }
             }
@@ -107,9 +107,9 @@ internal constructor(
             .thenApply { response ->
                 response
                     .use { setAddressHandler.handle(it) }
-                    .apply {
+                    .also {
                         if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
-                            validate()
+                            it.validate()
                         }
                     }
             }
@@ -135,9 +135,9 @@ internal constructor(
             .thenApply { response ->
                 response
                     .use { setCardHandler.handle(it) }
-                    .apply {
+                    .also {
                         if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
-                            validate()
+                            it.validate()
                         }
                     }
             }
@@ -163,9 +163,9 @@ internal constructor(
             .thenApply { response ->
                 response
                     .use { setItemHandler.handle(it) }
-                    .apply {
+                    .also {
                         if (requestOptions.responseValidation ?: clientOptions.responseValidation) {
-                            validate()
+                            it.validate()
                         }
                     }
             }
