@@ -1,5 +1,32 @@
 # Changelog
 
+## 0.1.0-alpha.5 (2025-02-06)
+
+Full Changelog: [v0.1.0-alpha.4...v0.1.0-alpha.5](https://github.com/terminaldotshop/terminal-sdk-java/compare/v0.1.0-alpha.4...v0.1.0-alpha.5)
+
+### Features
+
+* **client:** send client-side timeout headers ([#64](https://github.com/terminaldotshop/terminal-sdk-java/issues/64)) ([33875ee](https://github.com/terminaldotshop/terminal-sdk-java/commit/33875ee07c693dbf248413bee093d59f5ae07674))
+
+
+### Bug Fixes
+
+* **api:** add missing `@MustBeClosed` annotations ([#65](https://github.com/terminaldotshop/terminal-sdk-java/issues/65)) ([a5abcfa](https://github.com/terminaldotshop/terminal-sdk-java/commit/a5abcfa612d7be9870619a45cb97c1a25280371c))
+* **api:** switch `CompletableFuture&lt;Void&gt;` to `CompletableFuture<Void?>` ([a5abcfa](https://github.com/terminaldotshop/terminal-sdk-java/commit/a5abcfa612d7be9870619a45cb97c1a25280371c))
+* **client:** add missing validation calls on response ([a5abcfa](https://github.com/terminaldotshop/terminal-sdk-java/commit/a5abcfa612d7be9870619a45cb97c1a25280371c))
+* **client:** always provide a body for `PATCH` methods ([a5abcfa](https://github.com/terminaldotshop/terminal-sdk-java/commit/a5abcfa612d7be9870619a45cb97c1a25280371c))
+
+
+### Chores
+
+* **internal:** minor formatting/style changes ([a5abcfa](https://github.com/terminaldotshop/terminal-sdk-java/commit/a5abcfa612d7be9870619a45cb97c1a25280371c))
+* **internal:** rename some tests ([a5abcfa](https://github.com/terminaldotshop/terminal-sdk-java/commit/a5abcfa612d7be9870619a45cb97c1a25280371c))
+
+
+### Documentation
+
+* fix incorrect additional properties info ([#62](https://github.com/terminaldotshop/terminal-sdk-java/issues/62)) ([5948868](https://github.com/terminaldotshop/terminal-sdk-java/commit/59488684132b21f7dfb292e4389d471ea08e3319))
+
 ## 0.1.0-alpha.4 (2025-01-30)
 
 Full Changelog: [v0.1.0-alpha.3...v0.1.0-alpha.4](https://github.com/terminaldotshop/terminal-sdk-java/compare/v0.1.0-alpha.3...v0.1.0-alpha.4)
