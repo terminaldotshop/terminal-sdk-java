@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.1.0-alpha.7 (2025-02-13)
+
+Full Changelog: [v0.1.0-alpha.6...v0.1.0-alpha.7](https://github.com/terminaldotshop/terminal-sdk-java/compare/v0.1.0-alpha.6...v0.1.0-alpha.7)
+
+### Chores
+
+* **internal:** refactor `PhantomReachableClosingAsyncStreamResponse` impl ([#70](https://github.com/terminaldotshop/terminal-sdk-java/issues/70)) ([0bd9f88](https://github.com/terminaldotshop/terminal-sdk-java/commit/0bd9f88c116164f992079fad7e30385353762560))
+
+
+### Documentation
+
+* add more phantom reachability docs ([0bd9f88](https://github.com/terminaldotshop/terminal-sdk-java/commit/0bd9f88c116164f992079fad7e30385353762560))
+
 ## 0.1.0-alpha.6 (2025-02-06)
 
 Full Changelog: [v0.1.0-alpha.5...v0.1.0-alpha.6](https://github.com/terminaldotshop/terminal-sdk-java/compare/v0.1.0-alpha.5...v0.1.0-alpha.6)
