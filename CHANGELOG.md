@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.0-alpha.8 (2025-02-16)
+
+Full Changelog: [v0.1.0-alpha.7...v0.1.0-alpha.8](https://github.com/terminaldotshop/terminal-sdk-java/compare/v0.1.0-alpha.7...v0.1.0-alpha.8)
+
+### Features
+
+* **api:** manual updates ([#74](https://github.com/terminaldotshop/terminal-sdk-java/issues/74)) ([6d4989c](https://github.com/terminaldotshop/terminal-sdk-java/commit/6d4989c7cb0ecf74e1b579e8f5406cbe71f8f3fe))
+
 ## 0.1.0-alpha.7 (2025-02-16)
 
 Full Changelog: [v0.1.0-alpha.6...v0.1.0-alpha.7](https://github.com/terminaldotshop/terminal-sdk-java/compare/v0.1.0-alpha.6...v0.1.0-alpha.7)
