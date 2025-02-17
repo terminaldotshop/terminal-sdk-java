@@ -80,21 +80,14 @@ Read the documentation for more configuration options.
 
 ### Example: creating a resource
 
-To create a new subscription, first use the `SubscriptionCreateParams` builder to specify attributes, then pass that to the `create` method of the `subscription` service.
+To create a new product, first use the `ProductListParams` builder to specify attributes, then pass that to the `list` method of the `product` service.
 
 ```java
-import shop.terminal.api.models.SubscriptionCreateParams;
-import shop.terminal.api.models.SubscriptionCreateResponse;
+import shop.terminal.api.models.ProductListParams;
+import shop.terminal.api.models.ProductListResponse;
 
-SubscriptionCreateParams params = SubscriptionCreateParams.builder()
-    .id("sub_XXXXXXXXXXXXXXXXXXXXXXXXX")
-    .addressId("shp_XXXXXXXXXXXXXXXXXXXXXXXXX")
-    .cardId("crd_XXXXXXXXXXXXXXXXXXXXXXXXX")
-    .frequency(SubscriptionCreateParams.Frequency.FIXED)
-    .productVariantId("var_XXXXXXXXXXXXXXXXXXXXXXXXX")
-    .quantity(1L)
-    .build();
-SubscriptionCreateResponse subscription = client.subscription().create(params);
+ProductListParams params = ProductListParams.builder().build();
+ProductListResponse product = client.product().list(params);
 ```
 
 ---
