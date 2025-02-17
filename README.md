@@ -80,21 +80,14 @@ Read the documentation for more configuration options.
 
 ### Example: creating a resource
 
-To create a new subscription, first use the `SubscriptionCreateParams` builder to specify attributes, then pass that to the `create` method of the `subscription` service.
+To create a new product, first use the `ProductListParams` builder to specify attributes, then pass that to the `list` method of the `product` service.
 
 ```java
-import shop.terminal.api.models.SubscriptionCreateParams;
-import shop.terminal.api.models.SubscriptionCreateResponse;
+import shop.terminal.api.models.ProductListParams;
+import shop.terminal.api.models.ProductListResponse;
 
-SubscriptionCreateParams params = SubscriptionCreateParams.builder()
-    .id("sub_XXXXXXXXXXXXXXXXXXXXXXXXX")
-    .addressId("shp_XXXXXXXXXXXXXXXXXXXXXXXXX")
-    .cardId("crd_XXXXXXXXXXXXXXXXXXXXXXXXX")
-    .frequency(SubscriptionCreateParams.Frequency.FIXED)
-    .productVariantId("var_XXXXXXXXXXXXXXXXXXXXXXXXX")
-    .quantity(1L)
-    .build();
-SubscriptionCreateResponse subscription = client.subscription().create(params);
+ProductListParams params = ProductListParams.builder().build();
+ProductListResponse product = client.product().list(params);
 ```
 
 ---
@@ -114,9 +107,9 @@ See [Undocumented request params](#undocumented-request-params) for how to send 
 When receiving a response, the Terminal Java SDK will deserialize it into instances of the typed model classes. In rare cases, the API may return a response property that doesn't match the expected Java type. If you directly access the mistaken property, the SDK will throw an unchecked `TerminalInvalidDataException` at runtime. If you would prefer to check in advance that that response is completely well-typed, call `.validate()` on the returned model.
 
 ```java
-import shop.terminal.api.models.SubscriptionCreateResponse;
+import shop.terminal.api.models.ProductListResponse;
 
-SubscriptionCreateResponse subscription = client.subscription().create().validate();
+ProductListResponse product = client.product().list().validate();
 ```
 
 ### Response properties as JSON
@@ -247,15 +240,15 @@ This library is typed for convenient access to the documented API. If you need t
 
 ### Undocumented request params
 
-In [Example: creating a resource](#example-creating-a-resource) above, we used the `SubscriptionCreateParams.builder()` to pass to the `create` method of the `subscription` service.
+In [Example: creating a resource](#example-creating-a-resource) above, we used the `ProductListParams.builder()` to pass to the `list` method of the `product` service.
 
 Sometimes, the API may support other properties that are not yet supported in the Java SDK types. In that case, you can attach them using raw setters:
 
 ```java
 import shop.terminal.api.core.JsonValue;
-import shop.terminal.api.models.SubscriptionCreateParams;
+import shop.terminal.api.models.ProductListParams;
 
-SubscriptionCreateParams params = SubscriptionCreateParams.builder()
+ProductListParams params = ProductListParams.builder()
     .putAdditionalHeader("Secret-Header", "42")
     .putAdditionalQueryParam("secret_query_param", "42")
     .putAdditionalBodyProperty("secretProperty", JsonValue.from("42"))
