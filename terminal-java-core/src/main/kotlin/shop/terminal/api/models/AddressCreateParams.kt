@@ -23,7 +23,7 @@ import shop.terminal.api.core.toImmutable
 /** Create and add a shipping address to the current user. */
 class AddressCreateParams
 private constructor(
-    private val body: AddressCreateBody,
+    private val body: Body,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
@@ -82,7 +82,7 @@ private constructor(
 
     fun _additionalQueryParams(): QueryParams = additionalQueryParams
 
-    @JvmSynthetic internal fun _body(): AddressCreateBody = body
+    @JvmSynthetic internal fun _body(): Body = body
 
     override fun _headers(): Headers = additionalHeaders
 
@@ -90,9 +90,9 @@ private constructor(
 
     /** Address information. */
     @NoAutoDetect
-    class AddressCreateBody
+    class Body
     @JsonCreator
-    internal constructor(
+    private constructor(
         @JsonProperty("city")
         @ExcludeMissing
         private val city: JsonField<String> = JsonMissing.of(),
@@ -173,7 +173,7 @@ private constructor(
 
         private var validated: Boolean = false
 
-        fun validate(): AddressCreateBody = apply {
+        fun validate(): Body = apply {
             if (validated) {
                 return@apply
             }
@@ -196,7 +196,7 @@ private constructor(
             @JvmStatic fun builder() = Builder()
         }
 
-        /** A builder for [AddressCreateBody]. */
+        /** A builder for [Body]. */
         class Builder internal constructor() {
 
             private var city: JsonField<String>? = null
@@ -210,16 +210,16 @@ private constructor(
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
-            internal fun from(addressCreateBody: AddressCreateBody) = apply {
-                city = addressCreateBody.city
-                country = addressCreateBody.country
-                name = addressCreateBody.name
-                street1 = addressCreateBody.street1
-                zip = addressCreateBody.zip
-                phone = addressCreateBody.phone
-                province = addressCreateBody.province
-                street2 = addressCreateBody.street2
-                additionalProperties = addressCreateBody.additionalProperties.toMutableMap()
+            internal fun from(body: Body) = apply {
+                city = body.city
+                country = body.country
+                name = body.name
+                street1 = body.street1
+                zip = body.zip
+                phone = body.phone
+                province = body.province
+                street2 = body.street2
+                additionalProperties = body.additionalProperties.toMutableMap()
             }
 
             /** City of the address. */
@@ -289,8 +289,8 @@ private constructor(
                 keys.forEach(::removeAdditionalProperty)
             }
 
-            fun build(): AddressCreateBody =
-                AddressCreateBody(
+            fun build(): Body =
+                Body(
                     checkRequired("city", city),
                     checkRequired("country", country),
                     checkRequired("name", name),
@@ -308,7 +308,7 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is AddressCreateBody && city == other.city && country == other.country && name == other.name && street1 == other.street1 && zip == other.zip && phone == other.phone && province == other.province && street2 == other.street2 && additionalProperties == other.additionalProperties /* spotless:on */
+            return /* spotless:off */ other is Body && city == other.city && country == other.country && name == other.name && street1 == other.street1 && zip == other.zip && phone == other.phone && province == other.province && street2 == other.street2 && additionalProperties == other.additionalProperties /* spotless:on */
         }
 
         /* spotless:off */
@@ -318,7 +318,7 @@ private constructor(
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "AddressCreateBody{city=$city, country=$country, name=$name, street1=$street1, zip=$zip, phone=$phone, province=$province, street2=$street2, additionalProperties=$additionalProperties}"
+            "Body{city=$city, country=$country, name=$name, street1=$street1, zip=$zip, phone=$phone, province=$province, street2=$street2, additionalProperties=$additionalProperties}"
     }
 
     fun toBuilder() = Builder().from(this)
@@ -332,7 +332,7 @@ private constructor(
     @NoAutoDetect
     class Builder internal constructor() {
 
-        private var body: AddressCreateBody.Builder = AddressCreateBody.builder()
+        private var body: Body.Builder = Body.builder()
         private var additionalHeaders: Headers.Builder = Headers.builder()
         private var additionalQueryParams: QueryParams.Builder = QueryParams.builder()
 
