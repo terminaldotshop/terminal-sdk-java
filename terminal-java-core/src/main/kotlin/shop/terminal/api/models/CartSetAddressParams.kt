@@ -124,7 +124,7 @@ private constructor(
             fun build(): CartSetAddressBody =
                 CartSetAddressBody(
                     checkRequired("addressId", addressId),
-                    additionalProperties.toImmutable()
+                    additionalProperties.toImmutable(),
                 )
         }
 

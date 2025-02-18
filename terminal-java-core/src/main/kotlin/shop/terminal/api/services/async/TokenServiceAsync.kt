@@ -21,27 +21,27 @@ interface TokenServiceAsync {
     @JvmOverloads
     fun create(
         params: TokenCreateParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<TokenCreateResponse>
 
     /** List the current user's personal access tokens. */
     @JvmOverloads
     fun list(
         params: TokenListParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<TokenListResponse>
 
     /** Delete the personal access token with the given ID. */
     @JvmOverloads
     fun delete(
         params: TokenDeleteParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<TokenDeleteResponse>
 
     /** Get the personal access token with the given ID. */
     @JvmOverloads
     fun get(
         params: TokenGetParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<TokenGetResponse>
 }

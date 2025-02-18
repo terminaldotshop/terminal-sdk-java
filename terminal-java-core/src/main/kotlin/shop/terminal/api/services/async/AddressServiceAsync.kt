@@ -19,20 +19,20 @@ interface AddressServiceAsync {
     @JvmOverloads
     fun create(
         params: AddressCreateParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<AddressCreateResponse>
 
     /** Get the shipping addresses associated with the current user. */
     @JvmOverloads
     fun list(
         params: AddressListParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<AddressListResponse>
 
     /** Delete a shipping address from the current user. */
     @JvmOverloads
     fun delete(
         params: AddressDeleteParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<AddressDeleteResponse>
 }

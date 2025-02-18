@@ -21,10 +21,8 @@ import shop.terminal.api.models.SubscriptionDeleteResponse
 import shop.terminal.api.models.SubscriptionListParams
 import shop.terminal.api.models.SubscriptionListResponse
 
-class SubscriptionServiceAsyncImpl
-internal constructor(
-    private val clientOptions: ClientOptions,
-) : SubscriptionServiceAsync {
+class SubscriptionServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
+    SubscriptionServiceAsync {
 
     private val errorHandler: Handler<TerminalError> = errorHandler(clientOptions.jsonMapper)
 
@@ -35,7 +33,7 @@ internal constructor(
     /** Create a subscription for the current user. */
     override fun create(
         params: SubscriptionCreateParams,
-        requestOptions: RequestOptions
+        requestOptions: RequestOptions,
     ): CompletableFuture<SubscriptionCreateResponse> {
         val request =
             HttpRequest.builder()
@@ -64,7 +62,7 @@ internal constructor(
     /** List the subscriptions associated with the current user. */
     override fun list(
         params: SubscriptionListParams,
-        requestOptions: RequestOptions
+        requestOptions: RequestOptions,
     ): CompletableFuture<SubscriptionListResponse> {
         val request =
             HttpRequest.builder()
@@ -92,7 +90,7 @@ internal constructor(
     /** Cancel a subscription for the current user. */
     override fun delete(
         params: SubscriptionDeleteParams,
-        requestOptions: RequestOptions
+        requestOptions: RequestOptions,
     ): CompletableFuture<SubscriptionDeleteResponse> {
         val request =
             HttpRequest.builder()
