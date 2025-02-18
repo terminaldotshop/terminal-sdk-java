@@ -23,10 +23,8 @@ import shop.terminal.api.models.CardDeleteResponse
 import shop.terminal.api.models.CardListParams
 import shop.terminal.api.models.CardListResponse
 
-class CardServiceAsyncImpl
-internal constructor(
-    private val clientOptions: ClientOptions,
-) : CardServiceAsync {
+class CardServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
+    CardServiceAsync {
 
     private val errorHandler: Handler<TerminalError> = errorHandler(clientOptions.jsonMapper)
 
@@ -36,7 +34,7 @@ internal constructor(
     /** Attach a credit card (tokenized via Stripe) to the current user. */
     override fun create(
         params: CardCreateParams,
-        requestOptions: RequestOptions
+        requestOptions: RequestOptions,
     ): CompletableFuture<CardCreateResponse> {
         val request =
             HttpRequest.builder()
@@ -64,7 +62,7 @@ internal constructor(
     /** List the credit cards associated with the current user. */
     override fun list(
         params: CardListParams,
-        requestOptions: RequestOptions
+        requestOptions: RequestOptions,
     ): CompletableFuture<CardListResponse> {
         val request =
             HttpRequest.builder()
@@ -91,7 +89,7 @@ internal constructor(
     /** Delete a credit card associated with the current user. */
     override fun delete(
         params: CardDeleteParams,
-        requestOptions: RequestOptions
+        requestOptions: RequestOptions,
     ): CompletableFuture<CardDeleteResponse> {
         val request =
             HttpRequest.builder()
@@ -119,7 +117,7 @@ internal constructor(
     /** Create a temporary URL for collecting credit card information for the current user. */
     override fun collect(
         params: CardCollectParams,
-        requestOptions: RequestOptions
+        requestOptions: RequestOptions,
     ): CompletableFuture<CardCollectResponse> {
         val request =
             HttpRequest.builder()

@@ -110,7 +110,7 @@ private constructor(
         fun build(): AddressListResponse =
             AddressListResponse(
                 checkRequired("data", data).map { it.toImmutable() },
-                additionalProperties.toImmutable()
+                additionalProperties.toImmutable(),
             )
     }
 

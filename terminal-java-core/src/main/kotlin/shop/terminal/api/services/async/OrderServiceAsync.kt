@@ -17,13 +17,13 @@ interface OrderServiceAsync {
     @JvmOverloads
     fun list(
         params: OrderListParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<OrderListResponse>
 
     /** Get the order with the given ID. */
     @JvmOverloads
     fun get(
         params: OrderGetParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<OrderGetResponse>
 }

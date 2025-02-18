@@ -23,10 +23,8 @@ import shop.terminal.api.models.AppGetResponse
 import shop.terminal.api.models.AppListParams
 import shop.terminal.api.models.AppListResponse
 
-class AppServiceAsyncImpl
-internal constructor(
-    private val clientOptions: ClientOptions,
-) : AppServiceAsync {
+class AppServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
+    AppServiceAsync {
 
     private val errorHandler: Handler<TerminalError> = errorHandler(clientOptions.jsonMapper)
 
@@ -36,7 +34,7 @@ internal constructor(
     /** Create an app. */
     override fun create(
         params: AppCreateParams,
-        requestOptions: RequestOptions
+        requestOptions: RequestOptions,
     ): CompletableFuture<AppCreateResponse> {
         val request =
             HttpRequest.builder()
@@ -64,7 +62,7 @@ internal constructor(
     /** List the current user's registered apps. */
     override fun list(
         params: AppListParams,
-        requestOptions: RequestOptions
+        requestOptions: RequestOptions,
     ): CompletableFuture<AppListResponse> {
         val request =
             HttpRequest.builder()
@@ -91,7 +89,7 @@ internal constructor(
     /** Delete the app with the given ID. */
     override fun delete(
         params: AppDeleteParams,
-        requestOptions: RequestOptions
+        requestOptions: RequestOptions,
     ): CompletableFuture<AppDeleteResponse> {
         val request =
             HttpRequest.builder()
@@ -119,7 +117,7 @@ internal constructor(
     /** Get the app with the given ID. */
     override fun get(
         params: AppGetParams,
-        requestOptions: RequestOptions
+        requestOptions: RequestOptions,
     ): CompletableFuture<AppGetResponse> {
         val request =
             HttpRequest.builder()
