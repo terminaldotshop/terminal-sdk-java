@@ -91,11 +91,7 @@ private constructor(
             CartSetCardResponse(checkRequired("data", data), additionalProperties.toImmutable())
     }
 
-    class Data
-    @JsonCreator
-    private constructor(
-        private val value: JsonField<String>,
-    ) : Enum {
+    class Data @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -116,7 +112,7 @@ private constructor(
 
         /** An enum containing [Data]'s known values. */
         enum class Known {
-            OK,
+            OK
         }
 
         /**

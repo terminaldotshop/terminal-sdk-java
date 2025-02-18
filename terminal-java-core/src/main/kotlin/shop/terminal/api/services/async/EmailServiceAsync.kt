@@ -15,6 +15,6 @@ interface EmailServiceAsync {
     @JvmOverloads
     fun create(
         params: EmailCreateParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<EmailCreateResponse>
 }

@@ -106,7 +106,7 @@ private constructor(
         fun build(): AppListResponse =
             AppListResponse(
                 checkRequired("data", data).map { it.toImmutable() },
-                additionalProperties.toImmutable()
+                additionalProperties.toImmutable(),
             )
     }
 

@@ -19,20 +19,20 @@ interface SubscriptionServiceAsync {
     @JvmOverloads
     fun create(
         params: SubscriptionCreateParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<SubscriptionCreateResponse>
 
     /** List the subscriptions associated with the current user. */
     @JvmOverloads
     fun list(
         params: SubscriptionListParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<SubscriptionListResponse>
 
     /** Cancel a subscription for the current user. */
     @JvmOverloads
     fun delete(
         params: SubscriptionDeleteParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<SubscriptionDeleteResponse>
 }

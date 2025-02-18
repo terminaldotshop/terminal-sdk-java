@@ -15,6 +15,6 @@ interface ProductServiceAsync {
     @JvmOverloads
     fun list(
         params: ProductListParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<ProductListResponse>
 }

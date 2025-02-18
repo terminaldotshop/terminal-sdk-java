@@ -18,20 +18,20 @@ interface AddressService {
     @JvmOverloads
     fun create(
         params: AddressCreateParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): AddressCreateResponse
 
     /** Get the shipping addresses associated with the current user. */
     @JvmOverloads
     fun list(
         params: AddressListParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): AddressListResponse
 
     /** Delete a shipping address from the current user. */
     @JvmOverloads
     fun delete(
         params: AddressDeleteParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): AddressDeleteResponse
 }

@@ -21,27 +21,27 @@ interface AppServiceAsync {
     @JvmOverloads
     fun create(
         params: AppCreateParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<AppCreateResponse>
 
     /** List the current user's registered apps. */
     @JvmOverloads
     fun list(
         params: AppListParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<AppListResponse>
 
     /** Delete the app with the given ID. */
     @JvmOverloads
     fun delete(
         params: AppDeleteParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<AppDeleteResponse>
 
     /** Get the app with the given ID. */
     @JvmOverloads
     fun get(
         params: AppGetParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<AppGetResponse>
 }

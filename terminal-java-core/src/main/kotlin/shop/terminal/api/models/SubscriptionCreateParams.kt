@@ -552,11 +552,7 @@ private constructor(
     }
 
     /** Frequency of the subscription. */
-    class Frequency
-    @JsonCreator
-    private constructor(
-        private val value: JsonField<String>,
-    ) : Enum {
+    class Frequency @JsonCreator private constructor(private val value: JsonField<String>) : Enum {
 
         /**
          * Returns this class instance's raw value.
@@ -789,7 +785,7 @@ private constructor(
             override fun serialize(
                 value: Schedule,
                 generator: JsonGenerator,
-                provider: SerializerProvider
+                provider: SerializerProvider,
             ) {
                 when {
                     value.fixed != null -> generator.writeObject(value.fixed)
@@ -879,11 +875,8 @@ private constructor(
                     Fixed(checkRequired("type", type), additionalProperties.toImmutable())
             }
 
-            class Type
-            @JsonCreator
-            private constructor(
-                private val value: JsonField<String>,
-            ) : Enum {
+            class Type @JsonCreator private constructor(private val value: JsonField<String>) :
+                Enum {
 
                 /**
                  * Returns this class instance's raw value.
@@ -904,7 +897,7 @@ private constructor(
 
                 /** An enum containing [Type]'s known values. */
                 enum class Known {
-                    FIXED,
+                    FIXED
                 }
 
                 /**
@@ -1082,11 +1075,8 @@ private constructor(
                     )
             }
 
-            class Type
-            @JsonCreator
-            private constructor(
-                private val value: JsonField<String>,
-            ) : Enum {
+            class Type @JsonCreator private constructor(private val value: JsonField<String>) :
+                Enum {
 
                 /**
                  * Returns this class instance's raw value.
@@ -1107,7 +1097,7 @@ private constructor(
 
                 /** An enum containing [Type]'s known values. */
                 enum class Known {
-                    WEEKLY,
+                    WEEKLY
                 }
 
                 /**
