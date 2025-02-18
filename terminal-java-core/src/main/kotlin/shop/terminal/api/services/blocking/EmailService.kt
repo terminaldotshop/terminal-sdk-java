@@ -14,6 +14,6 @@ interface EmailService {
     @JvmOverloads
     fun create(
         params: EmailCreateParams,
-        requestOptions: RequestOptions = RequestOptions.none()
+        requestOptions: RequestOptions = RequestOptions.none(),
     ): EmailCreateResponse
 }

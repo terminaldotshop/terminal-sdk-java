@@ -25,10 +25,8 @@ import shop.terminal.api.models.CartSetCardResponse
 import shop.terminal.api.models.CartSetItemParams
 import shop.terminal.api.models.CartSetItemResponse
 
-class CartServiceAsyncImpl
-internal constructor(
-    private val clientOptions: ClientOptions,
-) : CartServiceAsync {
+class CartServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
+    CartServiceAsync {
 
     private val errorHandler: Handler<TerminalError> = errorHandler(clientOptions.jsonMapper)
 
@@ -38,7 +36,7 @@ internal constructor(
     /** Convert the current user's cart to an order. */
     override fun convert(
         params: CartConvertParams,
-        requestOptions: RequestOptions
+        requestOptions: RequestOptions,
     ): CompletableFuture<CartConvertResponse> {
         val request =
             HttpRequest.builder()
@@ -66,7 +64,7 @@ internal constructor(
     /** Get the current user's cart. */
     override fun get(
         params: CartGetParams,
-        requestOptions: RequestOptions
+        requestOptions: RequestOptions,
     ): CompletableFuture<CartGetResponse> {
         val request =
             HttpRequest.builder()
@@ -93,7 +91,7 @@ internal constructor(
     /** Set the shipping address for the current user's cart. */
     override fun setAddress(
         params: CartSetAddressParams,
-        requestOptions: RequestOptions
+        requestOptions: RequestOptions,
     ): CompletableFuture<CartSetAddressResponse> {
         val request =
             HttpRequest.builder()
@@ -121,7 +119,7 @@ internal constructor(
     /** Set the credit card for the current user's cart. */
     override fun setCard(
         params: CartSetCardParams,
-        requestOptions: RequestOptions
+        requestOptions: RequestOptions,
     ): CompletableFuture<CartSetCardResponse> {
         val request =
             HttpRequest.builder()
@@ -149,7 +147,7 @@ internal constructor(
     /** Add an item to the current user's cart. */
     override fun setItem(
         params: CartSetItemParams,
-        requestOptions: RequestOptions
+        requestOptions: RequestOptions,
     ): CompletableFuture<CartSetItemResponse> {
         val request =
             HttpRequest.builder()

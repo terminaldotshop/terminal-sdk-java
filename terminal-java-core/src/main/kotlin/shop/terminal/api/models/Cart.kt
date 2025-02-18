@@ -589,12 +589,7 @@ private constructor(
                 keys.forEach(::removeAdditionalProperty)
             }
 
-            fun build(): Shipping =
-                Shipping(
-                    service,
-                    timeframe,
-                    additionalProperties.toImmutable(),
-                )
+            fun build(): Shipping = Shipping(service, timeframe, additionalProperties.toImmutable())
         }
 
         override fun equals(other: Any?): Boolean {
