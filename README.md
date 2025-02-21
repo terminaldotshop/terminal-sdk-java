@@ -282,9 +282,9 @@ To set undocumented parameters, call the `putAdditionalHeader`, `putAdditionalQu
 
 ```java
 import shop.terminal.api.core.JsonValue;
-import shop.terminal.api.models.ProfileUpdateParams;
+import shop.terminal.api.models.ProductListParams;
 
-ProfileUpdateParams params = ProfileUpdateParams.builder()
+ProductListParams params = ProductListParams.builder()
     .putAdditionalHeader("Secret-Header", "42")
     .putAdditionalQueryParam("secret_query_param", "42")
     .putAdditionalBodyProperty("secretProperty", JsonValue.from("42"))
@@ -297,9 +297,8 @@ To set a documented parameter or property to an undocumented or not yet supporte
 
 ```java
 import shop.terminal.api.models.ProductListParams;
-import shop.terminal.api.models.ProfileUpdateParams;
 
-ProfileUpdateParams params = ProductListParams.builder().build();
+ProductListParams params = ProductListParams.builder().build();
 ```
 
 ### Response properties
