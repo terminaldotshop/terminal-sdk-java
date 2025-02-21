@@ -3,31 +3,33 @@
 package shop.terminal.api.models
 
 import java.util.Objects
+import java.util.Optional
 import shop.terminal.api.core.JsonValue
 import shop.terminal.api.core.NoAutoDetect
 import shop.terminal.api.core.Params
-import shop.terminal.api.core.checkRequired
 import shop.terminal.api.core.http.Headers
 import shop.terminal.api.core.http.QueryParams
+import shop.terminal.api.core.immutableEmptyMap
 
 /** Create a subscription for the current user. */
 class SubscriptionCreateParams
 private constructor(
-    private val subscription: Subscription,
+    private val subscription: Subscription?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
     /** Subscription to a Terminal shop product. */
-    fun subscription(): Subscription = subscription
+    fun subscription(): Optional<Subscription> = Optional.ofNullable(subscription)
 
-    fun _additionalBodyProperties(): Map<String, JsonValue> = subscription._additionalProperties()
+    fun _additionalBodyProperties(): Map<String, JsonValue> =
+        subscription?._additionalProperties() ?: immutableEmptyMap()
 
     fun _additionalHeaders(): Headers = additionalHeaders
 
     fun _additionalQueryParams(): QueryParams = additionalQueryParams
 
-    @JvmSynthetic internal fun _body(): Subscription = subscription
+    @JvmSynthetic internal fun _body(): Optional<Subscription> = Optional.ofNullable(subscription)
 
     override fun _headers(): Headers = additionalHeaders
 
@@ -56,7 +58,11 @@ private constructor(
         }
 
         /** Subscription to a Terminal shop product. */
-        fun subscription(subscription: Subscription) = apply { this.subscription = subscription }
+        fun subscription(subscription: Subscription?) = apply { this.subscription = subscription }
+
+        /** Subscription to a Terminal shop product. */
+        fun subscription(subscription: Optional<Subscription>) =
+            subscription(subscription.orElse(null))
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -158,7 +164,7 @@ private constructor(
 
         fun build(): SubscriptionCreateParams =
             SubscriptionCreateParams(
-                checkRequired("subscription", subscription),
+                subscription,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
             )
