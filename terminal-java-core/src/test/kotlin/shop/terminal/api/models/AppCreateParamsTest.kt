@@ -2,6 +2,7 @@
 
 package shop.terminal.api.models
 
+import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -33,9 +34,8 @@ class AppCreateParamsTest {
                 )
                 .build()
 
-        val body = params._body()
+        val body = params._body().getOrNull()
 
-        assertThat(body).isNotNull
         assertThat(body)
             .isEqualTo(
                 App.builder()
@@ -48,27 +48,8 @@ class AppCreateParamsTest {
 
     @Test
     fun bodyWithoutOptionalFields() {
-        val params =
-            AppCreateParams.builder()
-                .app(
-                    App.builder()
-                        .id("cli_XXXXXXXXXXXXXXXXXXXXXXXXX")
-                        .name("Example App")
-                        .redirectUri("https://example.com/callback")
-                        .build()
-                )
-                .build()
+        val params = AppCreateParams.builder().build()
 
-        val body = params._body()
-
-        assertThat(body).isNotNull
-        assertThat(body)
-            .isEqualTo(
-                App.builder()
-                    .id("cli_XXXXXXXXXXXXXXXXXXXXXXXXX")
-                    .name("Example App")
-                    .redirectUri("https://example.com/callback")
-                    .build()
-            )
+        val body = params._body().getOrNull()
     }
 }
