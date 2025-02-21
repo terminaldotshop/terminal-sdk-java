@@ -2,6 +2,7 @@
 
 package shop.terminal.api.models
 
+import kotlin.jvm.optionals.getOrNull
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -53,9 +54,8 @@ class SubscriptionCreateParamsTest {
                 )
                 .build()
 
-        val body = params._body()
+        val body = params._body().getOrNull()
 
-        assertThat(body).isNotNull
         assertThat(body)
             .isEqualTo(
                 Subscription.builder()
@@ -78,33 +78,8 @@ class SubscriptionCreateParamsTest {
 
     @Test
     fun bodyWithoutOptionalFields() {
-        val params =
-            SubscriptionCreateParams.builder()
-                .subscription(
-                    Subscription.builder()
-                        .id("sub_XXXXXXXXXXXXXXXXXXXXXXXXX")
-                        .addressId("shp_XXXXXXXXXXXXXXXXXXXXXXXXX")
-                        .cardId("crd_XXXXXXXXXXXXXXXXXXXXXXXXX")
-                        .frequency(Subscription.Frequency.FIXED)
-                        .productVariantId("var_XXXXXXXXXXXXXXXXXXXXXXXXX")
-                        .quantity(1L)
-                        .build()
-                )
-                .build()
+        val params = SubscriptionCreateParams.builder().build()
 
-        val body = params._body()
-
-        assertThat(body).isNotNull
-        assertThat(body)
-            .isEqualTo(
-                Subscription.builder()
-                    .id("sub_XXXXXXXXXXXXXXXXXXXXXXXXX")
-                    .addressId("shp_XXXXXXXXXXXXXXXXXXXXXXXXX")
-                    .cardId("crd_XXXXXXXXXXXXXXXXXXXXXXXXX")
-                    .frequency(Subscription.Frequency.FIXED)
-                    .productVariantId("var_XXXXXXXXXXXXXXXXXXXXXXXXX")
-                    .quantity(1L)
-                    .build()
-            )
+        val body = params._body().getOrNull()
     }
 }
