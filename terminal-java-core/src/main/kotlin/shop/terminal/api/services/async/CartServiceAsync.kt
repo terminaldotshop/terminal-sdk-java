@@ -22,16 +22,24 @@ interface CartServiceAsync {
     /** Convert the current user's cart to an order. */
     @JvmOverloads
     fun convert(
-        params: CartConvertParams,
+        params: CartConvertParams = CartConvertParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<CartConvertResponse>
+
+    /** Convert the current user's cart to an order. */
+    fun convert(requestOptions: RequestOptions): CompletableFuture<CartConvertResponse> =
+        convert(CartConvertParams.none(), requestOptions)
 
     /** Get the current user's cart. */
     @JvmOverloads
     fun get(
-        params: CartGetParams,
+        params: CartGetParams = CartGetParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<CartGetResponse>
+
+    /** Get the current user's cart. */
+    fun get(requestOptions: RequestOptions): CompletableFuture<CartGetResponse> =
+        get(CartGetParams.none(), requestOptions)
 
     /** Set the shipping address for the current user's cart. */
     @JvmOverloads

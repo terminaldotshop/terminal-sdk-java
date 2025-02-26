@@ -39,6 +39,8 @@ private constructor(
 
     companion object {
 
+        fun none(): SubscriptionCreateParams = builder().build()
+
         @JvmStatic fun builder() = Builder()
     }
 

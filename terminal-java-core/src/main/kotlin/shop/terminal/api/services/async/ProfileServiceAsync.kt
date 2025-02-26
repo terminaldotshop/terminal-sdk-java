@@ -16,14 +16,22 @@ interface ProfileServiceAsync {
     /** Update the current user's profile. */
     @JvmOverloads
     fun update(
-        params: ProfileUpdateParams,
+        params: ProfileUpdateParams = ProfileUpdateParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<ProfileUpdateResponse>
+
+    /** Update the current user's profile. */
+    fun update(requestOptions: RequestOptions): CompletableFuture<ProfileUpdateResponse> =
+        update(ProfileUpdateParams.none(), requestOptions)
 
     /** Get the current user's profile. */
     @JvmOverloads
     fun me(
-        params: ProfileMeParams,
+        params: ProfileMeParams = ProfileMeParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<ProfileMeResponse>
+
+    /** Get the current user's profile. */
+    fun me(requestOptions: RequestOptions): CompletableFuture<ProfileMeResponse> =
+        me(ProfileMeParams.none(), requestOptions)
 }

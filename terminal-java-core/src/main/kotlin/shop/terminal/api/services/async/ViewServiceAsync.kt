@@ -17,7 +17,14 @@ interface ViewServiceAsync {
      */
     @JvmOverloads
     fun init(
-        params: ViewInitParams,
+        params: ViewInitParams = ViewInitParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<ViewInitResponse>
+
+    /**
+     * Get initial app data, including user, products, cart, addresses, cards, subscriptions, and
+     * orders.
+     */
+    fun init(requestOptions: RequestOptions): CompletableFuture<ViewInitResponse> =
+        init(ViewInitParams.none(), requestOptions)
 }

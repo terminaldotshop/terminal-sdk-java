@@ -20,16 +20,24 @@ interface TokenServiceAsync {
     /** Create a personal access token. */
     @JvmOverloads
     fun create(
-        params: TokenCreateParams,
+        params: TokenCreateParams = TokenCreateParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<TokenCreateResponse>
+
+    /** Create a personal access token. */
+    fun create(requestOptions: RequestOptions): CompletableFuture<TokenCreateResponse> =
+        create(TokenCreateParams.none(), requestOptions)
 
     /** List the current user's personal access tokens. */
     @JvmOverloads
     fun list(
-        params: TokenListParams,
+        params: TokenListParams = TokenListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<TokenListResponse>
+
+    /** List the current user's personal access tokens. */
+    fun list(requestOptions: RequestOptions): CompletableFuture<TokenListResponse> =
+        list(TokenListParams.none(), requestOptions)
 
     /** Delete the personal access token with the given ID. */
     @JvmOverloads
