@@ -27,7 +27,7 @@ private constructor(
 
     companion object {
 
-        fun none(): ProfileMeParams = builder().build()
+        @JvmStatic fun none(): ProfileMeParams = builder().build()
 
         @JvmStatic fun builder() = Builder()
     }
