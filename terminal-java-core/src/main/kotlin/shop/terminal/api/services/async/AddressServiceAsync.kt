@@ -25,9 +25,13 @@ interface AddressServiceAsync {
     /** Get the shipping addresses associated with the current user. */
     @JvmOverloads
     fun list(
-        params: AddressListParams,
+        params: AddressListParams = AddressListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<AddressListResponse>
+
+    /** Get the shipping addresses associated with the current user. */
+    fun list(requestOptions: RequestOptions): CompletableFuture<AddressListResponse> =
+        list(AddressListParams.none(), requestOptions)
 
     /** Delete a shipping address from the current user. */
     @JvmOverloads

@@ -27,9 +27,13 @@ interface CardServiceAsync {
     /** List the credit cards associated with the current user. */
     @JvmOverloads
     fun list(
-        params: CardListParams,
+        params: CardListParams = CardListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<CardListResponse>
+
+    /** List the credit cards associated with the current user. */
+    fun list(requestOptions: RequestOptions): CompletableFuture<CardListResponse> =
+        list(CardListParams.none(), requestOptions)
 
     /** Delete a credit card associated with the current user. */
     @JvmOverloads
@@ -41,7 +45,11 @@ interface CardServiceAsync {
     /** Create a temporary URL for collecting credit card information for the current user. */
     @JvmOverloads
     fun collect(
-        params: CardCollectParams,
+        params: CardCollectParams = CardCollectParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<CardCollectResponse>
+
+    /** Create a temporary URL for collecting credit card information for the current user. */
+    fun collect(requestOptions: RequestOptions): CompletableFuture<CardCollectResponse> =
+        collect(CardCollectParams.none(), requestOptions)
 }

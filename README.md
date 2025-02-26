@@ -51,8 +51,7 @@ import shop.terminal.api.models.ProductListResponse;
 // Configures using the `TERMINAL_BEARER_TOKEN` environment variable
 TerminalClient client = TerminalOkHttpClient.fromEnv();
 
-ProductListParams params = ProductListParams.builder().build();
-ProductListResponse product = client.product().list(params);
+ProductListResponse product = client.product().list();
 ```
 
 ## Client configuration
@@ -129,8 +128,7 @@ import shop.terminal.api.models.ProductListResponse;
 // Configures using the `TERMINAL_BEARER_TOKEN` environment variable
 TerminalClient client = TerminalOkHttpClient.fromEnv();
 
-ProductListParams params = ProductListParams.builder().build();
-CompletableFuture<ProductListResponse> product = client.async().product().list(params);
+CompletableFuture<ProductListResponse> product = client.async().product().list();
 ```
 
 Or create an asynchronous client from the beginning:
@@ -145,8 +143,7 @@ import shop.terminal.api.models.ProductListResponse;
 // Configures using the `TERMINAL_BEARER_TOKEN` environment variable
 TerminalClientAsync client = TerminalOkHttpClientAsync.fromEnv();
 
-ProductListParams params = ProductListParams.builder().build();
-CompletableFuture<ProductListResponse> product = client.product().list(params);
+CompletableFuture<ProductListResponse> product = client.product().list();
 ```
 
 The asynchronous client supports the same options as the synchronous one, except most methods return `CompletableFuture`s.
@@ -228,9 +225,7 @@ To set a custom timeout, configure the method call using the `timeout` method:
 import shop.terminal.api.models.ProductListParams;
 import shop.terminal.api.models.ProductListResponse;
 
-ProductListResponse product = client.product().list(
-  params, RequestOptions.builder().timeout(Duration.ofSeconds(30)).build()
-);
+ProductListResponse product = client.product().list(RequestOptions.builder().timeout(Duration.ofSeconds(30)).build());
 ```
 
 Or configure the default for all method calls at the client level:
@@ -383,9 +378,7 @@ Or configure the method call to validate the response using the `responseValidat
 import shop.terminal.api.models.ProductListParams;
 import shop.terminal.api.models.ProductListResponse;
 
-ProductListResponse product = client.product().list(
-  params, RequestOptions.builder().responseValidation(true).build()
-);
+ProductListResponse product = client.product().list(RequestOptions.builder().responseValidation(true).build());
 ```
 
 Or configure the default for all method calls at the client level:

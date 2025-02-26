@@ -30,6 +30,8 @@ private constructor(
 
     companion object {
 
+        fun none(): ViewInitParams = builder().build()
+
         @JvmStatic fun builder() = Builder()
     }
 
