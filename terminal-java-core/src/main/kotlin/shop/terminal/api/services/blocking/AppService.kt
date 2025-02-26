@@ -19,16 +19,24 @@ interface AppService {
     /** Create an app. */
     @JvmOverloads
     fun create(
-        params: AppCreateParams,
+        params: AppCreateParams = AppCreateParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): AppCreateResponse
+
+    /** Create an app. */
+    fun create(requestOptions: RequestOptions): AppCreateResponse =
+        create(AppCreateParams.none(), requestOptions)
 
     /** List the current user's registered apps. */
     @JvmOverloads
     fun list(
-        params: AppListParams,
+        params: AppListParams = AppListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): AppListResponse
+
+    /** List the current user's registered apps. */
+    fun list(requestOptions: RequestOptions): AppListResponse =
+        list(AppListParams.none(), requestOptions)
 
     /** Delete the app with the given ID. */
     @JvmOverloads
