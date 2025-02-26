@@ -6,12 +6,21 @@ package shop.terminal.api.services.async
 
 import java.util.concurrent.CompletableFuture
 import shop.terminal.api.core.RequestOptions
+import shop.terminal.api.models.OrderCreateParams
+import shop.terminal.api.models.OrderCreateResponse
 import shop.terminal.api.models.OrderGetParams
 import shop.terminal.api.models.OrderGetResponse
 import shop.terminal.api.models.OrderListParams
 import shop.terminal.api.models.OrderListResponse
 
 interface OrderServiceAsync {
+
+    /** Create an order without a cart. The order will be placed immediately. */
+    @JvmOverloads
+    fun create(
+        params: OrderCreateParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<OrderCreateResponse>
 
     /** List the orders associated with the current user. */
     @JvmOverloads
