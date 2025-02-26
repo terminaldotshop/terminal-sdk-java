@@ -14,7 +14,11 @@ interface ProductServiceAsync {
     /** List all products for sale in the Terminal shop. */
     @JvmOverloads
     fun list(
-        params: ProductListParams,
+        params: ProductListParams = ProductListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<ProductListResponse>
+
+    /** List all products for sale in the Terminal shop. */
+    fun list(requestOptions: RequestOptions): CompletableFuture<ProductListResponse> =
+        list(ProductListParams.none(), requestOptions)
 }

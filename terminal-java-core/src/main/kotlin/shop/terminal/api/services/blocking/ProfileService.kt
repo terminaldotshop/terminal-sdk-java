@@ -15,14 +15,22 @@ interface ProfileService {
     /** Update the current user's profile. */
     @JvmOverloads
     fun update(
-        params: ProfileUpdateParams,
+        params: ProfileUpdateParams = ProfileUpdateParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): ProfileUpdateResponse
+
+    /** Update the current user's profile. */
+    fun update(requestOptions: RequestOptions): ProfileUpdateResponse =
+        update(ProfileUpdateParams.none(), requestOptions)
 
     /** Get the current user's profile. */
     @JvmOverloads
     fun me(
-        params: ProfileMeParams,
+        params: ProfileMeParams = ProfileMeParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): ProfileMeResponse
+
+    /** Get the current user's profile. */
+    fun me(requestOptions: RequestOptions): ProfileMeResponse =
+        me(ProfileMeParams.none(), requestOptions)
 }

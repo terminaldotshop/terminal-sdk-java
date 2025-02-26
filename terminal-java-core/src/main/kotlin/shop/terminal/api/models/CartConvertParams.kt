@@ -37,6 +37,8 @@ private constructor(
 
     companion object {
 
+        fun none(): CartConvertParams = builder().build()
+
         @JvmStatic fun builder() = Builder()
     }
 
