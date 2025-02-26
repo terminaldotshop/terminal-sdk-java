@@ -39,7 +39,7 @@ private constructor(
 
     companion object {
 
-        fun none(): AppCreateParams = builder().build()
+        @JvmStatic fun none(): AppCreateParams = builder().build()
 
         @JvmStatic fun builder() = Builder()
     }

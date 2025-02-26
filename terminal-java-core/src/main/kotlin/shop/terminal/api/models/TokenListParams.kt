@@ -27,7 +27,7 @@ private constructor(
 
     companion object {
 
-        fun none(): TokenListParams = builder().build()
+        @JvmStatic fun none(): TokenListParams = builder().build()
 
         @JvmStatic fun builder() = Builder()
     }
