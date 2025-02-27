@@ -1,28 +1,29 @@
 // File generated from our OpenAPI spec by Stainless.
 
-package shop.terminal.api.services.blocking
+package shop.terminal.api.services.async
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import shop.terminal.api.TestServerExtension
-import shop.terminal.api.client.okhttp.TerminalOkHttpClient
+import shop.terminal.api.client.okhttp.TerminalOkHttpClientAsync
 import shop.terminal.api.models.EmailCreateParams
 
 @ExtendWith(TestServerExtension::class)
-class EmailServiceTest {
+class EmailServiceAsyncTest {
 
     @Test
     fun create() {
         val client =
-            TerminalOkHttpClient.builder()
+            TerminalOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
                 .bearerToken("My Bearer Token")
                 .build()
-        val emailService = client.email()
+        val emailServiceAsync = client.email()
 
-        val email =
-            emailService.create(EmailCreateParams.builder().email("john@example.com").build())
+        val emailFuture =
+            emailServiceAsync.create(EmailCreateParams.builder().email("john@example.com").build())
 
+        val email = emailFuture.get()
         email.validate()
     }
 }
