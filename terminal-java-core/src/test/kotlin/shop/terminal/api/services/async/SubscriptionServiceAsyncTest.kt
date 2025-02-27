@@ -1,29 +1,29 @@
 // File generated from our OpenAPI spec by Stainless.
 
-package shop.terminal.api.services.blocking
+package shop.terminal.api.services.async
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import shop.terminal.api.TestServerExtension
-import shop.terminal.api.client.okhttp.TerminalOkHttpClient
+import shop.terminal.api.client.okhttp.TerminalOkHttpClientAsync
 import shop.terminal.api.models.Subscription
 import shop.terminal.api.models.SubscriptionCreateParams
 import shop.terminal.api.models.SubscriptionDeleteParams
 
 @ExtendWith(TestServerExtension::class)
-class SubscriptionServiceTest {
+class SubscriptionServiceAsyncTest {
 
     @Test
     fun create() {
         val client =
-            TerminalOkHttpClient.builder()
+            TerminalOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
                 .bearerToken("My Bearer Token")
                 .build()
-        val subscriptionService = client.subscription()
+        val subscriptionServiceAsync = client.subscription()
 
-        val subscription =
-            subscriptionService.create(
+        val subscriptionFuture =
+            subscriptionServiceAsync.create(
                 SubscriptionCreateParams.builder()
                     .subscription(
                         Subscription.builder()
@@ -44,37 +44,40 @@ class SubscriptionServiceTest {
                     .build()
             )
 
+        val subscription = subscriptionFuture.get()
         subscription.validate()
     }
 
     @Test
     fun list() {
         val client =
-            TerminalOkHttpClient.builder()
+            TerminalOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
                 .bearerToken("My Bearer Token")
                 .build()
-        val subscriptionService = client.subscription()
+        val subscriptionServiceAsync = client.subscription()
 
-        val subscription = subscriptionService.list()
+        val subscriptionFuture = subscriptionServiceAsync.list()
 
+        val subscription = subscriptionFuture.get()
         subscription.validate()
     }
 
     @Test
     fun delete() {
         val client =
-            TerminalOkHttpClient.builder()
+            TerminalOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
                 .bearerToken("My Bearer Token")
                 .build()
-        val subscriptionService = client.subscription()
+        val subscriptionServiceAsync = client.subscription()
 
-        val subscription =
-            subscriptionService.delete(
+        val subscriptionFuture =
+            subscriptionServiceAsync.delete(
                 SubscriptionDeleteParams.builder().id("sub_XXXXXXXXXXXXXXXXXXXXXXXXX").build()
             )
 
+        val subscription = subscriptionFuture.get()
         subscription.validate()
     }
 }

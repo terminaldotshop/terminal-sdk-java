@@ -1,28 +1,28 @@
 // File generated from our OpenAPI spec by Stainless.
 
-package shop.terminal.api.services.blocking
+package shop.terminal.api.services.async
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import shop.terminal.api.TestServerExtension
-import shop.terminal.api.client.okhttp.TerminalOkHttpClient
+import shop.terminal.api.client.okhttp.TerminalOkHttpClientAsync
 import shop.terminal.api.models.AddressCreateParams
 import shop.terminal.api.models.AddressDeleteParams
 
 @ExtendWith(TestServerExtension::class)
-class AddressServiceTest {
+class AddressServiceAsyncTest {
 
     @Test
     fun create() {
         val client =
-            TerminalOkHttpClient.builder()
+            TerminalOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
                 .bearerToken("My Bearer Token")
                 .build()
-        val addressService = client.address()
+        val addressServiceAsync = client.address()
 
-        val address =
-            addressService.create(
+        val addressFuture =
+            addressServiceAsync.create(
                 AddressCreateParams.builder()
                     .city("Anytown")
                     .country("US")
@@ -35,37 +35,40 @@ class AddressServiceTest {
                     .build()
             )
 
+        val address = addressFuture.get()
         address.validate()
     }
 
     @Test
     fun list() {
         val client =
-            TerminalOkHttpClient.builder()
+            TerminalOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
                 .bearerToken("My Bearer Token")
                 .build()
-        val addressService = client.address()
+        val addressServiceAsync = client.address()
 
-        val address = addressService.list()
+        val addressFuture = addressServiceAsync.list()
 
+        val address = addressFuture.get()
         address.validate()
     }
 
     @Test
     fun delete() {
         val client =
-            TerminalOkHttpClient.builder()
+            TerminalOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
                 .bearerToken("My Bearer Token")
                 .build()
-        val addressService = client.address()
+        val addressServiceAsync = client.address()
 
-        val address =
-            addressService.delete(
+        val addressFuture =
+            addressServiceAsync.delete(
                 AddressDeleteParams.builder().id("shp_XXXXXXXXXXXXXXXXXXXXXXXXX").build()
             )
 
+        val address = addressFuture.get()
         address.validate()
     }
 }

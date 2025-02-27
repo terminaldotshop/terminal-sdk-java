@@ -1,44 +1,46 @@
 // File generated from our OpenAPI spec by Stainless.
 
-package shop.terminal.api.services.blocking
+package shop.terminal.api.services.async
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import shop.terminal.api.TestServerExtension
-import shop.terminal.api.client.okhttp.TerminalOkHttpClient
+import shop.terminal.api.client.okhttp.TerminalOkHttpClientAsync
 import shop.terminal.api.models.ProfileUpdateParams
 
 @ExtendWith(TestServerExtension::class)
-class ProfileServiceTest {
+class ProfileServiceAsyncTest {
 
     @Test
     fun update() {
         val client =
-            TerminalOkHttpClient.builder()
+            TerminalOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
                 .bearerToken("My Bearer Token")
                 .build()
-        val profileService = client.profile()
+        val profileServiceAsync = client.profile()
 
-        val profile =
-            profileService.update(
+        val profileFuture =
+            profileServiceAsync.update(
                 ProfileUpdateParams.builder().email("john@example.com").name("John Doe").build()
             )
 
+        val profile = profileFuture.get()
         profile.validate()
     }
 
     @Test
     fun me() {
         val client =
-            TerminalOkHttpClient.builder()
+            TerminalOkHttpClientAsync.builder()
                 .baseUrl(TestServerExtension.BASE_URL)
                 .bearerToken("My Bearer Token")
                 .build()
-        val profileService = client.profile()
+        val profileServiceAsync = client.profile()
 
-        val response = profileService.me()
+        val responseFuture = profileServiceAsync.me()
 
+        val response = responseFuture.get()
         response.validate()
     }
 }
