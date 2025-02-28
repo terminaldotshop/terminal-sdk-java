@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.json.JsonMapper
 import java.net.Proxy
 import java.time.Clock
 import java.time.Duration
+import java.util.Optional
 import shop.terminal.api.client.TerminalClientAsync
 import shop.terminal.api.client.TerminalClientAsyncImpl
 import shop.terminal.api.core.ClientOptions
@@ -132,6 +133,10 @@ class TerminalOkHttpClientAsync private constructor() {
         }
 
         fun bearerToken(bearerToken: String) = apply { clientOptions.bearerToken(bearerToken) }
+
+        fun app(app: String?) = apply { clientOptions.app(app) }
+
+        fun app(app: Optional<String>) = app(app.orElse(null))
 
         fun fromEnv() = apply { clientOptions.fromEnv() }
 
