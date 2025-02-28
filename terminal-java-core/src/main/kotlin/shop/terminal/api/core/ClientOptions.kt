@@ -4,6 +4,7 @@ package shop.terminal.api.core
 
 import com.fasterxml.jackson.databind.json.JsonMapper
 import java.time.Clock
+import java.util.Optional
 import shop.terminal.api.core.http.Headers
 import shop.terminal.api.core.http.HttpClient
 import shop.terminal.api.core.http.PhantomReachableClosingHttpClient
@@ -22,6 +23,7 @@ private constructor(
     @get:JvmName("responseValidation") val responseValidation: Boolean,
     @get:JvmName("maxRetries") val maxRetries: Int,
     @get:JvmName("bearerToken") val bearerToken: String,
+    @get:JvmName("app") val app: String?,
 ) {
 
     fun toBuilder() = Builder().from(this)
@@ -49,6 +51,7 @@ private constructor(
         private var responseValidation: Boolean = false
         private var maxRetries: Int = 2
         private var bearerToken: String? = null
+        private var app: String? = null
 
         @JvmSynthetic
         internal fun from(clientOptions: ClientOptions) = apply {
@@ -61,6 +64,7 @@ private constructor(
             responseValidation = clientOptions.responseValidation
             maxRetries = clientOptions.maxRetries
             bearerToken = clientOptions.bearerToken
+            app = clientOptions.app
         }
 
         fun httpClient(httpClient: HttpClient) = apply { this.httpClient = httpClient }
@@ -78,6 +82,10 @@ private constructor(
         fun maxRetries(maxRetries: Int) = apply { this.maxRetries = maxRetries }
 
         fun bearerToken(bearerToken: String) = apply { this.bearerToken = bearerToken }
+
+        fun app(app: String?) = apply { this.app = app }
+
+        fun app(app: Optional<String>) = app(app.orElse(null))
 
         fun headers(headers: Headers) = apply {
             this.headers.clear()
@@ -174,6 +182,7 @@ private constructor(
             headers.put("X-Stainless-Package-Version", getPackageVersion())
             headers.put("X-Stainless-Runtime", "JRE")
             headers.put("X-Stainless-Runtime-Version", getJavaVersion())
+            app?.let { headers.put("x-terminal-app", it) }
             bearerToken.let {
                 if (!it.isEmpty()) {
                     headers.put("Authorization", "Bearer $it")
@@ -199,6 +208,7 @@ private constructor(
                 responseValidation,
                 maxRetries,
                 bearerToken,
+                app,
             )
         }
     }
