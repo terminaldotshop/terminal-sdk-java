@@ -23,7 +23,7 @@ private constructor(
     @get:JvmName("responseValidation") val responseValidation: Boolean,
     @get:JvmName("maxRetries") val maxRetries: Int,
     @get:JvmName("bearerToken") val bearerToken: String,
-    @get:JvmName("app") val app: String?,
+    @get:JvmName("appId") val appId: String?,
 ) {
 
     fun toBuilder() = Builder().from(this)
@@ -51,7 +51,7 @@ private constructor(
         private var responseValidation: Boolean = false
         private var maxRetries: Int = 2
         private var bearerToken: String? = null
-        private var app: String? = null
+        private var appId: String? = null
 
         @JvmSynthetic
         internal fun from(clientOptions: ClientOptions) = apply {
@@ -64,7 +64,7 @@ private constructor(
             responseValidation = clientOptions.responseValidation
             maxRetries = clientOptions.maxRetries
             bearerToken = clientOptions.bearerToken
-            app = clientOptions.app
+            appId = clientOptions.appId
         }
 
         fun httpClient(httpClient: HttpClient) = apply { this.httpClient = httpClient }
@@ -83,9 +83,9 @@ private constructor(
 
         fun bearerToken(bearerToken: String) = apply { this.bearerToken = bearerToken }
 
-        fun app(app: String?) = apply { this.app = app }
+        fun appId(appId: String?) = apply { this.appId = appId }
 
-        fun app(app: Optional<String>) = app(app.orElse(null))
+        fun appId(appId: Optional<String>) = appId(appId.orElse(null))
 
         fun headers(headers: Headers) = apply {
             this.headers.clear()
@@ -182,7 +182,7 @@ private constructor(
             headers.put("X-Stainless-Package-Version", getPackageVersion())
             headers.put("X-Stainless-Runtime", "JRE")
             headers.put("X-Stainless-Runtime-Version", getJavaVersion())
-            app?.let { headers.put("x-terminal-app", it) }
+            appId?.let { headers.put("x-terminal-app-id", it) }
             bearerToken.let {
                 if (!it.isEmpty()) {
                     headers.put("Authorization", "Bearer $it")
@@ -208,7 +208,7 @@ private constructor(
                 responseValidation,
                 maxRetries,
                 bearerToken,
-                app,
+                appId,
             )
         }
     }
