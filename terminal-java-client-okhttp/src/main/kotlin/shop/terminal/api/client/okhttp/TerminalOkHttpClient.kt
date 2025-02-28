@@ -134,9 +134,9 @@ class TerminalOkHttpClient private constructor() {
 
         fun bearerToken(bearerToken: String) = apply { clientOptions.bearerToken(bearerToken) }
 
-        fun app(app: String?) = apply { clientOptions.app(app) }
+        fun appId(appId: String?) = apply { clientOptions.appId(appId) }
 
-        fun app(app: Optional<String>) = app(app.orElse(null))
+        fun appId(appId: Optional<String>) = appId(appId.orElse(null))
 
         fun fromEnv() = apply { clientOptions.fromEnv() }
 
