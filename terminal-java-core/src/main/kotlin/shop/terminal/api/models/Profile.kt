@@ -51,6 +51,14 @@ private constructor(
 
     companion object {
 
+        /**
+         * Returns a mutable builder for constructing an instance of [Profile].
+         *
+         * The following fields are required:
+         * ```java
+         * .user()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 
@@ -175,6 +183,18 @@ private constructor(
 
         companion object {
 
+            /**
+             * Returns a mutable builder for constructing an instance of [User].
+             *
+             * The following fields are required:
+             * ```java
+             * .id()
+             * .email()
+             * .fingerprint()
+             * .name()
+             * .stripeCustomerId()
+             * ```
+             */
             @JvmStatic fun builder() = Builder()
         }
 

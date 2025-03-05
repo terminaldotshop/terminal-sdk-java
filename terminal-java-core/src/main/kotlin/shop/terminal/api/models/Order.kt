@@ -100,6 +100,18 @@ private constructor(
 
     companion object {
 
+        /**
+         * Returns a mutable builder for constructing an instance of [Order].
+         *
+         * The following fields are required:
+         * ```java
+         * .id()
+         * .amount()
+         * .items()
+         * .shipping()
+         * .tracking()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 
@@ -247,6 +259,15 @@ private constructor(
 
         companion object {
 
+            /**
+             * Returns a mutable builder for constructing an instance of [Amount].
+             *
+             * The following fields are required:
+             * ```java
+             * .shipping()
+             * .subtotal()
+             * ```
+             */
             @JvmStatic fun builder() = Builder()
         }
 
@@ -401,6 +422,16 @@ private constructor(
 
         companion object {
 
+            /**
+             * Returns a mutable builder for constructing an instance of [Item].
+             *
+             * The following fields are required:
+             * ```java
+             * .id()
+             * .amount()
+             * .quantity()
+             * ```
+             */
             @JvmStatic fun builder() = Builder()
         }
 
@@ -612,6 +643,18 @@ private constructor(
 
         companion object {
 
+            /**
+             * Returns a mutable builder for constructing an instance of [Shipping].
+             *
+             * The following fields are required:
+             * ```java
+             * .city()
+             * .country()
+             * .name()
+             * .street1()
+             * .zip()
+             * ```
+             */
             @JvmStatic fun builder() = Builder()
         }
 
@@ -795,6 +838,7 @@ private constructor(
 
         companion object {
 
+            /** Returns a mutable builder for constructing an instance of [Tracking]. */
             @JvmStatic fun builder() = Builder()
         }
 

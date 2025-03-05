@@ -35,6 +35,15 @@ private constructor(
 
         const val DEV_URL = "https://api.dev.terminal.shop/"
 
+        /**
+         * Returns a mutable builder for constructing an instance of [ClientOptions].
+         *
+         * The following fields are required:
+         * ```java
+         * .httpClient()
+         * .bearerToken()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
 
         @JvmStatic fun fromEnv(): ClientOptions = builder().fromEnv().build()

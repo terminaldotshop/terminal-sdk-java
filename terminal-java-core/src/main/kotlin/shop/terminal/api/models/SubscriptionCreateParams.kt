@@ -41,6 +41,7 @@ private constructor(
 
         @JvmStatic fun none(): SubscriptionCreateParams = builder().build()
 
+        /** Returns a mutable builder for constructing an instance of [SubscriptionCreateParams]. */
         @JvmStatic fun builder() = Builder()
     }
 

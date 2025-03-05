@@ -18,6 +18,9 @@ class TerminalOkHttpClientAsync private constructor() {
 
     companion object {
 
+        /**
+         * Returns a mutable builder for constructing an instance of [TerminalOkHttpClientAsync].
+         */
         @JvmStatic fun builder() = Builder()
 
         @JvmStatic fun fromEnv(): TerminalClientAsync = builder().fromEnv().build()

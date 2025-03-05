@@ -39,6 +39,7 @@ private constructor(
 
         @JvmStatic fun none(): CardCollectParams = builder().build()
 
+        /** Returns a mutable builder for constructing an instance of [CardCollectParams]. */
         @JvmStatic fun builder() = Builder()
     }
 

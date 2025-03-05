@@ -39,6 +39,7 @@ private constructor(
 
         @JvmStatic fun none(): TokenCreateParams = builder().build()
 
+        /** Returns a mutable builder for constructing an instance of [TokenCreateParams]. */
         @JvmStatic fun builder() = Builder()
     }
 

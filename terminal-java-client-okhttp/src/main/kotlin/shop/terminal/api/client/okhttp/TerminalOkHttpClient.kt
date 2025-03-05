@@ -18,6 +18,7 @@ class TerminalOkHttpClient private constructor() {
 
     companion object {
 
+        /** Returns a mutable builder for constructing an instance of [TerminalOkHttpClient]. */
         @JvmStatic fun builder() = Builder()
 
         @JvmStatic fun fromEnv(): TerminalClient = builder().fromEnv().build()

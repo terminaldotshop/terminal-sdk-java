@@ -50,6 +50,14 @@ private constructor(
 
     companion object {
 
+        /**
+         * Returns a mutable builder for constructing an instance of [ViewInitResponse].
+         *
+         * The following fields are required:
+         * ```java
+         * .data()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 
@@ -201,6 +209,22 @@ private constructor(
 
         companion object {
 
+            /**
+             * Returns a mutable builder for constructing an instance of [Data].
+             *
+             * The following fields are required:
+             * ```java
+             * .addresses()
+             * .apps()
+             * .cards()
+             * .cart()
+             * .orders()
+             * .products()
+             * .profile()
+             * .subscriptions()
+             * .tokens()
+             * ```
+             */
             @JvmStatic fun builder() = Builder()
         }
 
