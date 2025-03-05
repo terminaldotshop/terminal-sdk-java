@@ -114,6 +114,16 @@ private constructor(
 
         companion object {
 
+            /**
+             * Returns a mutable builder for constructing an instance of [Body].
+             *
+             * The following fields are required:
+             * ```java
+             * .addressId()
+             * .cardId()
+             * .variants()
+             * ```
+             */
             @JvmStatic fun builder() = Builder()
         }
 
@@ -201,6 +211,16 @@ private constructor(
 
     companion object {
 
+        /**
+         * Returns a mutable builder for constructing an instance of [OrderCreateParams].
+         *
+         * The following fields are required:
+         * ```java
+         * .addressId()
+         * .cardId()
+         * .variants()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 
@@ -389,6 +409,7 @@ private constructor(
 
         companion object {
 
+            /** Returns a mutable builder for constructing an instance of [Variants]. */
             @JvmStatic fun builder() = Builder()
         }
 

@@ -123,6 +123,19 @@ private constructor(
 
     companion object {
 
+        /**
+         * Returns a mutable builder for constructing an instance of [Address].
+         *
+         * The following fields are required:
+         * ```java
+         * .id()
+         * .city()
+         * .country()
+         * .name()
+         * .street1()
+         * .zip()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 

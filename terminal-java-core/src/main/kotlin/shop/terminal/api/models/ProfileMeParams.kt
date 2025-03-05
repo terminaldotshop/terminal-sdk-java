@@ -29,6 +29,7 @@ private constructor(
 
         @JvmStatic fun none(): ProfileMeParams = builder().build()
 
+        /** Returns a mutable builder for constructing an instance of [ProfileMeParams]. */
         @JvmStatic fun builder() = Builder()
     }
 

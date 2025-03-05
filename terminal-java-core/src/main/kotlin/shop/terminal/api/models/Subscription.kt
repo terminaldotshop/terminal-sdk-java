@@ -123,6 +123,18 @@ private constructor(
 
     companion object {
 
+        /**
+         * Returns a mutable builder for constructing an instance of [Subscription].
+         *
+         * The following fields are required:
+         * ```java
+         * .id()
+         * .addressId()
+         * .cardId()
+         * .productVariantId()
+         * .quantity()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 
@@ -403,6 +415,14 @@ private constructor(
 
             companion object {
 
+                /**
+                 * Returns a mutable builder for constructing an instance of [Fixed].
+                 *
+                 * The following fields are required:
+                 * ```java
+                 * .type()
+                 * ```
+                 */
                 @JvmStatic fun builder() = Builder()
             }
 
@@ -605,6 +625,15 @@ private constructor(
 
             companion object {
 
+                /**
+                 * Returns a mutable builder for constructing an instance of [Weekly].
+                 *
+                 * The following fields are required:
+                 * ```java
+                 * .interval()
+                 * .type()
+                 * ```
+                 */
                 @JvmStatic fun builder() = Builder()
             }
 

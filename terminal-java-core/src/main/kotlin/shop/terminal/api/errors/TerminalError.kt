@@ -27,6 +27,7 @@ private constructor(
 
     companion object {
 
+        /** Returns a mutable builder for constructing an instance of [TerminalError]. */
         @JvmStatic fun builder() = Builder()
     }
 

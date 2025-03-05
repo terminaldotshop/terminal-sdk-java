@@ -121,6 +121,18 @@ private constructor(
 
     companion object {
 
+        /**
+         * Returns a mutable builder for constructing an instance of [Product].
+         *
+         * The following fields are required:
+         * ```java
+         * .id()
+         * .description()
+         * .filters()
+         * .name()
+         * .variants()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 
@@ -481,6 +493,7 @@ private constructor(
 
         companion object {
 
+            /** Returns a mutable builder for constructing an instance of [Tags]. */
             @JvmStatic fun builder() = Builder()
         }
 
