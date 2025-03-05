@@ -78,6 +78,17 @@ private constructor(
 
     companion object {
 
+        /**
+         * Returns a mutable builder for constructing an instance of [App].
+         *
+         * The following fields are required:
+         * ```java
+         * .id()
+         * .name()
+         * .redirectUri()
+         * .secret()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 

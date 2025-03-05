@@ -66,6 +66,16 @@ private constructor(
 
     companion object {
 
+        /**
+         * Returns a mutable builder for constructing an instance of [ProductVariant].
+         *
+         * The following fields are required:
+         * ```java
+         * .id()
+         * .name()
+         * .price()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 

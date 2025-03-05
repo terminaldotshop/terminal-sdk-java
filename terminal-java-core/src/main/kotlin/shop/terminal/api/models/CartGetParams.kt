@@ -29,6 +29,7 @@ private constructor(
 
         @JvmStatic fun none(): CartGetParams = builder().build()
 
+        /** Returns a mutable builder for constructing an instance of [CartGetParams]. */
         @JvmStatic fun builder() = Builder()
     }
 

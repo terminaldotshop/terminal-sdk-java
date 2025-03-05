@@ -98,6 +98,7 @@ private constructor(
 
         companion object {
 
+            /** Returns a mutable builder for constructing an instance of [Body]. */
             @JvmStatic fun builder() = Builder()
         }
 
@@ -179,6 +180,7 @@ private constructor(
 
         @JvmStatic fun none(): ProfileUpdateParams = builder().build()
 
+        /** Returns a mutable builder for constructing an instance of [ProfileUpdateParams]. */
         @JvmStatic fun builder() = Builder()
     }
 
