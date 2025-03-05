@@ -11,6 +11,8 @@ import shop.terminal.api.core.handlers.withErrorHandler
 import shop.terminal.api.core.http.HttpMethod
 import shop.terminal.api.core.http.HttpRequest
 import shop.terminal.api.core.http.HttpResponse.Handler
+import shop.terminal.api.core.http.HttpResponseFor
+import shop.terminal.api.core.http.parseable
 import shop.terminal.api.core.json
 import shop.terminal.api.core.prepareAsync
 import shop.terminal.api.errors.TerminalError
@@ -24,91 +26,128 @@ import shop.terminal.api.models.AddressListResponse
 class AddressServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
     AddressServiceAsync {
 
-    private val errorHandler: Handler<TerminalError> = errorHandler(clientOptions.jsonMapper)
+    private val withRawResponse: AddressServiceAsync.WithRawResponse by lazy {
+        WithRawResponseImpl(clientOptions)
+    }
 
-    private val createHandler: Handler<AddressCreateResponse> =
-        jsonHandler<AddressCreateResponse>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
+    override fun withRawResponse(): AddressServiceAsync.WithRawResponse = withRawResponse
 
-    /** Create and add a shipping address to the current user. */
     override fun create(
         params: AddressCreateParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<AddressCreateResponse> {
-        val request =
-            HttpRequest.builder()
-                .method(HttpMethod.POST)
-                .addPathSegments("address")
-                .body(json(clientOptions.jsonMapper, params._body()))
-                .build()
-                .prepareAsync(clientOptions, params)
-        val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-        return request
-            .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-            .thenApply { response ->
-                response
-                    .use { createHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-            }
-    }
+    ): CompletableFuture<AddressCreateResponse> =
+        // post /address
+        withRawResponse().create(params, requestOptions).thenApply { it.parse() }
 
-    private val listHandler: Handler<AddressListResponse> =
-        jsonHandler<AddressListResponse>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
-
-    /** Get the shipping addresses associated with the current user. */
     override fun list(
         params: AddressListParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<AddressListResponse> {
-        val request =
-            HttpRequest.builder()
-                .method(HttpMethod.GET)
-                .addPathSegments("address")
-                .build()
-                .prepareAsync(clientOptions, params)
-        val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-        return request
-            .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-            .thenApply { response ->
-                response
-                    .use { listHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
-                    }
-            }
-    }
+    ): CompletableFuture<AddressListResponse> =
+        // get /address
+        withRawResponse().list(params, requestOptions).thenApply { it.parse() }
 
-    private val deleteHandler: Handler<AddressDeleteResponse> =
-        jsonHandler<AddressDeleteResponse>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
-
-    /** Delete a shipping address from the current user. */
     override fun delete(
         params: AddressDeleteParams,
         requestOptions: RequestOptions,
-    ): CompletableFuture<AddressDeleteResponse> {
-        val request =
-            HttpRequest.builder()
-                .method(HttpMethod.DELETE)
-                .addPathSegments("address", params.getPathParam(0))
-                .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
-                .build()
-                .prepareAsync(clientOptions, params)
-        val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-        return request
-            .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-            .thenApply { response ->
-                response
-                    .use { deleteHandler.handle(it) }
-                    .also {
-                        if (requestOptions.responseValidation!!) {
-                            it.validate()
-                        }
+    ): CompletableFuture<AddressDeleteResponse> =
+        // delete /address/{id}
+        withRawResponse().delete(params, requestOptions).thenApply { it.parse() }
+
+    class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
+        AddressServiceAsync.WithRawResponse {
+
+        private val errorHandler: Handler<TerminalError> = errorHandler(clientOptions.jsonMapper)
+
+        private val createHandler: Handler<AddressCreateResponse> =
+            jsonHandler<AddressCreateResponse>(clientOptions.jsonMapper)
+                .withErrorHandler(errorHandler)
+
+        override fun create(
+            params: AddressCreateParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<AddressCreateResponse>> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.POST)
+                    .addPathSegments("address")
+                    .body(json(clientOptions.jsonMapper, params._body()))
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    response.parseable {
+                        response
+                            .use { createHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
                     }
-            }
+                }
+        }
+
+        private val listHandler: Handler<AddressListResponse> =
+            jsonHandler<AddressListResponse>(clientOptions.jsonMapper)
+                .withErrorHandler(errorHandler)
+
+        override fun list(
+            params: AddressListParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<AddressListResponse>> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .addPathSegments("address")
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    response.parseable {
+                        response
+                            .use { listHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
+                    }
+                }
+        }
+
+        private val deleteHandler: Handler<AddressDeleteResponse> =
+            jsonHandler<AddressDeleteResponse>(clientOptions.jsonMapper)
+                .withErrorHandler(errorHandler)
+
+        override fun delete(
+            params: AddressDeleteParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<AddressDeleteResponse>> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.DELETE)
+                    .addPathSegments("address", params.getPathParam(0))
+                    .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    response.parseable {
+                        response
+                            .use { deleteHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
+                    }
+                }
+        }
     }
 }
