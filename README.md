@@ -148,6 +148,32 @@ CompletableFuture<ProductListResponse> product = client.product().list();
 
 The asynchronous client supports the same options as the synchronous one, except most methods return `CompletableFuture`s.
 
+## Raw responses
+
+The SDK defines methods that deserialize responses into instances of Java classes. However, these methods don't provide access to the response headers, status code, or the raw response body.
+
+To access this data, prefix any HTTP method call on a client or service with `withRawResponse()`:
+
+```java
+import shop.terminal.api.core.http.Headers;
+import shop.terminal.api.core.http.HttpResponseFor;
+import shop.terminal.api.models.ProductListParams;
+import shop.terminal.api.models.ProductListResponse;
+
+HttpResponseFor<ProductListResponse> product = client.product().withRawResponse().list();
+
+int statusCode = product.statusCode();
+Headers headers = product.headers();
+```
+
+You can still deserialize the response into an instance of a Java class if needed:
+
+```java
+import shop.terminal.api.models.ProductListResponse;
+
+ProductListResponse parsedProduct = product.parse();
+```
+
 ## Error handling
 
 The SDK throws custom unchecked exception types:
