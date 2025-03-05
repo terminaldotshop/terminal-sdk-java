@@ -4,8 +4,10 @@
 
 package shop.terminal.api.services.async
 
+import com.google.errorprone.annotations.MustBeClosed
 import java.util.concurrent.CompletableFuture
 import shop.terminal.api.core.RequestOptions
+import shop.terminal.api.core.http.HttpResponseFor
 import shop.terminal.api.models.AppCreateParams
 import shop.terminal.api.models.AppCreateResponse
 import shop.terminal.api.models.AppDeleteParams
@@ -16,6 +18,11 @@ import shop.terminal.api.models.AppListParams
 import shop.terminal.api.models.AppListResponse
 
 interface AppServiceAsync {
+
+    /**
+     * Returns a view of this service that provides access to raw HTTP responses for each method.
+     */
+    fun withRawResponse(): WithRawResponse
 
     /** Create an app. */
     @JvmOverloads
@@ -52,4 +59,72 @@ interface AppServiceAsync {
         params: AppGetParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<AppGetResponse>
+
+    /** A view of [AppServiceAsync] that provides access to raw HTTP responses for each method. */
+    interface WithRawResponse {
+
+        /**
+         * Returns a raw HTTP response for `post /app`, but is otherwise the same as
+         * [AppServiceAsync.create].
+         */
+        @JvmOverloads
+        @MustBeClosed
+        fun create(
+            params: AppCreateParams = AppCreateParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<AppCreateResponse>>
+
+        /**
+         * Returns a raw HTTP response for `post /app`, but is otherwise the same as
+         * [AppServiceAsync.create].
+         */
+        @MustBeClosed
+        fun create(
+            requestOptions: RequestOptions
+        ): CompletableFuture<HttpResponseFor<AppCreateResponse>> =
+            create(AppCreateParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `get /app`, but is otherwise the same as
+         * [AppServiceAsync.list].
+         */
+        @JvmOverloads
+        @MustBeClosed
+        fun list(
+            params: AppListParams = AppListParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<AppListResponse>>
+
+        /**
+         * Returns a raw HTTP response for `get /app`, but is otherwise the same as
+         * [AppServiceAsync.list].
+         */
+        @MustBeClosed
+        fun list(
+            requestOptions: RequestOptions
+        ): CompletableFuture<HttpResponseFor<AppListResponse>> =
+            list(AppListParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `delete /app/{id}`, but is otherwise the same as
+         * [AppServiceAsync.delete].
+         */
+        @JvmOverloads
+        @MustBeClosed
+        fun delete(
+            params: AppDeleteParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<AppDeleteResponse>>
+
+        /**
+         * Returns a raw HTTP response for `get /app/{id}`, but is otherwise the same as
+         * [AppServiceAsync.get].
+         */
+        @JvmOverloads
+        @MustBeClosed
+        fun get(
+            params: AppGetParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<AppGetResponse>>
+    }
 }
