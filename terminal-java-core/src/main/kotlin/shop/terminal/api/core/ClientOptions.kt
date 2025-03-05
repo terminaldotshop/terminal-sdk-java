@@ -24,8 +24,10 @@ private constructor(
     @get:JvmName("timeout") val timeout: Timeout,
     @get:JvmName("maxRetries") val maxRetries: Int,
     @get:JvmName("bearerToken") val bearerToken: String,
-    @get:JvmName("appId") val appId: String?,
+    private val appId: String?,
 ) {
+
+    fun appId(): Optional<String> = Optional.ofNullable(appId)
 
     fun toBuilder() = Builder().from(this)
 
