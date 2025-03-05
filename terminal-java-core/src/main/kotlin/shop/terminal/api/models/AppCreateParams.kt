@@ -41,6 +41,7 @@ private constructor(
 
         @JvmStatic fun none(): AppCreateParams = builder().build()
 
+        /** Returns a mutable builder for constructing an instance of [AppCreateParams]. */
         @JvmStatic fun builder() = Builder()
     }
 

@@ -78,6 +78,17 @@ private constructor(
 
     companion object {
 
+        /**
+         * Returns a mutable builder for constructing an instance of [Card].
+         *
+         * The following fields are required:
+         * ```java
+         * .id()
+         * .brand()
+         * .expiration()
+         * .last4()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 
@@ -197,6 +208,15 @@ private constructor(
 
         companion object {
 
+            /**
+             * Returns a mutable builder for constructing an instance of [Expiration].
+             *
+             * The following fields are required:
+             * ```java
+             * .month()
+             * .year()
+             * ```
+             */
             @JvmStatic fun builder() = Builder()
         }
 

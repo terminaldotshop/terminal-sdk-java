@@ -29,6 +29,7 @@ private constructor(
 
         @JvmStatic fun none(): OrderListParams = builder().build()
 
+        /** Returns a mutable builder for constructing an instance of [OrderListParams]. */
         @JvmStatic fun builder() = Builder()
     }
 
