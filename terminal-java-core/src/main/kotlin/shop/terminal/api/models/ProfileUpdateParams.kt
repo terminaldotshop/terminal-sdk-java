@@ -7,13 +7,13 @@ import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Objects
-import java.util.Optional
 import shop.terminal.api.core.ExcludeMissing
 import shop.terminal.api.core.JsonField
 import shop.terminal.api.core.JsonMissing
 import shop.terminal.api.core.JsonValue
 import shop.terminal.api.core.NoAutoDetect
 import shop.terminal.api.core.Params
+import shop.terminal.api.core.checkRequired
 import shop.terminal.api.core.http.Headers
 import shop.terminal.api.core.http.QueryParams
 import shop.terminal.api.core.immutableEmptyMap
@@ -27,16 +27,12 @@ private constructor(
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
-    /** Email address of the user. */
-    fun email(): Optional<String> = body.email()
+    fun email(): String = body.email()
 
-    /** Name of the user. */
-    fun name(): Optional<String> = body.name()
+    fun name(): String = body.name()
 
-    /** Email address of the user. */
     fun _email(): JsonField<String> = body._email()
 
-    /** Name of the user. */
     fun _name(): JsonField<String> = body._name()
 
     fun _additionalBodyProperties(): Map<String, JsonValue> = body._additionalProperties()
@@ -66,16 +62,12 @@ private constructor(
         private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
     ) {
 
-        /** Email address of the user. */
-        fun email(): Optional<String> = Optional.ofNullable(email.getNullable("email"))
+        fun email(): String = email.getRequired("email")
 
-        /** Name of the user. */
-        fun name(): Optional<String> = Optional.ofNullable(name.getNullable("name"))
+        fun name(): String = name.getRequired("name")
 
-        /** Email address of the user. */
         @JsonProperty("email") @ExcludeMissing fun _email(): JsonField<String> = email
 
-        /** Name of the user. */
         @JsonProperty("name") @ExcludeMissing fun _name(): JsonField<String> = name
 
         @JsonAnyGetter
@@ -98,15 +90,23 @@ private constructor(
 
         companion object {
 
-            /** Returns a mutable builder for constructing an instance of [Body]. */
+            /**
+             * Returns a mutable builder for constructing an instance of [Body].
+             *
+             * The following fields are required:
+             * ```java
+             * .email()
+             * .name()
+             * ```
+             */
             @JvmStatic fun builder() = Builder()
         }
 
         /** A builder for [Body]. */
         class Builder internal constructor() {
 
-            private var email: JsonField<String> = JsonMissing.of()
-            private var name: JsonField<String> = JsonMissing.of()
+            private var email: JsonField<String>? = null
+            private var name: JsonField<String>? = null
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
             @JvmSynthetic
@@ -116,22 +116,12 @@ private constructor(
                 additionalProperties = body.additionalProperties.toMutableMap()
             }
 
-            /** Email address of the user. */
-            fun email(email: String?) = email(JsonField.ofNullable(email))
+            fun email(email: String) = email(JsonField.of(email))
 
-            /** Email address of the user. */
-            fun email(email: Optional<String>) = email(email.orElse(null))
-
-            /** Email address of the user. */
             fun email(email: JsonField<String>) = apply { this.email = email }
 
-            /** Name of the user. */
-            fun name(name: String?) = name(JsonField.ofNullable(name))
+            fun name(name: String) = name(JsonField.of(name))
 
-            /** Name of the user. */
-            fun name(name: Optional<String>) = name(name.orElse(null))
-
-            /** Name of the user. */
             fun name(name: JsonField<String>) = apply { this.name = name }
 
             fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
@@ -153,7 +143,12 @@ private constructor(
                 keys.forEach(::removeAdditionalProperty)
             }
 
-            fun build(): Body = Body(email, name, additionalProperties.toImmutable())
+            fun build(): Body =
+                Body(
+                    checkRequired("email", email),
+                    checkRequired("name", name),
+                    additionalProperties.toImmutable(),
+                )
         }
 
         override fun equals(other: Any?): Boolean {
@@ -178,9 +173,15 @@ private constructor(
 
     companion object {
 
-        @JvmStatic fun none(): ProfileUpdateParams = builder().build()
-
-        /** Returns a mutable builder for constructing an instance of [ProfileUpdateParams]. */
+        /**
+         * Returns a mutable builder for constructing an instance of [ProfileUpdateParams].
+         *
+         * The following fields are required:
+         * ```java
+         * .email()
+         * .name()
+         * ```
+         */
         @JvmStatic fun builder() = Builder()
     }
 
@@ -199,22 +200,12 @@ private constructor(
             additionalQueryParams = profileUpdateParams.additionalQueryParams.toBuilder()
         }
 
-        /** Email address of the user. */
-        fun email(email: String?) = apply { body.email(email) }
+        fun email(email: String) = apply { body.email(email) }
 
-        /** Email address of the user. */
-        fun email(email: Optional<String>) = email(email.orElse(null))
-
-        /** Email address of the user. */
         fun email(email: JsonField<String>) = apply { body.email(email) }
 
-        /** Name of the user. */
-        fun name(name: String?) = apply { body.name(name) }
+        fun name(name: String) = apply { body.name(name) }
 
-        /** Name of the user. */
-        fun name(name: Optional<String>) = name(name.orElse(null))
-
-        /** Name of the user. */
         fun name(name: JsonField<String>) = apply { body.name(name) }
 
         fun additionalBodyProperties(additionalBodyProperties: Map<String, JsonValue>) = apply {

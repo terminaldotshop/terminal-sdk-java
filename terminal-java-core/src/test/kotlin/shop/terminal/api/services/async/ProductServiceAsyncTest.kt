@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import shop.terminal.api.TestServerExtension
 import shop.terminal.api.client.okhttp.TerminalOkHttpClientAsync
+import shop.terminal.api.models.ProductGetParams
 
 @ExtendWith(TestServerExtension::class)
 class ProductServiceAsyncTest {
@@ -20,6 +21,24 @@ class ProductServiceAsyncTest {
         val productServiceAsync = client.product()
 
         val productFuture = productServiceAsync.list()
+
+        val product = productFuture.get()
+        product.validate()
+    }
+
+    @Test
+    fun get() {
+        val client =
+            TerminalOkHttpClientAsync.builder()
+                .baseUrl(TestServerExtension.BASE_URL)
+                .bearerToken("My Bearer Token")
+                .build()
+        val productServiceAsync = client.product()
+
+        val productFuture =
+            productServiceAsync.get(
+                ProductGetParams.builder().id("prd_XXXXXXXXXXXXXXXXXXXXXXXXX").build()
+            )
 
         val product = productFuture.get()
         product.validate()

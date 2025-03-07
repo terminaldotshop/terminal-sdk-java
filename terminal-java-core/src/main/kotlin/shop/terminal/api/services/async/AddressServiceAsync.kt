@@ -12,6 +12,8 @@ import shop.terminal.api.models.AddressCreateParams
 import shop.terminal.api.models.AddressCreateResponse
 import shop.terminal.api.models.AddressDeleteParams
 import shop.terminal.api.models.AddressDeleteResponse
+import shop.terminal.api.models.AddressGetParams
+import shop.terminal.api.models.AddressGetResponse
 import shop.terminal.api.models.AddressListParams
 import shop.terminal.api.models.AddressListResponse
 
@@ -46,6 +48,13 @@ interface AddressServiceAsync {
         params: AddressDeleteParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<AddressDeleteResponse>
+
+    /** Get the shipping address with the given ID. */
+    @JvmOverloads
+    fun get(
+        params: AddressGetParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<AddressGetResponse>
 
     /**
      * A view of [AddressServiceAsync] that provides access to raw HTTP responses for each method.
@@ -94,5 +103,16 @@ interface AddressServiceAsync {
             params: AddressDeleteParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<AddressDeleteResponse>>
+
+        /**
+         * Returns a raw HTTP response for `get /address/{id}`, but is otherwise the same as
+         * [AddressServiceAsync.get].
+         */
+        @JvmOverloads
+        @MustBeClosed
+        fun get(
+            params: AddressGetParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<AddressGetResponse>>
     }
 }

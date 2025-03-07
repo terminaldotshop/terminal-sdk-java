@@ -7,6 +7,8 @@ package shop.terminal.api.services.blocking
 import com.google.errorprone.annotations.MustBeClosed
 import shop.terminal.api.core.RequestOptions
 import shop.terminal.api.core.http.HttpResponseFor
+import shop.terminal.api.models.ProductGetParams
+import shop.terminal.api.models.ProductGetResponse
 import shop.terminal.api.models.ProductListParams
 import shop.terminal.api.models.ProductListResponse
 
@@ -27,6 +29,13 @@ interface ProductService {
     /** List all products for sale in the Terminal shop. */
     fun list(requestOptions: RequestOptions): ProductListResponse =
         list(ProductListParams.none(), requestOptions)
+
+    /** Get a product by ID from the Terminal shop. */
+    @JvmOverloads
+    fun get(
+        params: ProductGetParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): ProductGetResponse
 
     /** A view of [ProductService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
@@ -49,5 +58,16 @@ interface ProductService {
         @MustBeClosed
         fun list(requestOptions: RequestOptions): HttpResponseFor<ProductListResponse> =
             list(ProductListParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `get /product/{id}`, but is otherwise the same as
+         * [ProductService.get].
+         */
+        @JvmOverloads
+        @MustBeClosed
+        fun get(
+            params: ProductGetParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<ProductGetResponse>
     }
 }
