@@ -15,6 +15,8 @@ import shop.terminal.api.core.http.HttpResponseFor
 import shop.terminal.api.core.http.parseable
 import shop.terminal.api.core.prepareAsync
 import shop.terminal.api.errors.TerminalError
+import shop.terminal.api.models.ProductGetParams
+import shop.terminal.api.models.ProductGetResponse
 import shop.terminal.api.models.ProductListParams
 import shop.terminal.api.models.ProductListResponse
 
@@ -33,6 +35,13 @@ class ProductServiceAsyncImpl internal constructor(private val clientOptions: Cl
     ): CompletableFuture<ProductListResponse> =
         // get /product
         withRawResponse().list(params, requestOptions).thenApply { it.parse() }
+
+    override fun get(
+        params: ProductGetParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<ProductGetResponse> =
+        // get /product/{id}
+        withRawResponse().get(params, requestOptions).thenApply { it.parse() }
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         ProductServiceAsync.WithRawResponse {
@@ -60,6 +69,35 @@ class ProductServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     response.parseable {
                         response
                             .use { listHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
+                    }
+                }
+        }
+
+        private val getHandler: Handler<ProductGetResponse> =
+            jsonHandler<ProductGetResponse>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
+
+        override fun get(
+            params: ProductGetParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<ProductGetResponse>> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .addPathSegments("product", params.getPathParam(0))
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    response.parseable {
+                        response
+                            .use { getHandler.handle(it) }
                             .also {
                                 if (requestOptions.responseValidation!!) {
                                     it.validate()

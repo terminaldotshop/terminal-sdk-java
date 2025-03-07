@@ -8,6 +8,8 @@ import com.google.errorprone.annotations.MustBeClosed
 import java.util.concurrent.CompletableFuture
 import shop.terminal.api.core.RequestOptions
 import shop.terminal.api.core.http.HttpResponseFor
+import shop.terminal.api.models.ProductGetParams
+import shop.terminal.api.models.ProductGetResponse
 import shop.terminal.api.models.ProductListParams
 import shop.terminal.api.models.ProductListResponse
 
@@ -28,6 +30,13 @@ interface ProductServiceAsync {
     /** List all products for sale in the Terminal shop. */
     fun list(requestOptions: RequestOptions): CompletableFuture<ProductListResponse> =
         list(ProductListParams.none(), requestOptions)
+
+    /** Get a product by ID from the Terminal shop. */
+    @JvmOverloads
+    fun get(
+        params: ProductGetParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<ProductGetResponse>
 
     /**
      * A view of [ProductServiceAsync] that provides access to raw HTTP responses for each method.
@@ -54,5 +63,16 @@ interface ProductServiceAsync {
             requestOptions: RequestOptions
         ): CompletableFuture<HttpResponseFor<ProductListResponse>> =
             list(ProductListParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `get /product/{id}`, but is otherwise the same as
+         * [ProductServiceAsync.get].
+         */
+        @JvmOverloads
+        @MustBeClosed
+        fun get(
+            params: ProductGetParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<ProductGetResponse>>
     }
 }

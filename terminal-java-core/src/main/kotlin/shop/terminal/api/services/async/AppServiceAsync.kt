@@ -27,13 +27,9 @@ interface AppServiceAsync {
     /** Create an app. */
     @JvmOverloads
     fun create(
-        params: AppCreateParams = AppCreateParams.none(),
+        params: AppCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<AppCreateResponse>
-
-    /** Create an app. */
-    fun create(requestOptions: RequestOptions): CompletableFuture<AppCreateResponse> =
-        create(AppCreateParams.none(), requestOptions)
 
     /** List the current user's registered apps. */
     @JvmOverloads
@@ -70,19 +66,9 @@ interface AppServiceAsync {
         @JvmOverloads
         @MustBeClosed
         fun create(
-            params: AppCreateParams = AppCreateParams.none(),
+            params: AppCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<AppCreateResponse>>
-
-        /**
-         * Returns a raw HTTP response for `post /app`, but is otherwise the same as
-         * [AppServiceAsync.create].
-         */
-        @MustBeClosed
-        fun create(
-            requestOptions: RequestOptions
-        ): CompletableFuture<HttpResponseFor<AppCreateResponse>> =
-            create(AppCreateParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `get /app`, but is otherwise the same as

@@ -12,6 +12,8 @@ import shop.terminal.api.models.SubscriptionCreateParams
 import shop.terminal.api.models.SubscriptionCreateResponse
 import shop.terminal.api.models.SubscriptionDeleteParams
 import shop.terminal.api.models.SubscriptionDeleteResponse
+import shop.terminal.api.models.SubscriptionGetParams
+import shop.terminal.api.models.SubscriptionGetResponse
 import shop.terminal.api.models.SubscriptionListParams
 import shop.terminal.api.models.SubscriptionListResponse
 
@@ -50,6 +52,13 @@ interface SubscriptionServiceAsync {
         params: SubscriptionDeleteParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<SubscriptionDeleteResponse>
+
+    /** Get the subscription with the given ID. */
+    @JvmOverloads
+    fun get(
+        params: SubscriptionGetParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<SubscriptionGetResponse>
 
     /**
      * A view of [SubscriptionServiceAsync] that provides access to raw HTTP responses for each
@@ -109,5 +118,16 @@ interface SubscriptionServiceAsync {
             params: SubscriptionDeleteParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<SubscriptionDeleteResponse>>
+
+        /**
+         * Returns a raw HTTP response for `get /subscription/{id}`, but is otherwise the same as
+         * [SubscriptionServiceAsync.get].
+         */
+        @JvmOverloads
+        @MustBeClosed
+        fun get(
+            params: SubscriptionGetParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<SubscriptionGetResponse>>
     }
 }
