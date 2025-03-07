@@ -23,13 +23,9 @@ interface ProfileServiceAsync {
     /** Update the current user's profile. */
     @JvmOverloads
     fun update(
-        params: ProfileUpdateParams = ProfileUpdateParams.none(),
+        params: ProfileUpdateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<ProfileUpdateResponse>
-
-    /** Update the current user's profile. */
-    fun update(requestOptions: RequestOptions): CompletableFuture<ProfileUpdateResponse> =
-        update(ProfileUpdateParams.none(), requestOptions)
 
     /** Get the current user's profile. */
     @JvmOverloads
@@ -54,19 +50,9 @@ interface ProfileServiceAsync {
         @JvmOverloads
         @MustBeClosed
         fun update(
-            params: ProfileUpdateParams = ProfileUpdateParams.none(),
+            params: ProfileUpdateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<ProfileUpdateResponse>>
-
-        /**
-         * Returns a raw HTTP response for `put /profile`, but is otherwise the same as
-         * [ProfileServiceAsync.update].
-         */
-        @MustBeClosed
-        fun update(
-            requestOptions: RequestOptions
-        ): CompletableFuture<HttpResponseFor<ProfileUpdateResponse>> =
-            update(ProfileUpdateParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `get /profile`, but is otherwise the same as

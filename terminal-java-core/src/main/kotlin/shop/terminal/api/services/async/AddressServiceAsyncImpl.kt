@@ -20,6 +20,8 @@ import shop.terminal.api.models.AddressCreateParams
 import shop.terminal.api.models.AddressCreateResponse
 import shop.terminal.api.models.AddressDeleteParams
 import shop.terminal.api.models.AddressDeleteResponse
+import shop.terminal.api.models.AddressGetParams
+import shop.terminal.api.models.AddressGetResponse
 import shop.terminal.api.models.AddressListParams
 import shop.terminal.api.models.AddressListResponse
 
@@ -52,6 +54,13 @@ class AddressServiceAsyncImpl internal constructor(private val clientOptions: Cl
     ): CompletableFuture<AddressDeleteResponse> =
         // delete /address/{id}
         withRawResponse().delete(params, requestOptions).thenApply { it.parse() }
+
+    override fun get(
+        params: AddressGetParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<AddressGetResponse> =
+        // get /address/{id}
+        withRawResponse().get(params, requestOptions).thenApply { it.parse() }
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         AddressServiceAsync.WithRawResponse {
@@ -141,6 +150,35 @@ class AddressServiceAsyncImpl internal constructor(private val clientOptions: Cl
                     response.parseable {
                         response
                             .use { deleteHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
+                    }
+                }
+        }
+
+        private val getHandler: Handler<AddressGetResponse> =
+            jsonHandler<AddressGetResponse>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
+
+        override fun get(
+            params: AddressGetParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<AddressGetResponse>> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .addPathSegments("address", params.getPathParam(0))
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    response.parseable {
+                        response
+                            .use { getHandler.handle(it) }
                             .also {
                                 if (requestOptions.responseValidation!!) {
                                     it.validate()

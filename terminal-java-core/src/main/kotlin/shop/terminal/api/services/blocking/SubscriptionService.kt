@@ -11,6 +11,8 @@ import shop.terminal.api.models.SubscriptionCreateParams
 import shop.terminal.api.models.SubscriptionCreateResponse
 import shop.terminal.api.models.SubscriptionDeleteParams
 import shop.terminal.api.models.SubscriptionDeleteResponse
+import shop.terminal.api.models.SubscriptionGetParams
+import shop.terminal.api.models.SubscriptionGetResponse
 import shop.terminal.api.models.SubscriptionListParams
 import shop.terminal.api.models.SubscriptionListResponse
 
@@ -49,6 +51,13 @@ interface SubscriptionService {
         params: SubscriptionDeleteParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): SubscriptionDeleteResponse
+
+    /** Get the subscription with the given ID. */
+    @JvmOverloads
+    fun get(
+        params: SubscriptionGetParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): SubscriptionGetResponse
 
     /**
      * A view of [SubscriptionService] that provides access to raw HTTP responses for each method.
@@ -103,5 +112,16 @@ interface SubscriptionService {
             params: SubscriptionDeleteParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<SubscriptionDeleteResponse>
+
+        /**
+         * Returns a raw HTTP response for `get /subscription/{id}`, but is otherwise the same as
+         * [SubscriptionService.get].
+         */
+        @JvmOverloads
+        @MustBeClosed
+        fun get(
+            params: SubscriptionGetParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<SubscriptionGetResponse>
     }
 }
