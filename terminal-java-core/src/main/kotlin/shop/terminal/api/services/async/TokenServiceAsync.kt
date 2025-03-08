@@ -1,7 +1,5 @@
 // File generated from our OpenAPI spec by Stainless.
 
-@file:Suppress("OVERLOADS_INTERFACE") // See https://youtrack.jetbrains.com/issue/KT-36102
-
 package shop.terminal.api.services.async
 
 import com.google.errorprone.annotations.MustBeClosed
@@ -25,36 +23,56 @@ interface TokenServiceAsync {
     fun withRawResponse(): WithRawResponse
 
     /** Create a personal access token. */
-    @JvmOverloads
+    fun create(): CompletableFuture<TokenCreateResponse> = create(TokenCreateParams.none())
+
+    /** @see [create] */
     fun create(
         params: TokenCreateParams = TokenCreateParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<TokenCreateResponse>
 
-    /** Create a personal access token. */
+    /** @see [create] */
+    fun create(
+        params: TokenCreateParams = TokenCreateParams.none()
+    ): CompletableFuture<TokenCreateResponse> = create(params, RequestOptions.none())
+
+    /** @see [create] */
     fun create(requestOptions: RequestOptions): CompletableFuture<TokenCreateResponse> =
         create(TokenCreateParams.none(), requestOptions)
 
     /** List the current user's personal access tokens. */
-    @JvmOverloads
+    fun list(): CompletableFuture<TokenListResponse> = list(TokenListParams.none())
+
+    /** @see [list] */
     fun list(
         params: TokenListParams = TokenListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<TokenListResponse>
 
-    /** List the current user's personal access tokens. */
+    /** @see [list] */
+    fun list(
+        params: TokenListParams = TokenListParams.none()
+    ): CompletableFuture<TokenListResponse> = list(params, RequestOptions.none())
+
+    /** @see [list] */
     fun list(requestOptions: RequestOptions): CompletableFuture<TokenListResponse> =
         list(TokenListParams.none(), requestOptions)
 
     /** Delete the personal access token with the given ID. */
-    @JvmOverloads
+    fun delete(params: TokenDeleteParams): CompletableFuture<TokenDeleteResponse> =
+        delete(params, RequestOptions.none())
+
+    /** @see [delete] */
     fun delete(
         params: TokenDeleteParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<TokenDeleteResponse>
 
     /** Get the personal access token with the given ID. */
-    @JvmOverloads
+    fun get(params: TokenGetParams): CompletableFuture<TokenGetResponse> =
+        get(params, RequestOptions.none())
+
+    /** @see [get] */
     fun get(
         params: TokenGetParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -67,17 +85,25 @@ interface TokenServiceAsync {
          * Returns a raw HTTP response for `post /token`, but is otherwise the same as
          * [TokenServiceAsync.create].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun create(): CompletableFuture<HttpResponseFor<TokenCreateResponse>> =
+            create(TokenCreateParams.none())
+
+        /** @see [create] */
         @MustBeClosed
         fun create(
             params: TokenCreateParams = TokenCreateParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<TokenCreateResponse>>
 
-        /**
-         * Returns a raw HTTP response for `post /token`, but is otherwise the same as
-         * [TokenServiceAsync.create].
-         */
+        /** @see [create] */
+        @MustBeClosed
+        fun create(
+            params: TokenCreateParams = TokenCreateParams.none()
+        ): CompletableFuture<HttpResponseFor<TokenCreateResponse>> =
+            create(params, RequestOptions.none())
+
+        /** @see [create] */
         @MustBeClosed
         fun create(
             requestOptions: RequestOptions
@@ -88,17 +114,25 @@ interface TokenServiceAsync {
          * Returns a raw HTTP response for `get /token`, but is otherwise the same as
          * [TokenServiceAsync.list].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun list(): CompletableFuture<HttpResponseFor<TokenListResponse>> =
+            list(TokenListParams.none())
+
+        /** @see [list] */
         @MustBeClosed
         fun list(
             params: TokenListParams = TokenListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<TokenListResponse>>
 
-        /**
-         * Returns a raw HTTP response for `get /token`, but is otherwise the same as
-         * [TokenServiceAsync.list].
-         */
+        /** @see [list] */
+        @MustBeClosed
+        fun list(
+            params: TokenListParams = TokenListParams.none()
+        ): CompletableFuture<HttpResponseFor<TokenListResponse>> =
+            list(params, RequestOptions.none())
+
+        /** @see [list] */
         @MustBeClosed
         fun list(
             requestOptions: RequestOptions
@@ -109,7 +143,13 @@ interface TokenServiceAsync {
          * Returns a raw HTTP response for `delete /token/{id}`, but is otherwise the same as
          * [TokenServiceAsync.delete].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun delete(
+            params: TokenDeleteParams
+        ): CompletableFuture<HttpResponseFor<TokenDeleteResponse>> =
+            delete(params, RequestOptions.none())
+
+        /** @see [delete] */
         @MustBeClosed
         fun delete(
             params: TokenDeleteParams,
@@ -120,7 +160,11 @@ interface TokenServiceAsync {
          * Returns a raw HTTP response for `get /token/{id}`, but is otherwise the same as
          * [TokenServiceAsync.get].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun get(params: TokenGetParams): CompletableFuture<HttpResponseFor<TokenGetResponse>> =
+            get(params, RequestOptions.none())
+
+        /** @see [get] */
         @MustBeClosed
         fun get(
             params: TokenGetParams,

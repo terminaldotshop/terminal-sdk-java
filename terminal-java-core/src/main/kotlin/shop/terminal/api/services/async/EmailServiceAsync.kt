@@ -1,7 +1,5 @@
 // File generated from our OpenAPI spec by Stainless.
 
-@file:Suppress("OVERLOADS_INTERFACE") // See https://youtrack.jetbrains.com/issue/KT-36102
-
 package shop.terminal.api.services.async
 
 import com.google.errorprone.annotations.MustBeClosed
@@ -19,7 +17,10 @@ interface EmailServiceAsync {
     fun withRawResponse(): WithRawResponse
 
     /** Subscribe to email updates from Terminal. */
-    @JvmOverloads
+    fun create(params: EmailCreateParams): CompletableFuture<EmailCreateResponse> =
+        create(params, RequestOptions.none())
+
+    /** @see [create] */
     fun create(
         params: EmailCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -32,7 +33,13 @@ interface EmailServiceAsync {
          * Returns a raw HTTP response for `post /email`, but is otherwise the same as
          * [EmailServiceAsync.create].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun create(
+            params: EmailCreateParams
+        ): CompletableFuture<HttpResponseFor<EmailCreateResponse>> =
+            create(params, RequestOptions.none())
+
+        /** @see [create] */
         @MustBeClosed
         fun create(
             params: EmailCreateParams,

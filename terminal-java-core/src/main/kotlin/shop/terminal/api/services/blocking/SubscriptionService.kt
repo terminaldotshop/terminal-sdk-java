@@ -1,7 +1,5 @@
 // File generated from our OpenAPI spec by Stainless.
 
-@file:Suppress("OVERLOADS_INTERFACE") // See https://youtrack.jetbrains.com/issue/KT-36102
-
 package shop.terminal.api.services.blocking
 
 import com.google.errorprone.annotations.MustBeClosed
@@ -24,36 +22,56 @@ interface SubscriptionService {
     fun withRawResponse(): WithRawResponse
 
     /** Create a subscription for the current user. */
-    @JvmOverloads
+    fun create(): SubscriptionCreateResponse = create(SubscriptionCreateParams.none())
+
+    /** @see [create] */
     fun create(
         params: SubscriptionCreateParams = SubscriptionCreateParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): SubscriptionCreateResponse
 
-    /** Create a subscription for the current user. */
+    /** @see [create] */
+    fun create(
+        params: SubscriptionCreateParams = SubscriptionCreateParams.none()
+    ): SubscriptionCreateResponse = create(params, RequestOptions.none())
+
+    /** @see [create] */
     fun create(requestOptions: RequestOptions): SubscriptionCreateResponse =
         create(SubscriptionCreateParams.none(), requestOptions)
 
     /** List the subscriptions associated with the current user. */
-    @JvmOverloads
+    fun list(): SubscriptionListResponse = list(SubscriptionListParams.none())
+
+    /** @see [list] */
     fun list(
         params: SubscriptionListParams = SubscriptionListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): SubscriptionListResponse
 
-    /** List the subscriptions associated with the current user. */
+    /** @see [list] */
+    fun list(
+        params: SubscriptionListParams = SubscriptionListParams.none()
+    ): SubscriptionListResponse = list(params, RequestOptions.none())
+
+    /** @see [list] */
     fun list(requestOptions: RequestOptions): SubscriptionListResponse =
         list(SubscriptionListParams.none(), requestOptions)
 
     /** Cancel a subscription for the current user. */
-    @JvmOverloads
+    fun delete(params: SubscriptionDeleteParams): SubscriptionDeleteResponse =
+        delete(params, RequestOptions.none())
+
+    /** @see [delete] */
     fun delete(
         params: SubscriptionDeleteParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): SubscriptionDeleteResponse
 
     /** Get the subscription with the given ID. */
-    @JvmOverloads
+    fun get(params: SubscriptionGetParams): SubscriptionGetResponse =
+        get(params, RequestOptions.none())
+
+    /** @see [get] */
     fun get(
         params: SubscriptionGetParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -68,17 +86,24 @@ interface SubscriptionService {
          * Returns a raw HTTP response for `post /subscription`, but is otherwise the same as
          * [SubscriptionService.create].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun create(): HttpResponseFor<SubscriptionCreateResponse> =
+            create(SubscriptionCreateParams.none())
+
+        /** @see [create] */
         @MustBeClosed
         fun create(
             params: SubscriptionCreateParams = SubscriptionCreateParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<SubscriptionCreateResponse>
 
-        /**
-         * Returns a raw HTTP response for `post /subscription`, but is otherwise the same as
-         * [SubscriptionService.create].
-         */
+        /** @see [create] */
+        @MustBeClosed
+        fun create(
+            params: SubscriptionCreateParams = SubscriptionCreateParams.none()
+        ): HttpResponseFor<SubscriptionCreateResponse> = create(params, RequestOptions.none())
+
+        /** @see [create] */
         @MustBeClosed
         fun create(requestOptions: RequestOptions): HttpResponseFor<SubscriptionCreateResponse> =
             create(SubscriptionCreateParams.none(), requestOptions)
@@ -87,17 +112,23 @@ interface SubscriptionService {
          * Returns a raw HTTP response for `get /subscription`, but is otherwise the same as
          * [SubscriptionService.list].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun list(): HttpResponseFor<SubscriptionListResponse> = list(SubscriptionListParams.none())
+
+        /** @see [list] */
         @MustBeClosed
         fun list(
             params: SubscriptionListParams = SubscriptionListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<SubscriptionListResponse>
 
-        /**
-         * Returns a raw HTTP response for `get /subscription`, but is otherwise the same as
-         * [SubscriptionService.list].
-         */
+        /** @see [list] */
+        @MustBeClosed
+        fun list(
+            params: SubscriptionListParams = SubscriptionListParams.none()
+        ): HttpResponseFor<SubscriptionListResponse> = list(params, RequestOptions.none())
+
+        /** @see [list] */
         @MustBeClosed
         fun list(requestOptions: RequestOptions): HttpResponseFor<SubscriptionListResponse> =
             list(SubscriptionListParams.none(), requestOptions)
@@ -106,7 +137,11 @@ interface SubscriptionService {
          * Returns a raw HTTP response for `delete /subscription/{id}`, but is otherwise the same as
          * [SubscriptionService.delete].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun delete(params: SubscriptionDeleteParams): HttpResponseFor<SubscriptionDeleteResponse> =
+            delete(params, RequestOptions.none())
+
+        /** @see [delete] */
         @MustBeClosed
         fun delete(
             params: SubscriptionDeleteParams,
@@ -117,7 +152,11 @@ interface SubscriptionService {
          * Returns a raw HTTP response for `get /subscription/{id}`, but is otherwise the same as
          * [SubscriptionService.get].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun get(params: SubscriptionGetParams): HttpResponseFor<SubscriptionGetResponse> =
+            get(params, RequestOptions.none())
+
+        /** @see [get] */
         @MustBeClosed
         fun get(
             params: SubscriptionGetParams,

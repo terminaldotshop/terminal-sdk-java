@@ -1,7 +1,5 @@
 // File generated from our OpenAPI spec by Stainless.
 
-@file:Suppress("OVERLOADS_INTERFACE") // See https://youtrack.jetbrains.com/issue/KT-36102
-
 package shop.terminal.api.services.async
 
 import com.google.errorprone.annotations.MustBeClosed
@@ -25,32 +23,47 @@ interface AppServiceAsync {
     fun withRawResponse(): WithRawResponse
 
     /** Create an app. */
-    @JvmOverloads
+    fun create(params: AppCreateParams): CompletableFuture<AppCreateResponse> =
+        create(params, RequestOptions.none())
+
+    /** @see [create] */
     fun create(
         params: AppCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<AppCreateResponse>
 
     /** List the current user's registered apps. */
-    @JvmOverloads
+    fun list(): CompletableFuture<AppListResponse> = list(AppListParams.none())
+
+    /** @see [list] */
     fun list(
         params: AppListParams = AppListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<AppListResponse>
 
-    /** List the current user's registered apps. */
+    /** @see [list] */
+    fun list(params: AppListParams = AppListParams.none()): CompletableFuture<AppListResponse> =
+        list(params, RequestOptions.none())
+
+    /** @see [list] */
     fun list(requestOptions: RequestOptions): CompletableFuture<AppListResponse> =
         list(AppListParams.none(), requestOptions)
 
     /** Delete the app with the given ID. */
-    @JvmOverloads
+    fun delete(params: AppDeleteParams): CompletableFuture<AppDeleteResponse> =
+        delete(params, RequestOptions.none())
+
+    /** @see [delete] */
     fun delete(
         params: AppDeleteParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<AppDeleteResponse>
 
     /** Get the app with the given ID. */
-    @JvmOverloads
+    fun get(params: AppGetParams): CompletableFuture<AppGetResponse> =
+        get(params, RequestOptions.none())
+
+    /** @see [get] */
     fun get(
         params: AppGetParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -63,7 +76,11 @@ interface AppServiceAsync {
          * Returns a raw HTTP response for `post /app`, but is otherwise the same as
          * [AppServiceAsync.create].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun create(params: AppCreateParams): CompletableFuture<HttpResponseFor<AppCreateResponse>> =
+            create(params, RequestOptions.none())
+
+        /** @see [create] */
         @MustBeClosed
         fun create(
             params: AppCreateParams,
@@ -74,17 +91,23 @@ interface AppServiceAsync {
          * Returns a raw HTTP response for `get /app`, but is otherwise the same as
          * [AppServiceAsync.list].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun list(): CompletableFuture<HttpResponseFor<AppListResponse>> = list(AppListParams.none())
+
+        /** @see [list] */
         @MustBeClosed
         fun list(
             params: AppListParams = AppListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<AppListResponse>>
 
-        /**
-         * Returns a raw HTTP response for `get /app`, but is otherwise the same as
-         * [AppServiceAsync.list].
-         */
+        /** @see [list] */
+        @MustBeClosed
+        fun list(
+            params: AppListParams = AppListParams.none()
+        ): CompletableFuture<HttpResponseFor<AppListResponse>> = list(params, RequestOptions.none())
+
+        /** @see [list] */
         @MustBeClosed
         fun list(
             requestOptions: RequestOptions
@@ -95,7 +118,11 @@ interface AppServiceAsync {
          * Returns a raw HTTP response for `delete /app/{id}`, but is otherwise the same as
          * [AppServiceAsync.delete].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun delete(params: AppDeleteParams): CompletableFuture<HttpResponseFor<AppDeleteResponse>> =
+            delete(params, RequestOptions.none())
+
+        /** @see [delete] */
         @MustBeClosed
         fun delete(
             params: AppDeleteParams,
@@ -106,7 +133,11 @@ interface AppServiceAsync {
          * Returns a raw HTTP response for `get /app/{id}`, but is otherwise the same as
          * [AppServiceAsync.get].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun get(params: AppGetParams): CompletableFuture<HttpResponseFor<AppGetResponse>> =
+            get(params, RequestOptions.none())
+
+        /** @see [get] */
         @MustBeClosed
         fun get(
             params: AppGetParams,

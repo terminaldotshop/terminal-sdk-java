@@ -1,7 +1,5 @@
 // File generated from our OpenAPI spec by Stainless.
 
-@file:Suppress("OVERLOADS_INTERFACE") // See https://youtrack.jetbrains.com/issue/KT-36102
-
 package shop.terminal.api.services.blocking
 
 import com.google.errorprone.annotations.MustBeClosed
@@ -20,18 +18,26 @@ interface ProductService {
     fun withRawResponse(): WithRawResponse
 
     /** List all products for sale in the Terminal shop. */
-    @JvmOverloads
+    fun list(): ProductListResponse = list(ProductListParams.none())
+
+    /** @see [list] */
     fun list(
         params: ProductListParams = ProductListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): ProductListResponse
 
-    /** List all products for sale in the Terminal shop. */
+    /** @see [list] */
+    fun list(params: ProductListParams = ProductListParams.none()): ProductListResponse =
+        list(params, RequestOptions.none())
+
+    /** @see [list] */
     fun list(requestOptions: RequestOptions): ProductListResponse =
         list(ProductListParams.none(), requestOptions)
 
     /** Get a product by ID from the Terminal shop. */
-    @JvmOverloads
+    fun get(params: ProductGetParams): ProductGetResponse = get(params, RequestOptions.none())
+
+    /** @see [get] */
     fun get(
         params: ProductGetParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -44,17 +50,23 @@ interface ProductService {
          * Returns a raw HTTP response for `get /product`, but is otherwise the same as
          * [ProductService.list].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun list(): HttpResponseFor<ProductListResponse> = list(ProductListParams.none())
+
+        /** @see [list] */
         @MustBeClosed
         fun list(
             params: ProductListParams = ProductListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<ProductListResponse>
 
-        /**
-         * Returns a raw HTTP response for `get /product`, but is otherwise the same as
-         * [ProductService.list].
-         */
+        /** @see [list] */
+        @MustBeClosed
+        fun list(
+            params: ProductListParams = ProductListParams.none()
+        ): HttpResponseFor<ProductListResponse> = list(params, RequestOptions.none())
+
+        /** @see [list] */
         @MustBeClosed
         fun list(requestOptions: RequestOptions): HttpResponseFor<ProductListResponse> =
             list(ProductListParams.none(), requestOptions)
@@ -63,7 +75,11 @@ interface ProductService {
          * Returns a raw HTTP response for `get /product/{id}`, but is otherwise the same as
          * [ProductService.get].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun get(params: ProductGetParams): HttpResponseFor<ProductGetResponse> =
+            get(params, RequestOptions.none())
+
+        /** @see [get] */
         @MustBeClosed
         fun get(
             params: ProductGetParams,

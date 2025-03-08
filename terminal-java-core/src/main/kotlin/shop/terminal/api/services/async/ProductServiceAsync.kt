@@ -1,7 +1,5 @@
 // File generated from our OpenAPI spec by Stainless.
 
-@file:Suppress("OVERLOADS_INTERFACE") // See https://youtrack.jetbrains.com/issue/KT-36102
-
 package shop.terminal.api.services.async
 
 import com.google.errorprone.annotations.MustBeClosed
@@ -21,18 +19,28 @@ interface ProductServiceAsync {
     fun withRawResponse(): WithRawResponse
 
     /** List all products for sale in the Terminal shop. */
-    @JvmOverloads
+    fun list(): CompletableFuture<ProductListResponse> = list(ProductListParams.none())
+
+    /** @see [list] */
     fun list(
         params: ProductListParams = ProductListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<ProductListResponse>
 
-    /** List all products for sale in the Terminal shop. */
+    /** @see [list] */
+    fun list(
+        params: ProductListParams = ProductListParams.none()
+    ): CompletableFuture<ProductListResponse> = list(params, RequestOptions.none())
+
+    /** @see [list] */
     fun list(requestOptions: RequestOptions): CompletableFuture<ProductListResponse> =
         list(ProductListParams.none(), requestOptions)
 
     /** Get a product by ID from the Terminal shop. */
-    @JvmOverloads
+    fun get(params: ProductGetParams): CompletableFuture<ProductGetResponse> =
+        get(params, RequestOptions.none())
+
+    /** @see [get] */
     fun get(
         params: ProductGetParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -47,17 +55,25 @@ interface ProductServiceAsync {
          * Returns a raw HTTP response for `get /product`, but is otherwise the same as
          * [ProductServiceAsync.list].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun list(): CompletableFuture<HttpResponseFor<ProductListResponse>> =
+            list(ProductListParams.none())
+
+        /** @see [list] */
         @MustBeClosed
         fun list(
             params: ProductListParams = ProductListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<ProductListResponse>>
 
-        /**
-         * Returns a raw HTTP response for `get /product`, but is otherwise the same as
-         * [ProductServiceAsync.list].
-         */
+        /** @see [list] */
+        @MustBeClosed
+        fun list(
+            params: ProductListParams = ProductListParams.none()
+        ): CompletableFuture<HttpResponseFor<ProductListResponse>> =
+            list(params, RequestOptions.none())
+
+        /** @see [list] */
         @MustBeClosed
         fun list(
             requestOptions: RequestOptions
@@ -68,7 +84,11 @@ interface ProductServiceAsync {
          * Returns a raw HTTP response for `get /product/{id}`, but is otherwise the same as
          * [ProductServiceAsync.get].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun get(params: ProductGetParams): CompletableFuture<HttpResponseFor<ProductGetResponse>> =
+            get(params, RequestOptions.none())
+
+        /** @see [get] */
         @MustBeClosed
         fun get(
             params: ProductGetParams,

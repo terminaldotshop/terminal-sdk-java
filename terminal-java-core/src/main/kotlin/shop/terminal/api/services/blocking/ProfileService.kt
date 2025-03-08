@@ -1,7 +1,5 @@
 // File generated from our OpenAPI spec by Stainless.
 
-@file:Suppress("OVERLOADS_INTERFACE") // See https://youtrack.jetbrains.com/issue/KT-36102
-
 package shop.terminal.api.services.blocking
 
 import com.google.errorprone.annotations.MustBeClosed
@@ -20,20 +18,29 @@ interface ProfileService {
     fun withRawResponse(): WithRawResponse
 
     /** Update the current user's profile. */
-    @JvmOverloads
+    fun update(params: ProfileUpdateParams): ProfileUpdateResponse =
+        update(params, RequestOptions.none())
+
+    /** @see [update] */
     fun update(
         params: ProfileUpdateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): ProfileUpdateResponse
 
     /** Get the current user's profile. */
-    @JvmOverloads
+    fun me(): ProfileMeResponse = me(ProfileMeParams.none())
+
+    /** @see [me] */
     fun me(
         params: ProfileMeParams = ProfileMeParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): ProfileMeResponse
 
-    /** Get the current user's profile. */
+    /** @see [me] */
+    fun me(params: ProfileMeParams = ProfileMeParams.none()): ProfileMeResponse =
+        me(params, RequestOptions.none())
+
+    /** @see [me] */
     fun me(requestOptions: RequestOptions): ProfileMeResponse =
         me(ProfileMeParams.none(), requestOptions)
 
@@ -44,7 +51,11 @@ interface ProfileService {
          * Returns a raw HTTP response for `put /profile`, but is otherwise the same as
          * [ProfileService.update].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun update(params: ProfileUpdateParams): HttpResponseFor<ProfileUpdateResponse> =
+            update(params, RequestOptions.none())
+
+        /** @see [update] */
         @MustBeClosed
         fun update(
             params: ProfileUpdateParams,
@@ -55,17 +66,22 @@ interface ProfileService {
          * Returns a raw HTTP response for `get /profile`, but is otherwise the same as
          * [ProfileService.me].
          */
-        @JvmOverloads
+        @MustBeClosed fun me(): HttpResponseFor<ProfileMeResponse> = me(ProfileMeParams.none())
+
+        /** @see [me] */
         @MustBeClosed
         fun me(
             params: ProfileMeParams = ProfileMeParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<ProfileMeResponse>
 
-        /**
-         * Returns a raw HTTP response for `get /profile`, but is otherwise the same as
-         * [ProfileService.me].
-         */
+        /** @see [me] */
+        @MustBeClosed
+        fun me(
+            params: ProfileMeParams = ProfileMeParams.none()
+        ): HttpResponseFor<ProfileMeResponse> = me(params, RequestOptions.none())
+
+        /** @see [me] */
         @MustBeClosed
         fun me(requestOptions: RequestOptions): HttpResponseFor<ProfileMeResponse> =
             me(ProfileMeParams.none(), requestOptions)
