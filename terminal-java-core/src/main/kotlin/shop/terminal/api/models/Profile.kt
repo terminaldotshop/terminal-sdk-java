@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Objects
 import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 import shop.terminal.api.core.ExcludeMissing
 import shop.terminal.api.core.JsonField
 import shop.terminal.api.core.JsonMissing
@@ -228,7 +229,7 @@ private constructor(
             fun email(email: String?) = email(JsonField.ofNullable(email))
 
             /** Email address of the user. */
-            fun email(email: Optional<String>) = email(email.orElse(null))
+            fun email(email: Optional<String>) = email(email.getOrNull())
 
             /** Email address of the user. */
             fun email(email: JsonField<String>) = apply { this.email = email }
@@ -237,7 +238,7 @@ private constructor(
             fun fingerprint(fingerprint: String?) = fingerprint(JsonField.ofNullable(fingerprint))
 
             /** The user's fingerprint, derived from their public SSH key. */
-            fun fingerprint(fingerprint: Optional<String>) = fingerprint(fingerprint.orElse(null))
+            fun fingerprint(fingerprint: Optional<String>) = fingerprint(fingerprint.getOrNull())
 
             /** The user's fingerprint, derived from their public SSH key. */
             fun fingerprint(fingerprint: JsonField<String>) = apply {
@@ -248,7 +249,7 @@ private constructor(
             fun name(name: String?) = name(JsonField.ofNullable(name))
 
             /** Name of the user. */
-            fun name(name: Optional<String>) = name(name.orElse(null))
+            fun name(name: Optional<String>) = name(name.getOrNull())
 
             /** Name of the user. */
             fun name(name: JsonField<String>) = apply { this.name = name }

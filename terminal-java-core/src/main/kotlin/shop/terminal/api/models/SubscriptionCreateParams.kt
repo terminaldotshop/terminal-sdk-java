@@ -4,6 +4,7 @@ package shop.terminal.api.models
 
 import java.util.Objects
 import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 import shop.terminal.api.core.JsonValue
 import shop.terminal.api.core.NoAutoDetect
 import shop.terminal.api.core.Params
@@ -65,7 +66,7 @@ private constructor(
 
         /** Subscription to a Terminal shop product. */
         fun subscription(subscription: Optional<Subscription>) =
-            subscription(subscription.orElse(null))
+            subscription(subscription.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()

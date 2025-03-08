@@ -7,6 +7,7 @@ import java.net.Proxy
 import java.time.Clock
 import java.time.Duration
 import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 import shop.terminal.api.client.TerminalClientAsync
 import shop.terminal.api.client.TerminalClientAsyncImpl
 import shop.terminal.api.core.ClientOptions
@@ -151,7 +152,7 @@ class TerminalOkHttpClientAsync private constructor() {
 
         fun appId(appId: String?) = apply { clientOptions.appId(appId) }
 
-        fun appId(appId: Optional<String>) = appId(appId.orElse(null))
+        fun appId(appId: Optional<String>) = appId(appId.getOrNull())
 
         fun fromEnv() = apply { clientOptions.fromEnv() }
 
