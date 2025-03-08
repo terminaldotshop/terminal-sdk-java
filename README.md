@@ -3,6 +3,7 @@
 <!-- x-release-please-start-version -->
 
 [![Maven Central](https://img.shields.io/maven-central/v/shop.terminal.api/terminal-java)](https://central.sonatype.com/artifact/shop.terminal.api/terminal-java/0.1.0-alpha.8)
+[![javadoc](https://javadoc.io/badge2/shop.terminal.api/terminal-java/0.1.0-alpha.8/javadoc.svg)](https://javadoc.io/doc/shop.terminal.api/terminal-java/0.1.0-alpha.8)
 
 <!-- x-release-please-end -->
 
@@ -12,7 +13,7 @@ The Terminal Java SDK is similar to the Terminal Kotlin SDK but with minor diffe
 
 It is generated with [Stainless](https://www.stainless.com/).
 
-The REST API documentation can be found on [terminal.shop](https://terminal.shop/docs).
+The REST API documentation can be found on [terminal.shop](https://terminal.shop/docs). Javadocs are also available on [javadoc.io](https://javadoc.io/doc/shop.terminal.api/terminal-java/0.1.0-alpha.8).
 
 ## Installation
 
