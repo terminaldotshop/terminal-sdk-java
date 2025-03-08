@@ -1,7 +1,5 @@
 // File generated from our OpenAPI spec by Stainless.
 
-@file:Suppress("OVERLOADS_INTERFACE") // See https://youtrack.jetbrains.com/issue/KT-36102
-
 package shop.terminal.api.services.async
 
 import com.google.errorprone.annotations.MustBeClosed
@@ -27,43 +25,65 @@ interface CardServiceAsync {
     fun withRawResponse(): WithRawResponse
 
     /** Attach a credit card (tokenized via Stripe) to the current user. */
-    @JvmOverloads
+    fun create(params: CardCreateParams): CompletableFuture<CardCreateResponse> =
+        create(params, RequestOptions.none())
+
+    /** @see [create] */
     fun create(
         params: CardCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<CardCreateResponse>
 
     /** List the credit cards associated with the current user. */
-    @JvmOverloads
+    fun list(): CompletableFuture<CardListResponse> = list(CardListParams.none())
+
+    /** @see [list] */
     fun list(
         params: CardListParams = CardListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<CardListResponse>
 
-    /** List the credit cards associated with the current user. */
+    /** @see [list] */
+    fun list(params: CardListParams = CardListParams.none()): CompletableFuture<CardListResponse> =
+        list(params, RequestOptions.none())
+
+    /** @see [list] */
     fun list(requestOptions: RequestOptions): CompletableFuture<CardListResponse> =
         list(CardListParams.none(), requestOptions)
 
     /** Delete a credit card associated with the current user. */
-    @JvmOverloads
+    fun delete(params: CardDeleteParams): CompletableFuture<CardDeleteResponse> =
+        delete(params, RequestOptions.none())
+
+    /** @see [delete] */
     fun delete(
         params: CardDeleteParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<CardDeleteResponse>
 
     /** Create a temporary URL for collecting credit card information for the current user. */
-    @JvmOverloads
+    fun collect(): CompletableFuture<CardCollectResponse> = collect(CardCollectParams.none())
+
+    /** @see [collect] */
     fun collect(
         params: CardCollectParams = CardCollectParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<CardCollectResponse>
 
-    /** Create a temporary URL for collecting credit card information for the current user. */
+    /** @see [collect] */
+    fun collect(
+        params: CardCollectParams = CardCollectParams.none()
+    ): CompletableFuture<CardCollectResponse> = collect(params, RequestOptions.none())
+
+    /** @see [collect] */
     fun collect(requestOptions: RequestOptions): CompletableFuture<CardCollectResponse> =
         collect(CardCollectParams.none(), requestOptions)
 
     /** Get a credit card by ID associated with the current user. */
-    @JvmOverloads
+    fun get(params: CardGetParams): CompletableFuture<CardGetResponse> =
+        get(params, RequestOptions.none())
+
+    /** @see [get] */
     fun get(
         params: CardGetParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -76,7 +96,13 @@ interface CardServiceAsync {
          * Returns a raw HTTP response for `post /card`, but is otherwise the same as
          * [CardServiceAsync.create].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun create(
+            params: CardCreateParams
+        ): CompletableFuture<HttpResponseFor<CardCreateResponse>> =
+            create(params, RequestOptions.none())
+
+        /** @see [create] */
         @MustBeClosed
         fun create(
             params: CardCreateParams,
@@ -87,17 +113,25 @@ interface CardServiceAsync {
          * Returns a raw HTTP response for `get /card`, but is otherwise the same as
          * [CardServiceAsync.list].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun list(): CompletableFuture<HttpResponseFor<CardListResponse>> =
+            list(CardListParams.none())
+
+        /** @see [list] */
         @MustBeClosed
         fun list(
             params: CardListParams = CardListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<CardListResponse>>
 
-        /**
-         * Returns a raw HTTP response for `get /card`, but is otherwise the same as
-         * [CardServiceAsync.list].
-         */
+        /** @see [list] */
+        @MustBeClosed
+        fun list(
+            params: CardListParams = CardListParams.none()
+        ): CompletableFuture<HttpResponseFor<CardListResponse>> =
+            list(params, RequestOptions.none())
+
+        /** @see [list] */
         @MustBeClosed
         fun list(
             requestOptions: RequestOptions
@@ -108,7 +142,13 @@ interface CardServiceAsync {
          * Returns a raw HTTP response for `delete /card/{id}`, but is otherwise the same as
          * [CardServiceAsync.delete].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun delete(
+            params: CardDeleteParams
+        ): CompletableFuture<HttpResponseFor<CardDeleteResponse>> =
+            delete(params, RequestOptions.none())
+
+        /** @see [delete] */
         @MustBeClosed
         fun delete(
             params: CardDeleteParams,
@@ -119,17 +159,25 @@ interface CardServiceAsync {
          * Returns a raw HTTP response for `post /card/collect`, but is otherwise the same as
          * [CardServiceAsync.collect].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun collect(): CompletableFuture<HttpResponseFor<CardCollectResponse>> =
+            collect(CardCollectParams.none())
+
+        /** @see [collect] */
         @MustBeClosed
         fun collect(
             params: CardCollectParams = CardCollectParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<CardCollectResponse>>
 
-        /**
-         * Returns a raw HTTP response for `post /card/collect`, but is otherwise the same as
-         * [CardServiceAsync.collect].
-         */
+        /** @see [collect] */
+        @MustBeClosed
+        fun collect(
+            params: CardCollectParams = CardCollectParams.none()
+        ): CompletableFuture<HttpResponseFor<CardCollectResponse>> =
+            collect(params, RequestOptions.none())
+
+        /** @see [collect] */
         @MustBeClosed
         fun collect(
             requestOptions: RequestOptions
@@ -140,7 +188,11 @@ interface CardServiceAsync {
          * Returns a raw HTTP response for `get /card/{id}`, but is otherwise the same as
          * [CardServiceAsync.get].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun get(params: CardGetParams): CompletableFuture<HttpResponseFor<CardGetResponse>> =
+            get(params, RequestOptions.none())
+
+        /** @see [get] */
         @MustBeClosed
         fun get(
             params: CardGetParams,

@@ -1,7 +1,5 @@
 // File generated from our OpenAPI spec by Stainless.
 
-@file:Suppress("OVERLOADS_INTERFACE") // See https://youtrack.jetbrains.com/issue/KT-36102
-
 package shop.terminal.api.services.blocking
 
 import com.google.errorprone.annotations.MustBeClosed
@@ -24,32 +22,44 @@ interface AppService {
     fun withRawResponse(): WithRawResponse
 
     /** Create an app. */
-    @JvmOverloads
+    fun create(params: AppCreateParams): AppCreateResponse = create(params, RequestOptions.none())
+
+    /** @see [create] */
     fun create(
         params: AppCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): AppCreateResponse
 
     /** List the current user's registered apps. */
-    @JvmOverloads
+    fun list(): AppListResponse = list(AppListParams.none())
+
+    /** @see [list] */
     fun list(
         params: AppListParams = AppListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): AppListResponse
 
-    /** List the current user's registered apps. */
+    /** @see [list] */
+    fun list(params: AppListParams = AppListParams.none()): AppListResponse =
+        list(params, RequestOptions.none())
+
+    /** @see [list] */
     fun list(requestOptions: RequestOptions): AppListResponse =
         list(AppListParams.none(), requestOptions)
 
     /** Delete the app with the given ID. */
-    @JvmOverloads
+    fun delete(params: AppDeleteParams): AppDeleteResponse = delete(params, RequestOptions.none())
+
+    /** @see [delete] */
     fun delete(
         params: AppDeleteParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): AppDeleteResponse
 
     /** Get the app with the given ID. */
-    @JvmOverloads
+    fun get(params: AppGetParams): AppGetResponse = get(params, RequestOptions.none())
+
+    /** @see [get] */
     fun get(
         params: AppGetParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -62,7 +72,11 @@ interface AppService {
          * Returns a raw HTTP response for `post /app`, but is otherwise the same as
          * [AppService.create].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun create(params: AppCreateParams): HttpResponseFor<AppCreateResponse> =
+            create(params, RequestOptions.none())
+
+        /** @see [create] */
         @MustBeClosed
         fun create(
             params: AppCreateParams,
@@ -73,17 +87,21 @@ interface AppService {
          * Returns a raw HTTP response for `get /app`, but is otherwise the same as
          * [AppService.list].
          */
-        @JvmOverloads
+        @MustBeClosed fun list(): HttpResponseFor<AppListResponse> = list(AppListParams.none())
+
+        /** @see [list] */
         @MustBeClosed
         fun list(
             params: AppListParams = AppListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<AppListResponse>
 
-        /**
-         * Returns a raw HTTP response for `get /app`, but is otherwise the same as
-         * [AppService.list].
-         */
+        /** @see [list] */
+        @MustBeClosed
+        fun list(params: AppListParams = AppListParams.none()): HttpResponseFor<AppListResponse> =
+            list(params, RequestOptions.none())
+
+        /** @see [list] */
         @MustBeClosed
         fun list(requestOptions: RequestOptions): HttpResponseFor<AppListResponse> =
             list(AppListParams.none(), requestOptions)
@@ -92,7 +110,11 @@ interface AppService {
          * Returns a raw HTTP response for `delete /app/{id}`, but is otherwise the same as
          * [AppService.delete].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun delete(params: AppDeleteParams): HttpResponseFor<AppDeleteResponse> =
+            delete(params, RequestOptions.none())
+
+        /** @see [delete] */
         @MustBeClosed
         fun delete(
             params: AppDeleteParams,
@@ -103,7 +125,11 @@ interface AppService {
          * Returns a raw HTTP response for `get /app/{id}`, but is otherwise the same as
          * [AppService.get].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun get(params: AppGetParams): HttpResponseFor<AppGetResponse> =
+            get(params, RequestOptions.none())
+
+        /** @see [get] */
         @MustBeClosed
         fun get(
             params: AppGetParams,

@@ -1,7 +1,5 @@
 // File generated from our OpenAPI spec by Stainless.
 
-@file:Suppress("OVERLOADS_INTERFACE") // See https://youtrack.jetbrains.com/issue/KT-36102
-
 package shop.terminal.api.services.blocking
 
 import com.google.errorprone.annotations.MustBeClosed
@@ -24,36 +22,53 @@ interface TokenService {
     fun withRawResponse(): WithRawResponse
 
     /** Create a personal access token. */
-    @JvmOverloads
+    fun create(): TokenCreateResponse = create(TokenCreateParams.none())
+
+    /** @see [create] */
     fun create(
         params: TokenCreateParams = TokenCreateParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): TokenCreateResponse
 
-    /** Create a personal access token. */
+    /** @see [create] */
+    fun create(params: TokenCreateParams = TokenCreateParams.none()): TokenCreateResponse =
+        create(params, RequestOptions.none())
+
+    /** @see [create] */
     fun create(requestOptions: RequestOptions): TokenCreateResponse =
         create(TokenCreateParams.none(), requestOptions)
 
     /** List the current user's personal access tokens. */
-    @JvmOverloads
+    fun list(): TokenListResponse = list(TokenListParams.none())
+
+    /** @see [list] */
     fun list(
         params: TokenListParams = TokenListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): TokenListResponse
 
-    /** List the current user's personal access tokens. */
+    /** @see [list] */
+    fun list(params: TokenListParams = TokenListParams.none()): TokenListResponse =
+        list(params, RequestOptions.none())
+
+    /** @see [list] */
     fun list(requestOptions: RequestOptions): TokenListResponse =
         list(TokenListParams.none(), requestOptions)
 
     /** Delete the personal access token with the given ID. */
-    @JvmOverloads
+    fun delete(params: TokenDeleteParams): TokenDeleteResponse =
+        delete(params, RequestOptions.none())
+
+    /** @see [delete] */
     fun delete(
         params: TokenDeleteParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): TokenDeleteResponse
 
     /** Get the personal access token with the given ID. */
-    @JvmOverloads
+    fun get(params: TokenGetParams): TokenGetResponse = get(params, RequestOptions.none())
+
+    /** @see [get] */
     fun get(
         params: TokenGetParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -66,17 +81,23 @@ interface TokenService {
          * Returns a raw HTTP response for `post /token`, but is otherwise the same as
          * [TokenService.create].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun create(): HttpResponseFor<TokenCreateResponse> = create(TokenCreateParams.none())
+
+        /** @see [create] */
         @MustBeClosed
         fun create(
             params: TokenCreateParams = TokenCreateParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<TokenCreateResponse>
 
-        /**
-         * Returns a raw HTTP response for `post /token`, but is otherwise the same as
-         * [TokenService.create].
-         */
+        /** @see [create] */
+        @MustBeClosed
+        fun create(
+            params: TokenCreateParams = TokenCreateParams.none()
+        ): HttpResponseFor<TokenCreateResponse> = create(params, RequestOptions.none())
+
+        /** @see [create] */
         @MustBeClosed
         fun create(requestOptions: RequestOptions): HttpResponseFor<TokenCreateResponse> =
             create(TokenCreateParams.none(), requestOptions)
@@ -85,17 +106,22 @@ interface TokenService {
          * Returns a raw HTTP response for `get /token`, but is otherwise the same as
          * [TokenService.list].
          */
-        @JvmOverloads
+        @MustBeClosed fun list(): HttpResponseFor<TokenListResponse> = list(TokenListParams.none())
+
+        /** @see [list] */
         @MustBeClosed
         fun list(
             params: TokenListParams = TokenListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<TokenListResponse>
 
-        /**
-         * Returns a raw HTTP response for `get /token`, but is otherwise the same as
-         * [TokenService.list].
-         */
+        /** @see [list] */
+        @MustBeClosed
+        fun list(
+            params: TokenListParams = TokenListParams.none()
+        ): HttpResponseFor<TokenListResponse> = list(params, RequestOptions.none())
+
+        /** @see [list] */
         @MustBeClosed
         fun list(requestOptions: RequestOptions): HttpResponseFor<TokenListResponse> =
             list(TokenListParams.none(), requestOptions)
@@ -104,7 +130,11 @@ interface TokenService {
          * Returns a raw HTTP response for `delete /token/{id}`, but is otherwise the same as
          * [TokenService.delete].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun delete(params: TokenDeleteParams): HttpResponseFor<TokenDeleteResponse> =
+            delete(params, RequestOptions.none())
+
+        /** @see [delete] */
         @MustBeClosed
         fun delete(
             params: TokenDeleteParams,
@@ -115,7 +145,11 @@ interface TokenService {
          * Returns a raw HTTP response for `get /token/{id}`, but is otherwise the same as
          * [TokenService.get].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun get(params: TokenGetParams): HttpResponseFor<TokenGetResponse> =
+            get(params, RequestOptions.none())
+
+        /** @see [get] */
         @MustBeClosed
         fun get(
             params: TokenGetParams,

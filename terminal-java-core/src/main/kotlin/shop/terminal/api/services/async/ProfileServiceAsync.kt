@@ -1,7 +1,5 @@
 // File generated from our OpenAPI spec by Stainless.
 
-@file:Suppress("OVERLOADS_INTERFACE") // See https://youtrack.jetbrains.com/issue/KT-36102
-
 package shop.terminal.api.services.async
 
 import com.google.errorprone.annotations.MustBeClosed
@@ -21,20 +19,29 @@ interface ProfileServiceAsync {
     fun withRawResponse(): WithRawResponse
 
     /** Update the current user's profile. */
-    @JvmOverloads
+    fun update(params: ProfileUpdateParams): CompletableFuture<ProfileUpdateResponse> =
+        update(params, RequestOptions.none())
+
+    /** @see [update] */
     fun update(
         params: ProfileUpdateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<ProfileUpdateResponse>
 
     /** Get the current user's profile. */
-    @JvmOverloads
+    fun me(): CompletableFuture<ProfileMeResponse> = me(ProfileMeParams.none())
+
+    /** @see [me] */
     fun me(
         params: ProfileMeParams = ProfileMeParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<ProfileMeResponse>
 
-    /** Get the current user's profile. */
+    /** @see [me] */
+    fun me(params: ProfileMeParams = ProfileMeParams.none()): CompletableFuture<ProfileMeResponse> =
+        me(params, RequestOptions.none())
+
+    /** @see [me] */
     fun me(requestOptions: RequestOptions): CompletableFuture<ProfileMeResponse> =
         me(ProfileMeParams.none(), requestOptions)
 
@@ -47,7 +54,13 @@ interface ProfileServiceAsync {
          * Returns a raw HTTP response for `put /profile`, but is otherwise the same as
          * [ProfileServiceAsync.update].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun update(
+            params: ProfileUpdateParams
+        ): CompletableFuture<HttpResponseFor<ProfileUpdateResponse>> =
+            update(params, RequestOptions.none())
+
+        /** @see [update] */
         @MustBeClosed
         fun update(
             params: ProfileUpdateParams,
@@ -58,17 +71,23 @@ interface ProfileServiceAsync {
          * Returns a raw HTTP response for `get /profile`, but is otherwise the same as
          * [ProfileServiceAsync.me].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun me(): CompletableFuture<HttpResponseFor<ProfileMeResponse>> = me(ProfileMeParams.none())
+
+        /** @see [me] */
         @MustBeClosed
         fun me(
             params: ProfileMeParams = ProfileMeParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<ProfileMeResponse>>
 
-        /**
-         * Returns a raw HTTP response for `get /profile`, but is otherwise the same as
-         * [ProfileServiceAsync.me].
-         */
+        /** @see [me] */
+        @MustBeClosed
+        fun me(
+            params: ProfileMeParams = ProfileMeParams.none()
+        ): CompletableFuture<HttpResponseFor<ProfileMeResponse>> = me(params, RequestOptions.none())
+
+        /** @see [me] */
         @MustBeClosed
         fun me(
             requestOptions: RequestOptions
