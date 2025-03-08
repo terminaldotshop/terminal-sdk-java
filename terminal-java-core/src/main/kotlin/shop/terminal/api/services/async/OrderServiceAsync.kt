@@ -1,7 +1,5 @@
 // File generated from our OpenAPI spec by Stainless.
 
-@file:Suppress("OVERLOADS_INTERFACE") // See https://youtrack.jetbrains.com/issue/KT-36102
-
 package shop.terminal.api.services.async
 
 import com.google.errorprone.annotations.MustBeClosed
@@ -23,25 +21,38 @@ interface OrderServiceAsync {
     fun withRawResponse(): WithRawResponse
 
     /** Create an order without a cart. The order will be placed immediately. */
-    @JvmOverloads
+    fun create(params: OrderCreateParams): CompletableFuture<OrderCreateResponse> =
+        create(params, RequestOptions.none())
+
+    /** @see [create] */
     fun create(
         params: OrderCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<OrderCreateResponse>
 
     /** List the orders associated with the current user. */
-    @JvmOverloads
+    fun list(): CompletableFuture<OrderListResponse> = list(OrderListParams.none())
+
+    /** @see [list] */
     fun list(
         params: OrderListParams = OrderListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<OrderListResponse>
 
-    /** List the orders associated with the current user. */
+    /** @see [list] */
+    fun list(
+        params: OrderListParams = OrderListParams.none()
+    ): CompletableFuture<OrderListResponse> = list(params, RequestOptions.none())
+
+    /** @see [list] */
     fun list(requestOptions: RequestOptions): CompletableFuture<OrderListResponse> =
         list(OrderListParams.none(), requestOptions)
 
     /** Get the order with the given ID. */
-    @JvmOverloads
+    fun get(params: OrderGetParams): CompletableFuture<OrderGetResponse> =
+        get(params, RequestOptions.none())
+
+    /** @see [get] */
     fun get(
         params: OrderGetParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -54,7 +65,13 @@ interface OrderServiceAsync {
          * Returns a raw HTTP response for `post /order`, but is otherwise the same as
          * [OrderServiceAsync.create].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun create(
+            params: OrderCreateParams
+        ): CompletableFuture<HttpResponseFor<OrderCreateResponse>> =
+            create(params, RequestOptions.none())
+
+        /** @see [create] */
         @MustBeClosed
         fun create(
             params: OrderCreateParams,
@@ -65,17 +82,25 @@ interface OrderServiceAsync {
          * Returns a raw HTTP response for `get /order`, but is otherwise the same as
          * [OrderServiceAsync.list].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun list(): CompletableFuture<HttpResponseFor<OrderListResponse>> =
+            list(OrderListParams.none())
+
+        /** @see [list] */
         @MustBeClosed
         fun list(
             params: OrderListParams = OrderListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<OrderListResponse>>
 
-        /**
-         * Returns a raw HTTP response for `get /order`, but is otherwise the same as
-         * [OrderServiceAsync.list].
-         */
+        /** @see [list] */
+        @MustBeClosed
+        fun list(
+            params: OrderListParams = OrderListParams.none()
+        ): CompletableFuture<HttpResponseFor<OrderListResponse>> =
+            list(params, RequestOptions.none())
+
+        /** @see [list] */
         @MustBeClosed
         fun list(
             requestOptions: RequestOptions
@@ -86,7 +111,11 @@ interface OrderServiceAsync {
          * Returns a raw HTTP response for `get /order/{id}`, but is otherwise the same as
          * [OrderServiceAsync.get].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun get(params: OrderGetParams): CompletableFuture<HttpResponseFor<OrderGetResponse>> =
+            get(params, RequestOptions.none())
+
+        /** @see [get] */
         @MustBeClosed
         fun get(
             params: OrderGetParams,

@@ -1,7 +1,5 @@
 // File generated from our OpenAPI spec by Stainless.
 
-@file:Suppress("OVERLOADS_INTERFACE") // See https://youtrack.jetbrains.com/issue/KT-36102
-
 package shop.terminal.api.services.blocking
 
 import com.google.errorprone.annotations.MustBeClosed
@@ -21,16 +19,19 @@ interface ViewService {
      * Get initial app data, including user, products, cart, addresses, cards, subscriptions, and
      * orders.
      */
-    @JvmOverloads
+    fun init(): ViewInitResponse = init(ViewInitParams.none())
+
+    /** @see [init] */
     fun init(
         params: ViewInitParams = ViewInitParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): ViewInitResponse
 
-    /**
-     * Get initial app data, including user, products, cart, addresses, cards, subscriptions, and
-     * orders.
-     */
+    /** @see [init] */
+    fun init(params: ViewInitParams = ViewInitParams.none()): ViewInitResponse =
+        init(params, RequestOptions.none())
+
+    /** @see [init] */
     fun init(requestOptions: RequestOptions): ViewInitResponse =
         init(ViewInitParams.none(), requestOptions)
 
@@ -41,17 +42,22 @@ interface ViewService {
          * Returns a raw HTTP response for `get /view/init`, but is otherwise the same as
          * [ViewService.init].
          */
-        @JvmOverloads
+        @MustBeClosed fun init(): HttpResponseFor<ViewInitResponse> = init(ViewInitParams.none())
+
+        /** @see [init] */
         @MustBeClosed
         fun init(
             params: ViewInitParams = ViewInitParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<ViewInitResponse>
 
-        /**
-         * Returns a raw HTTP response for `get /view/init`, but is otherwise the same as
-         * [ViewService.init].
-         */
+        /** @see [init] */
+        @MustBeClosed
+        fun init(
+            params: ViewInitParams = ViewInitParams.none()
+        ): HttpResponseFor<ViewInitResponse> = init(params, RequestOptions.none())
+
+        /** @see [init] */
         @MustBeClosed
         fun init(requestOptions: RequestOptions): HttpResponseFor<ViewInitResponse> =
             init(ViewInitParams.none(), requestOptions)

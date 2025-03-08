@@ -1,5 +1,3 @@
-@file:Suppress("OVERLOADS_INTERFACE") // See https://youtrack.jetbrains.com/issue/KT-36102
-
 package shop.terminal.api.core.http
 
 import java.lang.AutoCloseable
@@ -8,17 +6,20 @@ import shop.terminal.api.core.RequestOptions
 
 interface HttpClient : AutoCloseable {
 
-    @JvmOverloads
     fun execute(
         request: HttpRequest,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): HttpResponse
 
-    @JvmOverloads
+    fun execute(request: HttpRequest): HttpResponse = execute(request, RequestOptions.none())
+
     fun executeAsync(
         request: HttpRequest,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<HttpResponse>
+
+    fun executeAsync(request: HttpRequest): CompletableFuture<HttpResponse> =
+        executeAsync(request, RequestOptions.none())
 
     /** Overridden from [AutoCloseable] to not have a checked exception in its signature. */
     override fun close()

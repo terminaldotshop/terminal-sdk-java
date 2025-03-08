@@ -1,7 +1,5 @@
 // File generated from our OpenAPI spec by Stainless.
 
-@file:Suppress("OVERLOADS_INTERFACE") // See https://youtrack.jetbrains.com/issue/KT-36102
-
 package shop.terminal.api.services.blocking
 
 import com.google.errorprone.annotations.MustBeClosed
@@ -26,43 +24,61 @@ interface CardService {
     fun withRawResponse(): WithRawResponse
 
     /** Attach a credit card (tokenized via Stripe) to the current user. */
-    @JvmOverloads
+    fun create(params: CardCreateParams): CardCreateResponse = create(params, RequestOptions.none())
+
+    /** @see [create] */
     fun create(
         params: CardCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CardCreateResponse
 
     /** List the credit cards associated with the current user. */
-    @JvmOverloads
+    fun list(): CardListResponse = list(CardListParams.none())
+
+    /** @see [list] */
     fun list(
         params: CardListParams = CardListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CardListResponse
 
-    /** List the credit cards associated with the current user. */
+    /** @see [list] */
+    fun list(params: CardListParams = CardListParams.none()): CardListResponse =
+        list(params, RequestOptions.none())
+
+    /** @see [list] */
     fun list(requestOptions: RequestOptions): CardListResponse =
         list(CardListParams.none(), requestOptions)
 
     /** Delete a credit card associated with the current user. */
-    @JvmOverloads
+    fun delete(params: CardDeleteParams): CardDeleteResponse = delete(params, RequestOptions.none())
+
+    /** @see [delete] */
     fun delete(
         params: CardDeleteParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CardDeleteResponse
 
     /** Create a temporary URL for collecting credit card information for the current user. */
-    @JvmOverloads
+    fun collect(): CardCollectResponse = collect(CardCollectParams.none())
+
+    /** @see [collect] */
     fun collect(
         params: CardCollectParams = CardCollectParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CardCollectResponse
 
-    /** Create a temporary URL for collecting credit card information for the current user. */
+    /** @see [collect] */
+    fun collect(params: CardCollectParams = CardCollectParams.none()): CardCollectResponse =
+        collect(params, RequestOptions.none())
+
+    /** @see [collect] */
     fun collect(requestOptions: RequestOptions): CardCollectResponse =
         collect(CardCollectParams.none(), requestOptions)
 
     /** Get a credit card by ID associated with the current user. */
-    @JvmOverloads
+    fun get(params: CardGetParams): CardGetResponse = get(params, RequestOptions.none())
+
+    /** @see [get] */
     fun get(
         params: CardGetParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -75,7 +91,11 @@ interface CardService {
          * Returns a raw HTTP response for `post /card`, but is otherwise the same as
          * [CardService.create].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun create(params: CardCreateParams): HttpResponseFor<CardCreateResponse> =
+            create(params, RequestOptions.none())
+
+        /** @see [create] */
         @MustBeClosed
         fun create(
             params: CardCreateParams,
@@ -86,17 +106,22 @@ interface CardService {
          * Returns a raw HTTP response for `get /card`, but is otherwise the same as
          * [CardService.list].
          */
-        @JvmOverloads
+        @MustBeClosed fun list(): HttpResponseFor<CardListResponse> = list(CardListParams.none())
+
+        /** @see [list] */
         @MustBeClosed
         fun list(
             params: CardListParams = CardListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<CardListResponse>
 
-        /**
-         * Returns a raw HTTP response for `get /card`, but is otherwise the same as
-         * [CardService.list].
-         */
+        /** @see [list] */
+        @MustBeClosed
+        fun list(
+            params: CardListParams = CardListParams.none()
+        ): HttpResponseFor<CardListResponse> = list(params, RequestOptions.none())
+
+        /** @see [list] */
         @MustBeClosed
         fun list(requestOptions: RequestOptions): HttpResponseFor<CardListResponse> =
             list(CardListParams.none(), requestOptions)
@@ -105,7 +130,11 @@ interface CardService {
          * Returns a raw HTTP response for `delete /card/{id}`, but is otherwise the same as
          * [CardService.delete].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun delete(params: CardDeleteParams): HttpResponseFor<CardDeleteResponse> =
+            delete(params, RequestOptions.none())
+
+        /** @see [delete] */
         @MustBeClosed
         fun delete(
             params: CardDeleteParams,
@@ -116,17 +145,23 @@ interface CardService {
          * Returns a raw HTTP response for `post /card/collect`, but is otherwise the same as
          * [CardService.collect].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun collect(): HttpResponseFor<CardCollectResponse> = collect(CardCollectParams.none())
+
+        /** @see [collect] */
         @MustBeClosed
         fun collect(
             params: CardCollectParams = CardCollectParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<CardCollectResponse>
 
-        /**
-         * Returns a raw HTTP response for `post /card/collect`, but is otherwise the same as
-         * [CardService.collect].
-         */
+        /** @see [collect] */
+        @MustBeClosed
+        fun collect(
+            params: CardCollectParams = CardCollectParams.none()
+        ): HttpResponseFor<CardCollectResponse> = collect(params, RequestOptions.none())
+
+        /** @see [collect] */
         @MustBeClosed
         fun collect(requestOptions: RequestOptions): HttpResponseFor<CardCollectResponse> =
             collect(CardCollectParams.none(), requestOptions)
@@ -135,7 +170,11 @@ interface CardService {
          * Returns a raw HTTP response for `get /card/{id}`, but is otherwise the same as
          * [CardService.get].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun get(params: CardGetParams): HttpResponseFor<CardGetResponse> =
+            get(params, RequestOptions.none())
+
+        /** @see [get] */
         @MustBeClosed
         fun get(
             params: CardGetParams,

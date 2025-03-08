@@ -1,7 +1,5 @@
 // File generated from our OpenAPI spec by Stainless.
 
-@file:Suppress("OVERLOADS_INTERFACE") // See https://youtrack.jetbrains.com/issue/KT-36102
-
 package shop.terminal.api.services.blocking
 
 import com.google.errorprone.annotations.MustBeClosed
@@ -26,43 +24,64 @@ interface CartService {
     fun withRawResponse(): WithRawResponse
 
     /** Convert the current user's cart to an order. */
-    @JvmOverloads
+    fun convert(): CartConvertResponse = convert(CartConvertParams.none())
+
+    /** @see [convert] */
     fun convert(
         params: CartConvertParams = CartConvertParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CartConvertResponse
 
-    /** Convert the current user's cart to an order. */
+    /** @see [convert] */
+    fun convert(params: CartConvertParams = CartConvertParams.none()): CartConvertResponse =
+        convert(params, RequestOptions.none())
+
+    /** @see [convert] */
     fun convert(requestOptions: RequestOptions): CartConvertResponse =
         convert(CartConvertParams.none(), requestOptions)
 
     /** Get the current user's cart. */
-    @JvmOverloads
+    fun get(): CartGetResponse = get(CartGetParams.none())
+
+    /** @see [get] */
     fun get(
         params: CartGetParams = CartGetParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CartGetResponse
 
-    /** Get the current user's cart. */
+    /** @see [get] */
+    fun get(params: CartGetParams = CartGetParams.none()): CartGetResponse =
+        get(params, RequestOptions.none())
+
+    /** @see [get] */
     fun get(requestOptions: RequestOptions): CartGetResponse =
         get(CartGetParams.none(), requestOptions)
 
     /** Set the shipping address for the current user's cart. */
-    @JvmOverloads
+    fun setAddress(params: CartSetAddressParams): CartSetAddressResponse =
+        setAddress(params, RequestOptions.none())
+
+    /** @see [setAddress] */
     fun setAddress(
         params: CartSetAddressParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CartSetAddressResponse
 
     /** Set the credit card for the current user's cart. */
-    @JvmOverloads
+    fun setCard(params: CartSetCardParams): CartSetCardResponse =
+        setCard(params, RequestOptions.none())
+
+    /** @see [setCard] */
     fun setCard(
         params: CartSetCardParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CartSetCardResponse
 
     /** Add an item to the current user's cart. */
-    @JvmOverloads
+    fun setItem(params: CartSetItemParams): CartSetItemResponse =
+        setItem(params, RequestOptions.none())
+
+    /** @see [setItem] */
     fun setItem(
         params: CartSetItemParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -75,17 +94,23 @@ interface CartService {
          * Returns a raw HTTP response for `post /cart/convert`, but is otherwise the same as
          * [CartService.convert].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun convert(): HttpResponseFor<CartConvertResponse> = convert(CartConvertParams.none())
+
+        /** @see [convert] */
         @MustBeClosed
         fun convert(
             params: CartConvertParams = CartConvertParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<CartConvertResponse>
 
-        /**
-         * Returns a raw HTTP response for `post /cart/convert`, but is otherwise the same as
-         * [CartService.convert].
-         */
+        /** @see [convert] */
+        @MustBeClosed
+        fun convert(
+            params: CartConvertParams = CartConvertParams.none()
+        ): HttpResponseFor<CartConvertResponse> = convert(params, RequestOptions.none())
+
+        /** @see [convert] */
         @MustBeClosed
         fun convert(requestOptions: RequestOptions): HttpResponseFor<CartConvertResponse> =
             convert(CartConvertParams.none(), requestOptions)
@@ -94,17 +119,21 @@ interface CartService {
          * Returns a raw HTTP response for `get /cart`, but is otherwise the same as
          * [CartService.get].
          */
-        @JvmOverloads
+        @MustBeClosed fun get(): HttpResponseFor<CartGetResponse> = get(CartGetParams.none())
+
+        /** @see [get] */
         @MustBeClosed
         fun get(
             params: CartGetParams = CartGetParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<CartGetResponse>
 
-        /**
-         * Returns a raw HTTP response for `get /cart`, but is otherwise the same as
-         * [CartService.get].
-         */
+        /** @see [get] */
+        @MustBeClosed
+        fun get(params: CartGetParams = CartGetParams.none()): HttpResponseFor<CartGetResponse> =
+            get(params, RequestOptions.none())
+
+        /** @see [get] */
         @MustBeClosed
         fun get(requestOptions: RequestOptions): HttpResponseFor<CartGetResponse> =
             get(CartGetParams.none(), requestOptions)
@@ -113,7 +142,11 @@ interface CartService {
          * Returns a raw HTTP response for `put /cart/address`, but is otherwise the same as
          * [CartService.setAddress].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun setAddress(params: CartSetAddressParams): HttpResponseFor<CartSetAddressResponse> =
+            setAddress(params, RequestOptions.none())
+
+        /** @see [setAddress] */
         @MustBeClosed
         fun setAddress(
             params: CartSetAddressParams,
@@ -124,7 +157,11 @@ interface CartService {
          * Returns a raw HTTP response for `put /cart/card`, but is otherwise the same as
          * [CartService.setCard].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun setCard(params: CartSetCardParams): HttpResponseFor<CartSetCardResponse> =
+            setCard(params, RequestOptions.none())
+
+        /** @see [setCard] */
         @MustBeClosed
         fun setCard(
             params: CartSetCardParams,
@@ -135,7 +172,11 @@ interface CartService {
          * Returns a raw HTTP response for `put /cart/item`, but is otherwise the same as
          * [CartService.setItem].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun setItem(params: CartSetItemParams): HttpResponseFor<CartSetItemResponse> =
+            setItem(params, RequestOptions.none())
+
+        /** @see [setItem] */
         @MustBeClosed
         fun setItem(
             params: CartSetItemParams,
