@@ -5,6 +5,7 @@ package shop.terminal.api.core
 import com.fasterxml.jackson.databind.json.JsonMapper
 import java.time.Clock
 import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 import shop.terminal.api.core.http.Headers
 import shop.terminal.api.core.http.HttpClient
 import shop.terminal.api.core.http.PhantomReachableClosingHttpClient
@@ -101,7 +102,7 @@ private constructor(
 
         fun appId(appId: String?) = apply { this.appId = appId }
 
-        fun appId(appId: Optional<String>) = appId(appId.orElse(null))
+        fun appId(appId: Optional<String>) = appId(appId.getOrNull())
 
         fun headers(headers: Headers) = apply {
             this.headers.clear()
