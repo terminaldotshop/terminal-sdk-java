@@ -1,5 +1,79 @@
 # Changelog
 
+## 1.0.0 (2025-03-08)
+
+Full Changelog: [v0.1.0-alpha.8...v1.0.0](https://github.com/terminaldotshop/terminal-sdk-java/compare/v0.1.0-alpha.8...v1.0.0)
+
+### ⚠ BREAKING CHANGES
+
+* **client:** refactor multipart formdata impl ([#107](https://github.com/terminaldotshop/terminal-sdk-java/issues/107))
+
+### Features
+
+* **api:** manual updates ([#102](https://github.com/terminaldotshop/terminal-sdk-java/issues/102)) ([7fe43c5](https://github.com/terminaldotshop/terminal-sdk-java/commit/7fe43c51bd1c3c820c711351e536816d8d268ac2))
+* **api:** manual updates ([#103](https://github.com/terminaldotshop/terminal-sdk-java/issues/103)) ([bde16e0](https://github.com/terminaldotshop/terminal-sdk-java/commit/bde16e081f2568f3452dbb2481c2abc598b96645))
+* **api:** manual updates ([#113](https://github.com/terminaldotshop/terminal-sdk-java/issues/113)) ([95a72d8](https://github.com/terminaldotshop/terminal-sdk-java/commit/95a72d8a6fee4c77b3f56c9bece9146ee617eacc))
+* **api:** manual updates ([#78](https://github.com/terminaldotshop/terminal-sdk-java/issues/78)) ([5b0f7b0](https://github.com/terminaldotshop/terminal-sdk-java/commit/5b0f7b019326e9cd142c7e5d92c8c1f1c2c5250e))
+* **api:** manual updates ([#93](https://github.com/terminaldotshop/terminal-sdk-java/issues/93)) ([4f8842f](https://github.com/terminaldotshop/terminal-sdk-java/commit/4f8842f27624e9ace6101a107feb6b1e59fcdfec))
+* **api:** manual updates ([#96](https://github.com/terminaldotshop/terminal-sdk-java/issues/96)) ([da8a22b](https://github.com/terminaldotshop/terminal-sdk-java/commit/da8a22bb2a1b0727912fb8ee4db9f93b90a16946))
+* **api:** manual updates ([#97](https://github.com/terminaldotshop/terminal-sdk-java/issues/97)) ([0296a31](https://github.com/terminaldotshop/terminal-sdk-java/commit/0296a31c5298f4856a2bf9a7284194693c71a118))
+* **client:** accept `InputStream` and `Path` for file params ([#111](https://github.com/terminaldotshop/terminal-sdk-java/issues/111)) ([e7c5bd7](https://github.com/terminaldotshop/terminal-sdk-java/commit/e7c5bd7b0c14344d78ff6d9decbe546aaf9c74a5))
+* **client:** allow configuring timeouts granularly ([#105](https://github.com/terminaldotshop/terminal-sdk-java/issues/105)) ([c59cc3d](https://github.com/terminaldotshop/terminal-sdk-java/commit/c59cc3db8fbab9927ea696611ca6720d9d7acb6a))
+* **client:** allow omitting params object when none required ([#94](https://github.com/terminaldotshop/terminal-sdk-java/issues/94)) ([e04518f](https://github.com/terminaldotshop/terminal-sdk-java/commit/e04518f0088743011d434d64f76462d582b62506))
+* **client:** detect binary incompatible jackson versions ([#112](https://github.com/terminaldotshop/terminal-sdk-java/issues/112)) ([dfa8f69](https://github.com/terminaldotshop/terminal-sdk-java/commit/dfa8f69977dfa6faa536a7ac3415f8b8781996fe))
+* **client:** get rid of annoying checked exceptions ([#88](https://github.com/terminaldotshop/terminal-sdk-java/issues/88)) ([3cdbf22](https://github.com/terminaldotshop/terminal-sdk-java/commit/3cdbf225c1b10e69e6083f2ce6a78b605b557f4d))
+* **client:** support `JsonField#asX()` for known values ([#83](https://github.com/terminaldotshop/terminal-sdk-java/issues/83)) ([bcc8d1c](https://github.com/terminaldotshop/terminal-sdk-java/commit/bcc8d1c664ba860c2a8aff902253bd2a342f8da4))
+* **client:** support raw response access ([#106](https://github.com/terminaldotshop/terminal-sdk-java/issues/106)) ([fcfeafc](https://github.com/terminaldotshop/terminal-sdk-java/commit/fcfeafc93ec8df3edf6d9600e206760048258439))
+* **client:** update enum `asX` methods ([#82](https://github.com/terminaldotshop/terminal-sdk-java/issues/82)) ([ec8dc7b](https://github.com/terminaldotshop/terminal-sdk-java/commit/ec8dc7b0ebfb0308e5f33eb8975b5b1feb30068d))
+* generate and publish docs ([#116](https://github.com/terminaldotshop/terminal-sdk-java/issues/116)) ([d9fd9d4](https://github.com/terminaldotshop/terminal-sdk-java/commit/d9fd9d43fbc31a33db57d43e8d26b2b328315bc2))
+
+
+### Bug Fixes
+
+* **client:** add missing `@JvmStatic` ([#95](https://github.com/terminaldotshop/terminal-sdk-java/issues/95)) ([c0b2b2d](https://github.com/terminaldotshop/terminal-sdk-java/commit/c0b2b2d664f428e7f060910425aa1216c283087d))
+* **client:** mark some request bodies as optional ([#90](https://github.com/terminaldotshop/terminal-sdk-java/issues/90)) ([580cbb9](https://github.com/terminaldotshop/terminal-sdk-java/commit/580cbb907d9c9cb5d0e6d87f2340f58fd2a5f91d))
+
+
+### Chores
+
+* **ci:** update gradle actions to v4 ([#86](https://github.com/terminaldotshop/terminal-sdk-java/issues/86)) ([8d1a21c](https://github.com/terminaldotshop/terminal-sdk-java/commit/8d1a21c78b0f9082085f43c27cc4de62b56ac5be))
+* **client:** expose `Optional`, not nullable, from `ClientOptions` ([#110](https://github.com/terminaldotshop/terminal-sdk-java/issues/110)) ([d56027a](https://github.com/terminaldotshop/terminal-sdk-java/commit/d56027a2ab73b51aa14cf303ab42257f06394781))
+* **client:** refactor multipart formdata impl ([#107](https://github.com/terminaldotshop/terminal-sdk-java/issues/107)) ([3b5ca9f](https://github.com/terminaldotshop/terminal-sdk-java/commit/3b5ca9f91dabf10b06e88dfb7151bae4edc9e4f8))
+* **client:** use deep identity methods for primitive array types ([#99](https://github.com/terminaldotshop/terminal-sdk-java/issues/99)) ([7ba0b1b](https://github.com/terminaldotshop/terminal-sdk-java/commit/7ba0b1bc54c1b87aedc00e35d38c8e904104e059))
+* **docs:** add faq to readme ([#89](https://github.com/terminaldotshop/terminal-sdk-java/issues/89)) ([03755c5](https://github.com/terminaldotshop/terminal-sdk-java/commit/03755c522b4e6e6a9ffc8d9f4a95db5da6af7a65))
+* **docs:** reorganize readme ([#84](https://github.com/terminaldotshop/terminal-sdk-java/issues/84)) ([8b3e839](https://github.com/terminaldotshop/terminal-sdk-java/commit/8b3e83989b0894f47c192fe1ca0602616f5eee87))
+* **internal:** add `.kotlin` to `.gitignore` ([#117](https://github.com/terminaldotshop/terminal-sdk-java/issues/117)) ([26352c8](https://github.com/terminaldotshop/terminal-sdk-java/commit/26352c82f390937be0bbea24d9471bed3e995a3f))
+* **internal:** add async service tests ([#98](https://github.com/terminaldotshop/terminal-sdk-java/issues/98)) ([b09e29a](https://github.com/terminaldotshop/terminal-sdk-java/commit/b09e29a4ae16fcc06ab6d915d12ace4e432e0e53))
+* **internal:** codegen related update ([#87](https://github.com/terminaldotshop/terminal-sdk-java/issues/87)) ([a280274](https://github.com/terminaldotshop/terminal-sdk-java/commit/a28027456eddc6336538d8e92c70828c9c122e8e))
+* **internal:** don't use `JvmOverloads` in interfaces ([0b2097e](https://github.com/terminaldotshop/terminal-sdk-java/commit/0b2097e6b3fe73ff2eb624d6d147fdef00ea7ea1))
+* **internal:** fix `ServiceParamsTest` ([c3c067d](https://github.com/terminaldotshop/terminal-sdk-java/commit/c3c067dbfffc325d324f945655cdd872bccdb28c))
+* **internal:** get rid of configuration cache ([#85](https://github.com/terminaldotshop/terminal-sdk-java/issues/85)) ([9304dab](https://github.com/terminaldotshop/terminal-sdk-java/commit/9304dab83c9c9e777b97a7bb3c3ad81d9d99e02d))
+* **internal:** improve sync service tests ([b09e29a](https://github.com/terminaldotshop/terminal-sdk-java/commit/b09e29a4ae16fcc06ab6d915d12ace4e432e0e53))
+* **internal:** make body class constructors private ([2764315](https://github.com/terminaldotshop/terminal-sdk-java/commit/2764315d666f287251fbef24fd93491a3e1698d5))
+* **internal:** make body classes for multipart requests ([2764315](https://github.com/terminaldotshop/terminal-sdk-java/commit/2764315d666f287251fbef24fd93491a3e1698d5))
+* **internal:** misc formatting changes ([2764315](https://github.com/terminaldotshop/terminal-sdk-java/commit/2764315d666f287251fbef24fd93491a3e1698d5))
+* **internal:** optimize build and test perf ([b63b5a0](https://github.com/terminaldotshop/terminal-sdk-java/commit/b63b5a0efd3a13b7160b7aae618974a902b8cdbf))
+* **internal:** reenable warnings as errors ([#119](https://github.com/terminaldotshop/terminal-sdk-java/issues/119)) ([0b2097e](https://github.com/terminaldotshop/terminal-sdk-java/commit/0b2097e6b3fe73ff2eb624d6d147fdef00ea7ea1))
+* **internal:** refactor `ErrorHandlingTest` ([#104](https://github.com/terminaldotshop/terminal-sdk-java/issues/104)) ([4498970](https://github.com/terminaldotshop/terminal-sdk-java/commit/4498970d2157d39c9dce1cedaf87f807e8beed68))
+* **internal:** refactor `ServiceParamsTest` ([#100](https://github.com/terminaldotshop/terminal-sdk-java/issues/100)) ([11e5b21](https://github.com/terminaldotshop/terminal-sdk-java/commit/11e5b21ccd696d3f4f58268e0342da5bd8cc0b72))
+* **internal:** remove unnecessary non-null asserts in tests ([580cbb9](https://github.com/terminaldotshop/terminal-sdk-java/commit/580cbb907d9c9cb5d0e6d87f2340f58fd2a5f91d))
+* **internal:** rename internal body classes ([2764315](https://github.com/terminaldotshop/terminal-sdk-java/commit/2764315d666f287251fbef24fd93491a3e1698d5))
+* **internal:** update formatter ([#80](https://github.com/terminaldotshop/terminal-sdk-java/issues/80)) ([b63b5a0](https://github.com/terminaldotshop/terminal-sdk-java/commit/b63b5a0efd3a13b7160b7aae618974a902b8cdbf))
+* **internal:** update some formatting in `Values.kt` ([bcc8d1c](https://github.com/terminaldotshop/terminal-sdk-java/commit/bcc8d1c664ba860c2a8aff902253bd2a342f8da4))
+* **internal:** use `assertNotNull` in tests for type narrowing ([580cbb9](https://github.com/terminaldotshop/terminal-sdk-java/commit/580cbb907d9c9cb5d0e6d87f2340f58fd2a5f91d))
+* **internal:** use `getOrNull` instead of `orElse(null)` ([#118](https://github.com/terminaldotshop/terminal-sdk-java/issues/118)) ([ea681bf](https://github.com/terminaldotshop/terminal-sdk-java/commit/ea681bfe9ed1033e2e582305d7e7efca1a13b3e8))
+* **internal:** use better test example values ([#81](https://github.com/terminaldotshop/terminal-sdk-java/issues/81)) ([2764315](https://github.com/terminaldotshop/terminal-sdk-java/commit/2764315d666f287251fbef24fd93491a3e1698d5))
+
+
+### Documentation
+
+* add immutability explanation to readme ([#91](https://github.com/terminaldotshop/terminal-sdk-java/issues/91)) ([e3050ac](https://github.com/terminaldotshop/terminal-sdk-java/commit/e3050acf7038e6d50d5182492309d6883320a186))
+* add raw response readme documentation ([#108](https://github.com/terminaldotshop/terminal-sdk-java/issues/108)) ([c377bbe](https://github.com/terminaldotshop/terminal-sdk-java/commit/c377bbe344b3e19baf20264c0bdf75db21003c7a))
+* add source file links to readme ([#92](https://github.com/terminaldotshop/terminal-sdk-java/issues/92)) ([083abef](https://github.com/terminaldotshop/terminal-sdk-java/commit/083abef6c05e30cccd4c90b86e9d9df6a68cd68c))
+* note required fields in `builder` javadoc ([#109](https://github.com/terminaldotshop/terminal-sdk-java/issues/109)) ([b6b77bd](https://github.com/terminaldotshop/terminal-sdk-java/commit/b6b77bd0f8649d992705c29dd23e233d32cde151))
+* readme parameter tweaks ([b09e29a](https://github.com/terminaldotshop/terminal-sdk-java/commit/b09e29a4ae16fcc06ab6d915d12ace4e432e0e53))
+* update URLs from stainlessapi.com to stainless.com ([#101](https://github.com/terminaldotshop/terminal-sdk-java/issues/101)) ([256672d](https://github.com/terminaldotshop/terminal-sdk-java/commit/256672dee10cb9bdc33f478b9ecba163dd7023ad))
+
 ## 0.1.0-alpha.8 (2025-02-16)
 
 Full Changelog: [v0.1.0-alpha.7...v0.1.0-alpha.8](https://github.com/terminaldotshop/terminal-sdk-java/compare/v0.1.0-alpha.7...v0.1.0-alpha.8)
