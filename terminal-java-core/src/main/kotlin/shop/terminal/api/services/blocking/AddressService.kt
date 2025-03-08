@@ -1,7 +1,5 @@
 // File generated from our OpenAPI spec by Stainless.
 
-@file:Suppress("OVERLOADS_INTERFACE") // See https://youtrack.jetbrains.com/issue/KT-36102
-
 package shop.terminal.api.services.blocking
 
 import com.google.errorprone.annotations.MustBeClosed
@@ -24,32 +22,46 @@ interface AddressService {
     fun withRawResponse(): WithRawResponse
 
     /** Create and add a shipping address to the current user. */
-    @JvmOverloads
+    fun create(params: AddressCreateParams): AddressCreateResponse =
+        create(params, RequestOptions.none())
+
+    /** @see [create] */
     fun create(
         params: AddressCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): AddressCreateResponse
 
     /** Get the shipping addresses associated with the current user. */
-    @JvmOverloads
+    fun list(): AddressListResponse = list(AddressListParams.none())
+
+    /** @see [list] */
     fun list(
         params: AddressListParams = AddressListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): AddressListResponse
 
-    /** Get the shipping addresses associated with the current user. */
+    /** @see [list] */
+    fun list(params: AddressListParams = AddressListParams.none()): AddressListResponse =
+        list(params, RequestOptions.none())
+
+    /** @see [list] */
     fun list(requestOptions: RequestOptions): AddressListResponse =
         list(AddressListParams.none(), requestOptions)
 
     /** Delete a shipping address from the current user. */
-    @JvmOverloads
+    fun delete(params: AddressDeleteParams): AddressDeleteResponse =
+        delete(params, RequestOptions.none())
+
+    /** @see [delete] */
     fun delete(
         params: AddressDeleteParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): AddressDeleteResponse
 
     /** Get the shipping address with the given ID. */
-    @JvmOverloads
+    fun get(params: AddressGetParams): AddressGetResponse = get(params, RequestOptions.none())
+
+    /** @see [get] */
     fun get(
         params: AddressGetParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -62,7 +74,11 @@ interface AddressService {
          * Returns a raw HTTP response for `post /address`, but is otherwise the same as
          * [AddressService.create].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun create(params: AddressCreateParams): HttpResponseFor<AddressCreateResponse> =
+            create(params, RequestOptions.none())
+
+        /** @see [create] */
         @MustBeClosed
         fun create(
             params: AddressCreateParams,
@@ -73,17 +89,23 @@ interface AddressService {
          * Returns a raw HTTP response for `get /address`, but is otherwise the same as
          * [AddressService.list].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun list(): HttpResponseFor<AddressListResponse> = list(AddressListParams.none())
+
+        /** @see [list] */
         @MustBeClosed
         fun list(
             params: AddressListParams = AddressListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<AddressListResponse>
 
-        /**
-         * Returns a raw HTTP response for `get /address`, but is otherwise the same as
-         * [AddressService.list].
-         */
+        /** @see [list] */
+        @MustBeClosed
+        fun list(
+            params: AddressListParams = AddressListParams.none()
+        ): HttpResponseFor<AddressListResponse> = list(params, RequestOptions.none())
+
+        /** @see [list] */
         @MustBeClosed
         fun list(requestOptions: RequestOptions): HttpResponseFor<AddressListResponse> =
             list(AddressListParams.none(), requestOptions)
@@ -92,7 +114,11 @@ interface AddressService {
          * Returns a raw HTTP response for `delete /address/{id}`, but is otherwise the same as
          * [AddressService.delete].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun delete(params: AddressDeleteParams): HttpResponseFor<AddressDeleteResponse> =
+            delete(params, RequestOptions.none())
+
+        /** @see [delete] */
         @MustBeClosed
         fun delete(
             params: AddressDeleteParams,
@@ -103,7 +129,11 @@ interface AddressService {
          * Returns a raw HTTP response for `get /address/{id}`, but is otherwise the same as
          * [AddressService.get].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun get(params: AddressGetParams): HttpResponseFor<AddressGetResponse> =
+            get(params, RequestOptions.none())
+
+        /** @see [get] */
         @MustBeClosed
         fun get(
             params: AddressGetParams,

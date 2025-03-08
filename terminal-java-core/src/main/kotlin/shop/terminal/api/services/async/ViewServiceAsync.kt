@@ -1,7 +1,5 @@
 // File generated from our OpenAPI spec by Stainless.
 
-@file:Suppress("OVERLOADS_INTERFACE") // See https://youtrack.jetbrains.com/issue/KT-36102
-
 package shop.terminal.api.services.async
 
 import com.google.errorprone.annotations.MustBeClosed
@@ -22,16 +20,19 @@ interface ViewServiceAsync {
      * Get initial app data, including user, products, cart, addresses, cards, subscriptions, and
      * orders.
      */
-    @JvmOverloads
+    fun init(): CompletableFuture<ViewInitResponse> = init(ViewInitParams.none())
+
+    /** @see [init] */
     fun init(
         params: ViewInitParams = ViewInitParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<ViewInitResponse>
 
-    /**
-     * Get initial app data, including user, products, cart, addresses, cards, subscriptions, and
-     * orders.
-     */
+    /** @see [init] */
+    fun init(params: ViewInitParams = ViewInitParams.none()): CompletableFuture<ViewInitResponse> =
+        init(params, RequestOptions.none())
+
+    /** @see [init] */
     fun init(requestOptions: RequestOptions): CompletableFuture<ViewInitResponse> =
         init(ViewInitParams.none(), requestOptions)
 
@@ -42,17 +43,25 @@ interface ViewServiceAsync {
          * Returns a raw HTTP response for `get /view/init`, but is otherwise the same as
          * [ViewServiceAsync.init].
          */
-        @JvmOverloads
+        @MustBeClosed
+        fun init(): CompletableFuture<HttpResponseFor<ViewInitResponse>> =
+            init(ViewInitParams.none())
+
+        /** @see [init] */
         @MustBeClosed
         fun init(
             params: ViewInitParams = ViewInitParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<ViewInitResponse>>
 
-        /**
-         * Returns a raw HTTP response for `get /view/init`, but is otherwise the same as
-         * [ViewServiceAsync.init].
-         */
+        /** @see [init] */
+        @MustBeClosed
+        fun init(
+            params: ViewInitParams = ViewInitParams.none()
+        ): CompletableFuture<HttpResponseFor<ViewInitResponse>> =
+            init(params, RequestOptions.none())
+
+        /** @see [init] */
         @MustBeClosed
         fun init(
             requestOptions: RequestOptions
