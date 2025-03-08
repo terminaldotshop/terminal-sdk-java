@@ -13,7 +13,7 @@ The Terminal Java SDK is similar to the Terminal Kotlin SDK but with minor diffe
 
 It is generated with [Stainless](https://www.stainless.com/).
 
-The REST API documentation can be found on [terminal.shop](https://terminal.shop/docs). Javadocs are also available on [javadoc.io](https://javadoc.io/doc/shop.terminal.api/terminal-java/0.1.0-alpha.8).
+The REST API documentation can be found on [terminal.shop](https://terminal.shop/docs). Javadocs are also available on [javadoc.io](https://javadoc.io/doc/shop.terminal.api/terminal-java/1.0.0).
 
 ## Installation
 
