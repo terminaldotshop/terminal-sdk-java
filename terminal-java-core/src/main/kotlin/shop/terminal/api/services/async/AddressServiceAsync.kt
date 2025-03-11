@@ -6,14 +6,14 @@ import com.google.errorprone.annotations.MustBeClosed
 import java.util.concurrent.CompletableFuture
 import shop.terminal.api.core.RequestOptions
 import shop.terminal.api.core.http.HttpResponseFor
-import shop.terminal.api.models.AddressCreateParams
-import shop.terminal.api.models.AddressCreateResponse
-import shop.terminal.api.models.AddressDeleteParams
-import shop.terminal.api.models.AddressDeleteResponse
-import shop.terminal.api.models.AddressGetParams
-import shop.terminal.api.models.AddressGetResponse
-import shop.terminal.api.models.AddressListParams
-import shop.terminal.api.models.AddressListResponse
+import shop.terminal.api.models.address.AddressCreateParams
+import shop.terminal.api.models.address.AddressCreateResponse
+import shop.terminal.api.models.address.AddressDeleteParams
+import shop.terminal.api.models.address.AddressDeleteResponse
+import shop.terminal.api.models.address.AddressGetParams
+import shop.terminal.api.models.address.AddressGetResponse
+import shop.terminal.api.models.address.AddressListParams
+import shop.terminal.api.models.address.AddressListResponse
 
 interface AddressServiceAsync {
 
