@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import shop.terminal.api.TestServerExtension
 import shop.terminal.api.client.okhttp.TerminalOkHttpClientAsync
+import shop.terminal.api.models.cart.CartConvertParams
+import shop.terminal.api.models.cart.CartRedeemGiftCardParams
 import shop.terminal.api.models.cart.CartSetAddressParams
 import shop.terminal.api.models.cart.CartSetCardParams
 import shop.terminal.api.models.cart.CartSetItemParams
@@ -22,7 +24,10 @@ class CartServiceAsyncTest {
                 .build()
         val cartServiceAsync = client.cart()
 
-        val responseFuture = cartServiceAsync.convert()
+        val responseFuture =
+            cartServiceAsync.convert(
+                CartConvertParams.builder().recipientEmail("dev@stainless.com").build()
+            )
 
         val response = responseFuture.get()
         response.validate()
@@ -41,6 +46,39 @@ class CartServiceAsyncTest {
 
         val cart = cartFuture.get()
         cart.validate()
+    }
+
+    @Test
+    fun redeemGiftCard() {
+        val client =
+            TerminalOkHttpClientAsync.builder()
+                .baseUrl(TestServerExtension.BASE_URL)
+                .bearerToken("My Bearer Token")
+                .build()
+        val cartServiceAsync = client.cart()
+
+        val responseFuture =
+            cartServiceAsync.redeemGiftCard(
+                CartRedeemGiftCardParams.builder().giftCardId("giftCardID").build()
+            )
+
+        val response = responseFuture.get()
+        response.validate()
+    }
+
+    @Test
+    fun removeGiftCard() {
+        val client =
+            TerminalOkHttpClientAsync.builder()
+                .baseUrl(TestServerExtension.BASE_URL)
+                .bearerToken("My Bearer Token")
+                .build()
+        val cartServiceAsync = client.cart()
+
+        val responseFuture = cartServiceAsync.removeGiftCard()
+
+        val response = responseFuture.get()
+        response.validate()
     }
 
     @Test
