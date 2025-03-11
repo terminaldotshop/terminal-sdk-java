@@ -6,8 +6,8 @@ import com.google.errorprone.annotations.MustBeClosed
 import java.util.concurrent.CompletableFuture
 import shop.terminal.api.core.RequestOptions
 import shop.terminal.api.core.http.HttpResponseFor
-import shop.terminal.api.models.EmailCreateParams
-import shop.terminal.api.models.EmailCreateResponse
+import shop.terminal.api.models.email.EmailCreateParams
+import shop.terminal.api.models.email.EmailCreateResponse
 
 interface EmailServiceAsync {
 
