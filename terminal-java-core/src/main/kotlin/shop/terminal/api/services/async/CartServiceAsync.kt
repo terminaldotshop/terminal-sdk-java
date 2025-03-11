@@ -10,6 +10,10 @@ import shop.terminal.api.models.cart.CartConvertParams
 import shop.terminal.api.models.cart.CartConvertResponse
 import shop.terminal.api.models.cart.CartGetParams
 import shop.terminal.api.models.cart.CartGetResponse
+import shop.terminal.api.models.cart.CartRedeemGiftCardParams
+import shop.terminal.api.models.cart.CartRedeemGiftCardResponse
+import shop.terminal.api.models.cart.CartRemoveGiftCardParams
+import shop.terminal.api.models.cart.CartRemoveGiftCardResponse
 import shop.terminal.api.models.cart.CartSetAddressParams
 import shop.terminal.api.models.cart.CartSetAddressResponse
 import shop.terminal.api.models.cart.CartSetCardParams
@@ -58,6 +62,38 @@ interface CartServiceAsync {
     /** @see [get] */
     fun get(requestOptions: RequestOptions): CompletableFuture<CartGetResponse> =
         get(CartGetParams.none(), requestOptions)
+
+    /** Apply a gift card to the current user's cart. */
+    fun redeemGiftCard(
+        params: CartRedeemGiftCardParams
+    ): CompletableFuture<CartRedeemGiftCardResponse> = redeemGiftCard(params, RequestOptions.none())
+
+    /** @see [redeemGiftCard] */
+    fun redeemGiftCard(
+        params: CartRedeemGiftCardParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<CartRedeemGiftCardResponse>
+
+    /** Remove the gift card from the current user's cart. */
+    fun removeGiftCard(): CompletableFuture<CartRemoveGiftCardResponse> =
+        removeGiftCard(CartRemoveGiftCardParams.none())
+
+    /** @see [removeGiftCard] */
+    fun removeGiftCard(
+        params: CartRemoveGiftCardParams = CartRemoveGiftCardParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<CartRemoveGiftCardResponse>
+
+    /** @see [removeGiftCard] */
+    fun removeGiftCard(
+        params: CartRemoveGiftCardParams = CartRemoveGiftCardParams.none()
+    ): CompletableFuture<CartRemoveGiftCardResponse> = removeGiftCard(params, RequestOptions.none())
+
+    /** @see [removeGiftCard] */
+    fun removeGiftCard(
+        requestOptions: RequestOptions
+    ): CompletableFuture<CartRemoveGiftCardResponse> =
+        removeGiftCard(CartRemoveGiftCardParams.none(), requestOptions)
 
     /** Set the shipping address for the current user's cart. */
     fun setAddress(params: CartSetAddressParams): CompletableFuture<CartSetAddressResponse> =
@@ -147,6 +183,52 @@ interface CartServiceAsync {
             requestOptions: RequestOptions
         ): CompletableFuture<HttpResponseFor<CartGetResponse>> =
             get(CartGetParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `put /cart/gift-card`, but is otherwise the same as
+         * [CartServiceAsync.redeemGiftCard].
+         */
+        @MustBeClosed
+        fun redeemGiftCard(
+            params: CartRedeemGiftCardParams
+        ): CompletableFuture<HttpResponseFor<CartRedeemGiftCardResponse>> =
+            redeemGiftCard(params, RequestOptions.none())
+
+        /** @see [redeemGiftCard] */
+        @MustBeClosed
+        fun redeemGiftCard(
+            params: CartRedeemGiftCardParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<CartRedeemGiftCardResponse>>
+
+        /**
+         * Returns a raw HTTP response for `delete /cart/gift-card`, but is otherwise the same as
+         * [CartServiceAsync.removeGiftCard].
+         */
+        @MustBeClosed
+        fun removeGiftCard(): CompletableFuture<HttpResponseFor<CartRemoveGiftCardResponse>> =
+            removeGiftCard(CartRemoveGiftCardParams.none())
+
+        /** @see [removeGiftCard] */
+        @MustBeClosed
+        fun removeGiftCard(
+            params: CartRemoveGiftCardParams = CartRemoveGiftCardParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<CartRemoveGiftCardResponse>>
+
+        /** @see [removeGiftCard] */
+        @MustBeClosed
+        fun removeGiftCard(
+            params: CartRemoveGiftCardParams = CartRemoveGiftCardParams.none()
+        ): CompletableFuture<HttpResponseFor<CartRemoveGiftCardResponse>> =
+            removeGiftCard(params, RequestOptions.none())
+
+        /** @see [removeGiftCard] */
+        @MustBeClosed
+        fun removeGiftCard(
+            requestOptions: RequestOptions
+        ): CompletableFuture<HttpResponseFor<CartRemoveGiftCardResponse>> =
+            removeGiftCard(CartRemoveGiftCardParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `put /cart/address`, but is otherwise the same as
