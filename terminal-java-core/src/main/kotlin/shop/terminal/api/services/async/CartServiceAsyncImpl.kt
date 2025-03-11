@@ -20,6 +20,10 @@ import shop.terminal.api.models.cart.CartConvertParams
 import shop.terminal.api.models.cart.CartConvertResponse
 import shop.terminal.api.models.cart.CartGetParams
 import shop.terminal.api.models.cart.CartGetResponse
+import shop.terminal.api.models.cart.CartRedeemGiftCardParams
+import shop.terminal.api.models.cart.CartRedeemGiftCardResponse
+import shop.terminal.api.models.cart.CartRemoveGiftCardParams
+import shop.terminal.api.models.cart.CartRemoveGiftCardResponse
 import shop.terminal.api.models.cart.CartSetAddressParams
 import shop.terminal.api.models.cart.CartSetAddressResponse
 import shop.terminal.api.models.cart.CartSetCardParams
@@ -49,6 +53,20 @@ class CartServiceAsyncImpl internal constructor(private val clientOptions: Clien
     ): CompletableFuture<CartGetResponse> =
         // get /cart
         withRawResponse().get(params, requestOptions).thenApply { it.parse() }
+
+    override fun redeemGiftCard(
+        params: CartRedeemGiftCardParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<CartRedeemGiftCardResponse> =
+        // put /cart/gift-card
+        withRawResponse().redeemGiftCard(params, requestOptions).thenApply { it.parse() }
+
+    override fun removeGiftCard(
+        params: CartRemoveGiftCardParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<CartRemoveGiftCardResponse> =
+        // delete /cart/gift-card
+        withRawResponse().removeGiftCard(params, requestOptions).thenApply { it.parse() }
 
     override fun setAddress(
         params: CartSetAddressParams,
@@ -88,7 +106,7 @@ class CartServiceAsyncImpl internal constructor(private val clientOptions: Clien
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
                     .addPathSegments("cart", "convert")
-                    .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
+                    .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
                     .prepareAsync(clientOptions, params)
             val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
@@ -127,6 +145,68 @@ class CartServiceAsyncImpl internal constructor(private val clientOptions: Clien
                     response.parseable {
                         response
                             .use { getHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
+                    }
+                }
+        }
+
+        private val redeemGiftCardHandler: Handler<CartRedeemGiftCardResponse> =
+            jsonHandler<CartRedeemGiftCardResponse>(clientOptions.jsonMapper)
+                .withErrorHandler(errorHandler)
+
+        override fun redeemGiftCard(
+            params: CartRedeemGiftCardParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<CartRedeemGiftCardResponse>> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.PUT)
+                    .addPathSegments("cart", "gift-card")
+                    .body(json(clientOptions.jsonMapper, params._body()))
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    response.parseable {
+                        response
+                            .use { redeemGiftCardHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
+                    }
+                }
+        }
+
+        private val removeGiftCardHandler: Handler<CartRemoveGiftCardResponse> =
+            jsonHandler<CartRemoveGiftCardResponse>(clientOptions.jsonMapper)
+                .withErrorHandler(errorHandler)
+
+        override fun removeGiftCard(
+            params: CartRemoveGiftCardParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<CartRemoveGiftCardResponse>> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.DELETE)
+                    .addPathSegments("cart", "gift-card")
+                    .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    response.parseable {
+                        response
+                            .use { removeGiftCardHandler.handle(it) }
                             .also {
                                 if (requestOptions.responseValidation!!) {
                                     it.validate()
