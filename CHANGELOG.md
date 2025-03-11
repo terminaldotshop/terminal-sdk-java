@@ -1,5 +1,29 @@
 # Changelog
 
+## 1.1.0 (2025-03-11)
+
+Full Changelog: [v1.0.0...v1.1.0](https://github.com/terminaldotshop/terminal-sdk-java/compare/v1.0.0...v1.1.0)
+
+### ⚠ BREAKING CHANGES
+
+* **client:** move classes into subpackages and shorten names ([#124](https://github.com/terminaldotshop/terminal-sdk-java/issues/124))
+
+### Features
+
+* **api:** gift cards ([#125](https://github.com/terminaldotshop/terminal-sdk-java/issues/125)) ([f1b9c1c](https://github.com/terminaldotshop/terminal-sdk-java/commit/f1b9c1c100997b8fb46bcc0d660b7d072bfe3a4b))
+
+
+### Chores
+
+* **client:** move classes into subpackages and shorten names ([#124](https://github.com/terminaldotshop/terminal-sdk-java/issues/124)) ([09af66e](https://github.com/terminaldotshop/terminal-sdk-java/commit/09af66ed6e580cfaf74f3a224ad776d1de663ef1))
+* **internal:** version bump ([#120](https://github.com/terminaldotshop/terminal-sdk-java/issues/120)) ([9f816fd](https://github.com/terminaldotshop/terminal-sdk-java/commit/9f816fd96ae66fe9e66f58d35ef6a3afb3930cb0))
+
+
+### Documentation
+
+* document `JsonValue` construction in readme ([#123](https://github.com/terminaldotshop/terminal-sdk-java/issues/123)) ([84a8ff4](https://github.com/terminaldotshop/terminal-sdk-java/commit/84a8ff48720662844375bc67225303cfa5965622))
+* revise readme docs about nested params ([#122](https://github.com/terminaldotshop/terminal-sdk-java/issues/122)) ([40cf55b](https://github.com/terminaldotshop/terminal-sdk-java/commit/40cf55be598287e72f89588840c7db25c6320ea8))
+
 ## 1.0.0 (2025-03-08)
 
 Full Changelog: [v0.1.0-alpha.8...v1.0.0](https://github.com/terminaldotshop/terminal-sdk-java/compare/v0.1.0-alpha.8...v1.0.0)
