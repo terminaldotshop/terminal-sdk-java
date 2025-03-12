@@ -25,164 +25,134 @@ import shop.terminal.api.models.app.AppGetResponse
 import shop.terminal.api.models.app.AppListParams
 import shop.terminal.api.models.app.AppListResponse
 
-class AppServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
-    AppServiceAsync {
+class AppServiceAsyncImpl internal constructor(
+    private val clientOptions: ClientOptions,
 
-    private val withRawResponse: AppServiceAsync.WithRawResponse by lazy {
-        WithRawResponseImpl(clientOptions)
-    }
+) : AppServiceAsync {
+
+    private val withRawResponse: AppServiceAsync.WithRawResponse by lazy { WithRawResponseImpl(clientOptions) }
 
     override fun withRawResponse(): AppServiceAsync.WithRawResponse = withRawResponse
 
-    override fun create(
-        params: AppCreateParams,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<AppCreateResponse> =
+    override fun create(params: AppCreateParams, requestOptions: RequestOptions): CompletableFuture<AppCreateResponse> =
         // post /app
         withRawResponse().create(params, requestOptions).thenApply { it.parse() }
 
-    override fun list(
-        params: AppListParams,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<AppListResponse> =
+    override fun list(params: AppListParams, requestOptions: RequestOptions): CompletableFuture<AppListResponse> =
         // get /app
         withRawResponse().list(params, requestOptions).thenApply { it.parse() }
 
-    override fun delete(
-        params: AppDeleteParams,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<AppDeleteResponse> =
+    override fun delete(params: AppDeleteParams, requestOptions: RequestOptions): CompletableFuture<AppDeleteResponse> =
         // delete /app/{id}
         withRawResponse().delete(params, requestOptions).thenApply { it.parse() }
 
-    override fun get(
-        params: AppGetParams,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<AppGetResponse> =
+    override fun get(params: AppGetParams, requestOptions: RequestOptions): CompletableFuture<AppGetResponse> =
         // get /app/{id}
         withRawResponse().get(params, requestOptions).thenApply { it.parse() }
 
-    class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
-        AppServiceAsync.WithRawResponse {
+    class WithRawResponseImpl internal constructor(
+        private val clientOptions: ClientOptions,
+
+    ) : AppServiceAsync.WithRawResponse {
 
         private val errorHandler: Handler<TerminalError> = errorHandler(clientOptions.jsonMapper)
 
-        private val createHandler: Handler<AppCreateResponse> =
-            jsonHandler<AppCreateResponse>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
+        private val createHandler: Handler<AppCreateResponse> = jsonHandler<AppCreateResponse>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
 
-        override fun create(
-            params: AppCreateParams,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<AppCreateResponse>> {
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.POST)
-                    .addPathSegments("app")
-                    .body(json(clientOptions.jsonMapper, params._body()))
-                    .build()
-                    .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    response.parseable {
-                        response
-                            .use { createHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
-                                }
-                            }
-                    }
-                }
+        override fun create(params: AppCreateParams, requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<AppCreateResponse>> {
+          val request = HttpRequest.builder()
+            .method(HttpMethod.POST)
+            .addPathSegments("app")
+            .body(json(clientOptions.jsonMapper, params._body()))
+            .build()
+            .prepareAsync(clientOptions, params)
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          return request.thenComposeAsync { clientOptions.httpClient.executeAsync(
+            it, requestOptions
+          ) }.thenApply { response -> response.parseable {
+              response.use {
+                  createHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+          } }
         }
 
-        private val listHandler: Handler<AppListResponse> =
-            jsonHandler<AppListResponse>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
+        private val listHandler: Handler<AppListResponse> = jsonHandler<AppListResponse>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
 
-        override fun list(
-            params: AppListParams,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<AppListResponse>> {
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .addPathSegments("app")
-                    .build()
-                    .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    response.parseable {
-                        response
-                            .use { listHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
-                                }
-                            }
-                    }
-                }
+        override fun list(params: AppListParams, requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<AppListResponse>> {
+          val request = HttpRequest.builder()
+            .method(HttpMethod.GET)
+            .addPathSegments("app")
+            .build()
+            .prepareAsync(clientOptions, params)
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          return request.thenComposeAsync { clientOptions.httpClient.executeAsync(
+            it, requestOptions
+          ) }.thenApply { response -> response.parseable {
+              response.use {
+                  listHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+          } }
         }
 
-        private val deleteHandler: Handler<AppDeleteResponse> =
-            jsonHandler<AppDeleteResponse>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
+        private val deleteHandler: Handler<AppDeleteResponse> = jsonHandler<AppDeleteResponse>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
 
-        override fun delete(
-            params: AppDeleteParams,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<AppDeleteResponse>> {
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.DELETE)
-                    .addPathSegments("app", params.getPathParam(0))
-                    .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
-                    .build()
-                    .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    response.parseable {
-                        response
-                            .use { deleteHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
-                                }
-                            }
-                    }
-                }
+        override fun delete(params: AppDeleteParams, requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<AppDeleteResponse>> {
+          val request = HttpRequest.builder()
+            .method(HttpMethod.DELETE)
+            .addPathSegments("app", params.getPathParam(0))
+            .apply { params._body().ifPresent{ body(json(clientOptions.jsonMapper, it)) } }
+            .build()
+            .prepareAsync(clientOptions, params)
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          return request.thenComposeAsync { clientOptions.httpClient.executeAsync(
+            it, requestOptions
+          ) }.thenApply { response -> response.parseable {
+              response.use {
+                  deleteHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+          } }
         }
 
-        private val getHandler: Handler<AppGetResponse> =
-            jsonHandler<AppGetResponse>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
+        private val getHandler: Handler<AppGetResponse> = jsonHandler<AppGetResponse>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
 
-        override fun get(
-            params: AppGetParams,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<AppGetResponse>> {
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.GET)
-                    .addPathSegments("app", params.getPathParam(0))
-                    .build()
-                    .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    response.parseable {
-                        response
-                            .use { getHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
-                                }
-                            }
-                    }
-                }
+        override fun get(params: AppGetParams, requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<AppGetResponse>> {
+          val request = HttpRequest.builder()
+            .method(HttpMethod.GET)
+            .addPathSegments("app", params.getPathParam(0))
+            .build()
+            .prepareAsync(clientOptions, params)
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          return request.thenComposeAsync { clientOptions.httpClient.executeAsync(
+            it, requestOptions
+          ) }.thenApply { response -> response.parseable {
+              response.use {
+                  getHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+          } }
         }
     }
 }

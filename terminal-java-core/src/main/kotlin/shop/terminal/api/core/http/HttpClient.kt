@@ -11,7 +11,8 @@ interface HttpClient : AutoCloseable {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): HttpResponse
 
-    fun execute(request: HttpRequest): HttpResponse = execute(request, RequestOptions.none())
+    fun execute(request: HttpRequest): HttpResponse =
+        execute(request, RequestOptions.none())
 
     fun executeAsync(
         request: HttpRequest,

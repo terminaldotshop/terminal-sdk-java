@@ -19,56 +19,49 @@ import shop.terminal.api.errors.TerminalError
 import shop.terminal.api.models.email.EmailCreateParams
 import shop.terminal.api.models.email.EmailCreateResponse
 
-class EmailServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
-    EmailServiceAsync {
+class EmailServiceAsyncImpl internal constructor(
+    private val clientOptions: ClientOptions,
 
-    private val withRawResponse: EmailServiceAsync.WithRawResponse by lazy {
-        WithRawResponseImpl(clientOptions)
-    }
+) : EmailServiceAsync {
+
+    private val withRawResponse: EmailServiceAsync.WithRawResponse by lazy { WithRawResponseImpl(clientOptions) }
 
     override fun withRawResponse(): EmailServiceAsync.WithRawResponse = withRawResponse
 
-    override fun create(
-        params: EmailCreateParams,
-        requestOptions: RequestOptions,
-    ): CompletableFuture<EmailCreateResponse> =
+    override fun create(params: EmailCreateParams, requestOptions: RequestOptions): CompletableFuture<EmailCreateResponse> =
         // post /email
         withRawResponse().create(params, requestOptions).thenApply { it.parse() }
 
-    class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
-        EmailServiceAsync.WithRawResponse {
+    class WithRawResponseImpl internal constructor(
+        private val clientOptions: ClientOptions,
+
+    ) : EmailServiceAsync.WithRawResponse {
 
         private val errorHandler: Handler<TerminalError> = errorHandler(clientOptions.jsonMapper)
 
-        private val createHandler: Handler<EmailCreateResponse> =
-            jsonHandler<EmailCreateResponse>(clientOptions.jsonMapper)
-                .withErrorHandler(errorHandler)
+        private val createHandler: Handler<EmailCreateResponse> = jsonHandler<EmailCreateResponse>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
 
-        override fun create(
-            params: EmailCreateParams,
-            requestOptions: RequestOptions,
-        ): CompletableFuture<HttpResponseFor<EmailCreateResponse>> {
-            val request =
-                HttpRequest.builder()
-                    .method(HttpMethod.POST)
-                    .addPathSegments("email")
-                    .body(json(clientOptions.jsonMapper, params._body()))
-                    .build()
-                    .prepareAsync(clientOptions, params)
-            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
-            return request
-                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
-                .thenApply { response ->
-                    response.parseable {
-                        response
-                            .use { createHandler.handle(it) }
-                            .also {
-                                if (requestOptions.responseValidation!!) {
-                                    it.validate()
-                                }
-                            }
-                    }
-                }
+        override fun create(params: EmailCreateParams, requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<EmailCreateResponse>> {
+          val request = HttpRequest.builder()
+            .method(HttpMethod.POST)
+            .addPathSegments("email")
+            .body(json(clientOptions.jsonMapper, params._body()))
+            .build()
+            .prepareAsync(clientOptions, params)
+          val requestOptions = requestOptions
+              .applyDefaults(RequestOptions.from(clientOptions))
+          return request.thenComposeAsync { clientOptions.httpClient.executeAsync(
+            it, requestOptions
+          ) }.thenApply { response -> response.parseable {
+              response.use {
+                  createHandler.handle(it)
+              }
+              .also {
+                  if (requestOptions.responseValidation!!) {
+                    it.validate()
+                  }
+              }
+          } }
         }
     }
 }
