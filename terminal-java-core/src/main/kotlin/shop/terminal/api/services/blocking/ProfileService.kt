@@ -13,39 +13,38 @@ import shop.terminal.api.models.profile.ProfileUpdateResponse
 interface ProfileService {
 
     /**
-     * Returns a view of this service that provides access to raw HTTP responses for
-     * each method.
+     * Returns a view of this service that provides access to raw HTTP responses for each method.
      */
     fun withRawResponse(): WithRawResponse
 
     /** Update the current user's profile. */
     fun update(params: ProfileUpdateParams): ProfileUpdateResponse =
-        update(
-          params, RequestOptions.none()
-        )
+        update(params, RequestOptions.none())
 
     /** @see [update] */
-    fun update(params: ProfileUpdateParams, requestOptions: RequestOptions = RequestOptions.none()): ProfileUpdateResponse
+    fun update(
+        params: ProfileUpdateParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): ProfileUpdateResponse
 
     /** Get the current user's profile. */
     fun me(): ProfileMeResponse = me(ProfileMeParams.none())
 
     /** @see [me] */
-    fun me(params: ProfileMeParams = ProfileMeParams.none(), requestOptions: RequestOptions = RequestOptions.none()): ProfileMeResponse
+    fun me(
+        params: ProfileMeParams = ProfileMeParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): ProfileMeResponse
 
     /** @see [me] */
     fun me(params: ProfileMeParams = ProfileMeParams.none()): ProfileMeResponse =
-        me(
-          params, RequestOptions.none()
-        )
+        me(params, RequestOptions.none())
 
     /** @see [me] */
-    fun me(requestOptions: RequestOptions): ProfileMeResponse = me(ProfileMeParams.none(), requestOptions)
+    fun me(requestOptions: RequestOptions): ProfileMeResponse =
+        me(ProfileMeParams.none(), requestOptions)
 
-    /**
-     * A view of [ProfileService] that provides access to raw HTTP responses for each
-     * method.
-     */
+    /** A view of [ProfileService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
 
         /**
@@ -54,34 +53,37 @@ interface ProfileService {
          */
         @MustBeClosed
         fun update(params: ProfileUpdateParams): HttpResponseFor<ProfileUpdateResponse> =
-            update(
-              params, RequestOptions.none()
-            )
+            update(params, RequestOptions.none())
 
         /** @see [update] */
         @MustBeClosed
-        fun update(params: ProfileUpdateParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<ProfileUpdateResponse>
+        fun update(
+            params: ProfileUpdateParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<ProfileUpdateResponse>
 
         /**
          * Returns a raw HTTP response for `get /profile`, but is otherwise the same as
          * [ProfileService.me].
          */
-        @MustBeClosed
-        fun me(): HttpResponseFor<ProfileMeResponse> = me(ProfileMeParams.none())
+        @MustBeClosed fun me(): HttpResponseFor<ProfileMeResponse> = me(ProfileMeParams.none())
 
         /** @see [me] */
         @MustBeClosed
-        fun me(params: ProfileMeParams = ProfileMeParams.none(), requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<ProfileMeResponse>
+        fun me(
+            params: ProfileMeParams = ProfileMeParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<ProfileMeResponse>
 
         /** @see [me] */
         @MustBeClosed
-        fun me(params: ProfileMeParams = ProfileMeParams.none()): HttpResponseFor<ProfileMeResponse> =
-            me(
-              params, RequestOptions.none()
-            )
+        fun me(
+            params: ProfileMeParams = ProfileMeParams.none()
+        ): HttpResponseFor<ProfileMeResponse> = me(params, RequestOptions.none())
 
         /** @see [me] */
         @MustBeClosed
-        fun me(requestOptions: RequestOptions): HttpResponseFor<ProfileMeResponse> = me(ProfileMeParams.none(), requestOptions)
+        fun me(requestOptions: RequestOptions): HttpResponseFor<ProfileMeResponse> =
+            me(ProfileMeParams.none(), requestOptions)
     }
 }

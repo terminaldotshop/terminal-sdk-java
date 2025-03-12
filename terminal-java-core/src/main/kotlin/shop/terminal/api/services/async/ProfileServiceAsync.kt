@@ -14,38 +14,39 @@ import shop.terminal.api.models.profile.ProfileUpdateResponse
 interface ProfileServiceAsync {
 
     /**
-     * Returns a view of this service that provides access to raw HTTP responses for
-     * each method.
+     * Returns a view of this service that provides access to raw HTTP responses for each method.
      */
     fun withRawResponse(): WithRawResponse
 
     /** Update the current user's profile. */
     fun update(params: ProfileUpdateParams): CompletableFuture<ProfileUpdateResponse> =
-        update(
-          params, RequestOptions.none()
-        )
+        update(params, RequestOptions.none())
 
     /** @see [update] */
-    fun update(params: ProfileUpdateParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<ProfileUpdateResponse>
+    fun update(
+        params: ProfileUpdateParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<ProfileUpdateResponse>
 
     /** Get the current user's profile. */
     fun me(): CompletableFuture<ProfileMeResponse> = me(ProfileMeParams.none())
 
     /** @see [me] */
-    fun me(params: ProfileMeParams = ProfileMeParams.none(), requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<ProfileMeResponse>
+    fun me(
+        params: ProfileMeParams = ProfileMeParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<ProfileMeResponse>
 
     /** @see [me] */
     fun me(params: ProfileMeParams = ProfileMeParams.none()): CompletableFuture<ProfileMeResponse> =
-        me(
-          params, RequestOptions.none()
-        )
+        me(params, RequestOptions.none())
 
     /** @see [me] */
-    fun me(requestOptions: RequestOptions): CompletableFuture<ProfileMeResponse> = me(ProfileMeParams.none(), requestOptions)
+    fun me(requestOptions: RequestOptions): CompletableFuture<ProfileMeResponse> =
+        me(ProfileMeParams.none(), requestOptions)
 
     /**
-     * A view of [ProfileServiceAsync] that provides access to raw HTTP responses for
-     * each method.
+     * A view of [ProfileServiceAsync] that provides access to raw HTTP responses for each method.
      */
     interface WithRawResponse {
 
@@ -54,14 +55,17 @@ interface ProfileServiceAsync {
          * [ProfileServiceAsync.update].
          */
         @MustBeClosed
-        fun update(params: ProfileUpdateParams): CompletableFuture<HttpResponseFor<ProfileUpdateResponse>> =
-            update(
-              params, RequestOptions.none()
-            )
+        fun update(
+            params: ProfileUpdateParams
+        ): CompletableFuture<HttpResponseFor<ProfileUpdateResponse>> =
+            update(params, RequestOptions.none())
 
         /** @see [update] */
         @MustBeClosed
-        fun update(params: ProfileUpdateParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<ProfileUpdateResponse>>
+        fun update(
+            params: ProfileUpdateParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<ProfileUpdateResponse>>
 
         /**
          * Returns a raw HTTP response for `get /profile`, but is otherwise the same as
@@ -72,17 +76,22 @@ interface ProfileServiceAsync {
 
         /** @see [me] */
         @MustBeClosed
-        fun me(params: ProfileMeParams = ProfileMeParams.none(), requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<ProfileMeResponse>>
+        fun me(
+            params: ProfileMeParams = ProfileMeParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<ProfileMeResponse>>
 
         /** @see [me] */
         @MustBeClosed
-        fun me(params: ProfileMeParams = ProfileMeParams.none()): CompletableFuture<HttpResponseFor<ProfileMeResponse>> =
-            me(
-              params, RequestOptions.none()
-            )
+        fun me(
+            params: ProfileMeParams = ProfileMeParams.none()
+        ): CompletableFuture<HttpResponseFor<ProfileMeResponse>> = me(params, RequestOptions.none())
 
         /** @see [me] */
         @MustBeClosed
-        fun me(requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<ProfileMeResponse>> = me(ProfileMeParams.none(), requestOptions)
+        fun me(
+            requestOptions: RequestOptions
+        ): CompletableFuture<HttpResponseFor<ProfileMeResponse>> =
+            me(ProfileMeParams.none(), requestOptions)
     }
 }
