@@ -1,12 +1,13 @@
 package shop.terminal.api.core.http
 
-import java.util.TreeMap
 import shop.terminal.api.core.toImmutable
+import java.util.Collections
+import java.util.TreeMap
 
 class Headers
 private constructor(
     private val map: Map<String, List<String>>,
-    @get:JvmName("size") val size: Int,
+    @get:JvmName("size") val size: Int
 ) {
 
     fun isEmpty(): Boolean = map.isEmpty()
@@ -74,7 +75,7 @@ private constructor(
                         values.toImmutable()
                     }
                     .toImmutable(),
-                size,
+                size
             )
     }
 
