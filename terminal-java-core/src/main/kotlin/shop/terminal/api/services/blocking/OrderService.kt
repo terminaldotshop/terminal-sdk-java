@@ -15,47 +15,48 @@ import shop.terminal.api.models.order.OrderListResponse
 interface OrderService {
 
     /**
-     * Returns a view of this service that provides access to raw HTTP responses for each method.
+     * Returns a view of this service that provides access to raw HTTP responses for
+     * each method.
      */
     fun withRawResponse(): WithRawResponse
 
     /** Create an order without a cart. The order will be placed immediately. */
     fun create(params: OrderCreateParams): OrderCreateResponse =
-        create(params, RequestOptions.none())
+        create(
+          params, RequestOptions.none()
+        )
 
     /** @see [create] */
-    fun create(
-        params: OrderCreateParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): OrderCreateResponse
+    fun create(params: OrderCreateParams, requestOptions: RequestOptions = RequestOptions.none()): OrderCreateResponse
 
     /** List the orders associated with the current user. */
     fun list(): OrderListResponse = list(OrderListParams.none())
 
     /** @see [list] */
-    fun list(
-        params: OrderListParams = OrderListParams.none(),
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): OrderListResponse
+    fun list(params: OrderListParams = OrderListParams.none(), requestOptions: RequestOptions = RequestOptions.none()): OrderListResponse
 
     /** @see [list] */
     fun list(params: OrderListParams = OrderListParams.none()): OrderListResponse =
-        list(params, RequestOptions.none())
+        list(
+          params, RequestOptions.none()
+        )
 
     /** @see [list] */
-    fun list(requestOptions: RequestOptions): OrderListResponse =
-        list(OrderListParams.none(), requestOptions)
+    fun list(requestOptions: RequestOptions): OrderListResponse = list(OrderListParams.none(), requestOptions)
 
     /** Get the order with the given ID. */
-    fun get(params: OrderGetParams): OrderGetResponse = get(params, RequestOptions.none())
+    fun get(params: OrderGetParams): OrderGetResponse =
+        get(
+          params, RequestOptions.none()
+        )
 
     /** @see [get] */
-    fun get(
-        params: OrderGetParams,
-        requestOptions: RequestOptions = RequestOptions.none(),
-    ): OrderGetResponse
+    fun get(params: OrderGetParams, requestOptions: RequestOptions = RequestOptions.none()): OrderGetResponse
 
-    /** A view of [OrderService] that provides access to raw HTTP responses for each method. */
+    /**
+     * A view of [OrderService] that provides access to raw HTTP responses for each
+     * method.
+     */
     interface WithRawResponse {
 
         /**
@@ -64,38 +65,35 @@ interface OrderService {
          */
         @MustBeClosed
         fun create(params: OrderCreateParams): HttpResponseFor<OrderCreateResponse> =
-            create(params, RequestOptions.none())
+            create(
+              params, RequestOptions.none()
+            )
 
         /** @see [create] */
         @MustBeClosed
-        fun create(
-            params: OrderCreateParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<OrderCreateResponse>
+        fun create(params: OrderCreateParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<OrderCreateResponse>
 
         /**
          * Returns a raw HTTP response for `get /order`, but is otherwise the same as
          * [OrderService.list].
          */
-        @MustBeClosed fun list(): HttpResponseFor<OrderListResponse> = list(OrderListParams.none())
+        @MustBeClosed
+        fun list(): HttpResponseFor<OrderListResponse> = list(OrderListParams.none())
 
         /** @see [list] */
         @MustBeClosed
-        fun list(
-            params: OrderListParams = OrderListParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<OrderListResponse>
+        fun list(params: OrderListParams = OrderListParams.none(), requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<OrderListResponse>
 
         /** @see [list] */
         @MustBeClosed
-        fun list(
-            params: OrderListParams = OrderListParams.none()
-        ): HttpResponseFor<OrderListResponse> = list(params, RequestOptions.none())
+        fun list(params: OrderListParams = OrderListParams.none()): HttpResponseFor<OrderListResponse> =
+            list(
+              params, RequestOptions.none()
+            )
 
         /** @see [list] */
         @MustBeClosed
-        fun list(requestOptions: RequestOptions): HttpResponseFor<OrderListResponse> =
-            list(OrderListParams.none(), requestOptions)
+        fun list(requestOptions: RequestOptions): HttpResponseFor<OrderListResponse> = list(OrderListParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `get /order/{id}`, but is otherwise the same as
@@ -103,13 +101,12 @@ interface OrderService {
          */
         @MustBeClosed
         fun get(params: OrderGetParams): HttpResponseFor<OrderGetResponse> =
-            get(params, RequestOptions.none())
+            get(
+              params, RequestOptions.none()
+            )
 
         /** @see [get] */
         @MustBeClosed
-        fun get(
-            params: OrderGetParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): HttpResponseFor<OrderGetResponse>
+        fun get(params: OrderGetParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<OrderGetResponse>
     }
 }

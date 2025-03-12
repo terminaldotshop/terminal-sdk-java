@@ -17,18 +17,19 @@ import shop.terminal.api.core.immutableEmptyMap
 import shop.terminal.api.core.toImmutable
 
 @NoAutoDetect
-class OrderCreateResponse
-@JsonCreator
-private constructor(
+class OrderCreateResponse @JsonCreator private constructor(
     @JsonProperty("data") @ExcludeMissing private val data: JsonField<String> = JsonMissing.of(),
     @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
+
 ) {
 
     /** Order ID. */
     fun data(): String = data.getRequired("data")
 
     /** Order ID. */
-    @JsonProperty("data") @ExcludeMissing fun _data(): JsonField<String> = data
+    @JsonProperty("data")
+    @ExcludeMissing
+    fun _data(): JsonField<String> = data
 
     @JsonAnyGetter
     @ExcludeMissing
@@ -36,14 +37,15 @@ private constructor(
 
     private var validated: Boolean = false
 
-    fun validate(): OrderCreateResponse = apply {
-        if (validated) {
-            return@apply
-        }
+    fun validate(): OrderCreateResponse =
+        apply {
+            if (validated) {
+              return@apply
+            }
 
-        data()
-        validated = true
-    }
+            data()
+            validated = true
+        }
 
     fun toBuilder() = Builder().from(this)
 
@@ -53,11 +55,13 @@ private constructor(
          * Returns a mutable builder for constructing an instance of [OrderCreateResponse].
          *
          * The following fields are required:
+         *
          * ```java
          * .data()
          * ```
          */
-        @JvmStatic fun builder() = Builder()
+        @JvmStatic
+        fun builder() = Builder()
     }
 
     /** A builder for [OrderCreateResponse]. */
@@ -67,46 +71,61 @@ private constructor(
         private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
         @JvmSynthetic
-        internal fun from(orderCreateResponse: OrderCreateResponse) = apply {
-            data = orderCreateResponse.data
-            additionalProperties = orderCreateResponse.additionalProperties.toMutableMap()
-        }
+        internal fun from(orderCreateResponse: OrderCreateResponse) =
+            apply {
+                data = orderCreateResponse.data
+                additionalProperties = orderCreateResponse.additionalProperties.toMutableMap()
+            }
 
         /** Order ID. */
         fun data(data: String) = data(JsonField.of(data))
 
         /** Order ID. */
-        fun data(data: JsonField<String>) = apply { this.data = data }
+        fun data(data: JsonField<String>) =
+            apply {
+                this.data = data
+            }
 
-        fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.clear()
-            putAllAdditionalProperties(additionalProperties)
-        }
+        fun additionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.clear()
+                putAllAdditionalProperties(additionalProperties)
+            }
 
-        fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-            additionalProperties.put(key, value)
-        }
+        fun putAdditionalProperty(key: String, value: JsonValue) =
+            apply {
+                additionalProperties.put(key, value)
+            }
 
-        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-            this.additionalProperties.putAll(additionalProperties)
-        }
+        fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
+            apply {
+                this.additionalProperties.putAll(additionalProperties)
+            }
 
-        fun removeAdditionalProperty(key: String) = apply { additionalProperties.remove(key) }
+        fun removeAdditionalProperty(key: String) =
+            apply {
+                additionalProperties.remove(key)
+            }
 
-        fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-            keys.forEach(::removeAdditionalProperty)
-        }
+        fun removeAllAdditionalProperties(keys: Set<String>) =
+            apply {
+                keys.forEach(::removeAdditionalProperty)
+            }
 
         fun build(): OrderCreateResponse =
-            OrderCreateResponse(checkRequired("data", data), additionalProperties.toImmutable())
+            OrderCreateResponse(
+              checkRequired(
+                "data", data
+              ), additionalProperties.toImmutable()
+            )
     }
 
     override fun equals(other: Any?): Boolean {
-        if (this === other) {
-            return true
-        }
+      if (this === other) {
+          return true
+      }
 
-        return /* spotless:off */ other is OrderCreateResponse && data == other.data && additionalProperties == other.additionalProperties /* spotless:on */
+      return /* spotless:off */ other is OrderCreateResponse && data == other.data && additionalProperties == other.additionalProperties /* spotless:on */
     }
 
     /* spotless:off */
@@ -115,6 +134,5 @@ private constructor(
 
     override fun hashCode(): Int = hashCode
 
-    override fun toString() =
-        "OrderCreateResponse{data=$data, additionalProperties=$additionalProperties}"
+    override fun toString() = "OrderCreateResponse{data=$data, additionalProperties=$additionalProperties}"
 }
