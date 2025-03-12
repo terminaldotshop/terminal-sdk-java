@@ -12,33 +12,31 @@ import shop.terminal.api.models.view.ViewInitResponse
 interface ViewServiceAsync {
 
     /**
-     * Returns a view of this service that provides access to raw HTTP responses for
-     * each method.
+     * Returns a view of this service that provides access to raw HTTP responses for each method.
      */
     fun withRawResponse(): WithRawResponse
 
     /**
-     * Get initial app data, including user, products, cart, addresses, cards,
-     * subscriptions, and orders.
+     * Get initial app data, including user, products, cart, addresses, cards, subscriptions, and
+     * orders.
      */
     fun init(): CompletableFuture<ViewInitResponse> = init(ViewInitParams.none())
 
     /** @see [init] */
-    fun init(params: ViewInitParams = ViewInitParams.none(), requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<ViewInitResponse>
+    fun init(
+        params: ViewInitParams = ViewInitParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<ViewInitResponse>
 
     /** @see [init] */
     fun init(params: ViewInitParams = ViewInitParams.none()): CompletableFuture<ViewInitResponse> =
-        init(
-          params, RequestOptions.none()
-        )
+        init(params, RequestOptions.none())
 
     /** @see [init] */
-    fun init(requestOptions: RequestOptions): CompletableFuture<ViewInitResponse> = init(ViewInitParams.none(), requestOptions)
+    fun init(requestOptions: RequestOptions): CompletableFuture<ViewInitResponse> =
+        init(ViewInitParams.none(), requestOptions)
 
-    /**
-     * A view of [ViewServiceAsync] that provides access to raw HTTP responses for each
-     * method.
-     */
+    /** A view of [ViewServiceAsync] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
 
         /**
@@ -46,21 +44,28 @@ interface ViewServiceAsync {
          * [ViewServiceAsync.init].
          */
         @MustBeClosed
-        fun init(): CompletableFuture<HttpResponseFor<ViewInitResponse>> = init(ViewInitParams.none())
+        fun init(): CompletableFuture<HttpResponseFor<ViewInitResponse>> =
+            init(ViewInitParams.none())
 
         /** @see [init] */
         @MustBeClosed
-        fun init(params: ViewInitParams = ViewInitParams.none(), requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<ViewInitResponse>>
+        fun init(
+            params: ViewInitParams = ViewInitParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<ViewInitResponse>>
 
         /** @see [init] */
         @MustBeClosed
-        fun init(params: ViewInitParams = ViewInitParams.none()): CompletableFuture<HttpResponseFor<ViewInitResponse>> =
-            init(
-              params, RequestOptions.none()
-            )
+        fun init(
+            params: ViewInitParams = ViewInitParams.none()
+        ): CompletableFuture<HttpResponseFor<ViewInitResponse>> =
+            init(params, RequestOptions.none())
 
         /** @see [init] */
         @MustBeClosed
-        fun init(requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<ViewInitResponse>> = init(ViewInitParams.none(), requestOptions)
+        fun init(
+            requestOptions: RequestOptions
+        ): CompletableFuture<HttpResponseFor<ViewInitResponse>> =
+            init(ViewInitParams.none(), requestOptions)
     }
 }

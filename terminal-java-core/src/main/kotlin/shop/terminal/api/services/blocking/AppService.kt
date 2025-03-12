@@ -17,57 +17,55 @@ import shop.terminal.api.models.app.AppListResponse
 interface AppService {
 
     /**
-     * Returns a view of this service that provides access to raw HTTP responses for
-     * each method.
+     * Returns a view of this service that provides access to raw HTTP responses for each method.
      */
     fun withRawResponse(): WithRawResponse
 
     /** Create an app. */
-    fun create(params: AppCreateParams): AppCreateResponse =
-        create(
-          params, RequestOptions.none()
-        )
+    fun create(params: AppCreateParams): AppCreateResponse = create(params, RequestOptions.none())
 
     /** @see [create] */
-    fun create(params: AppCreateParams, requestOptions: RequestOptions = RequestOptions.none()): AppCreateResponse
+    fun create(
+        params: AppCreateParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): AppCreateResponse
 
     /** List the current user's registered apps. */
     fun list(): AppListResponse = list(AppListParams.none())
 
     /** @see [list] */
-    fun list(params: AppListParams = AppListParams.none(), requestOptions: RequestOptions = RequestOptions.none()): AppListResponse
+    fun list(
+        params: AppListParams = AppListParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): AppListResponse
 
     /** @see [list] */
     fun list(params: AppListParams = AppListParams.none()): AppListResponse =
-        list(
-          params, RequestOptions.none()
-        )
+        list(params, RequestOptions.none())
 
     /** @see [list] */
-    fun list(requestOptions: RequestOptions): AppListResponse = list(AppListParams.none(), requestOptions)
+    fun list(requestOptions: RequestOptions): AppListResponse =
+        list(AppListParams.none(), requestOptions)
 
     /** Delete the app with the given ID. */
-    fun delete(params: AppDeleteParams): AppDeleteResponse =
-        delete(
-          params, RequestOptions.none()
-        )
+    fun delete(params: AppDeleteParams): AppDeleteResponse = delete(params, RequestOptions.none())
 
     /** @see [delete] */
-    fun delete(params: AppDeleteParams, requestOptions: RequestOptions = RequestOptions.none()): AppDeleteResponse
+    fun delete(
+        params: AppDeleteParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): AppDeleteResponse
 
     /** Get the app with the given ID. */
-    fun get(params: AppGetParams): AppGetResponse =
-        get(
-          params, RequestOptions.none()
-        )
+    fun get(params: AppGetParams): AppGetResponse = get(params, RequestOptions.none())
 
     /** @see [get] */
-    fun get(params: AppGetParams, requestOptions: RequestOptions = RequestOptions.none()): AppGetResponse
+    fun get(
+        params: AppGetParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): AppGetResponse
 
-    /**
-     * A view of [AppService] that provides access to raw HTTP responses for each
-     * method.
-     */
+    /** A view of [AppService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
 
         /**
@@ -76,35 +74,37 @@ interface AppService {
          */
         @MustBeClosed
         fun create(params: AppCreateParams): HttpResponseFor<AppCreateResponse> =
-            create(
-              params, RequestOptions.none()
-            )
+            create(params, RequestOptions.none())
 
         /** @see [create] */
         @MustBeClosed
-        fun create(params: AppCreateParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<AppCreateResponse>
+        fun create(
+            params: AppCreateParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<AppCreateResponse>
 
         /**
          * Returns a raw HTTP response for `get /app`, but is otherwise the same as
          * [AppService.list].
          */
-        @MustBeClosed
-        fun list(): HttpResponseFor<AppListResponse> = list(AppListParams.none())
+        @MustBeClosed fun list(): HttpResponseFor<AppListResponse> = list(AppListParams.none())
 
         /** @see [list] */
         @MustBeClosed
-        fun list(params: AppListParams = AppListParams.none(), requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<AppListResponse>
+        fun list(
+            params: AppListParams = AppListParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<AppListResponse>
 
         /** @see [list] */
         @MustBeClosed
         fun list(params: AppListParams = AppListParams.none()): HttpResponseFor<AppListResponse> =
-            list(
-              params, RequestOptions.none()
-            )
+            list(params, RequestOptions.none())
 
         /** @see [list] */
         @MustBeClosed
-        fun list(requestOptions: RequestOptions): HttpResponseFor<AppListResponse> = list(AppListParams.none(), requestOptions)
+        fun list(requestOptions: RequestOptions): HttpResponseFor<AppListResponse> =
+            list(AppListParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `delete /app/{id}`, but is otherwise the same as
@@ -112,13 +112,14 @@ interface AppService {
          */
         @MustBeClosed
         fun delete(params: AppDeleteParams): HttpResponseFor<AppDeleteResponse> =
-            delete(
-              params, RequestOptions.none()
-            )
+            delete(params, RequestOptions.none())
 
         /** @see [delete] */
         @MustBeClosed
-        fun delete(params: AppDeleteParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<AppDeleteResponse>
+        fun delete(
+            params: AppDeleteParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<AppDeleteResponse>
 
         /**
          * Returns a raw HTTP response for `get /app/{id}`, but is otherwise the same as
@@ -126,12 +127,13 @@ interface AppService {
          */
         @MustBeClosed
         fun get(params: AppGetParams): HttpResponseFor<AppGetResponse> =
-            get(
-              params, RequestOptions.none()
-            )
+            get(params, RequestOptions.none())
 
         /** @see [get] */
         @MustBeClosed
-        fun get(params: AppGetParams, requestOptions: RequestOptions = RequestOptions.none()): HttpResponseFor<AppGetResponse>
+        fun get(
+            params: AppGetParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<AppGetResponse>
     }
 }

@@ -12,24 +12,21 @@ import shop.terminal.api.models.email.EmailCreateResponse
 interface EmailServiceAsync {
 
     /**
-     * Returns a view of this service that provides access to raw HTTP responses for
-     * each method.
+     * Returns a view of this service that provides access to raw HTTP responses for each method.
      */
     fun withRawResponse(): WithRawResponse
 
     /** Subscribe to email updates from Terminal. */
     fun create(params: EmailCreateParams): CompletableFuture<EmailCreateResponse> =
-        create(
-          params, RequestOptions.none()
-        )
+        create(params, RequestOptions.none())
 
     /** @see [create] */
-    fun create(params: EmailCreateParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<EmailCreateResponse>
+    fun create(
+        params: EmailCreateParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<EmailCreateResponse>
 
-    /**
-     * A view of [EmailServiceAsync] that provides access to raw HTTP responses for
-     * each method.
-     */
+    /** A view of [EmailServiceAsync] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
 
         /**
@@ -37,13 +34,16 @@ interface EmailServiceAsync {
          * [EmailServiceAsync.create].
          */
         @MustBeClosed
-        fun create(params: EmailCreateParams): CompletableFuture<HttpResponseFor<EmailCreateResponse>> =
-            create(
-              params, RequestOptions.none()
-            )
+        fun create(
+            params: EmailCreateParams
+        ): CompletableFuture<HttpResponseFor<EmailCreateResponse>> =
+            create(params, RequestOptions.none())
 
         /** @see [create] */
         @MustBeClosed
-        fun create(params: EmailCreateParams, requestOptions: RequestOptions = RequestOptions.none()): CompletableFuture<HttpResponseFor<EmailCreateResponse>>
+        fun create(
+            params: EmailCreateParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<EmailCreateResponse>>
     }
 }
