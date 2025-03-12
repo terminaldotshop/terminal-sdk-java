@@ -31,222 +31,282 @@ import shop.terminal.api.models.cart.CartSetCardResponse
 import shop.terminal.api.models.cart.CartSetItemParams
 import shop.terminal.api.models.cart.CartSetItemResponse
 
-class CartServiceAsyncImpl internal constructor(
-    private val clientOptions: ClientOptions,
+class CartServiceAsyncImpl internal constructor(private val clientOptions: ClientOptions) :
+    CartServiceAsync {
 
-) : CartServiceAsync {
-
-    private val withRawResponse: CartServiceAsync.WithRawResponse by lazy { WithRawResponseImpl(clientOptions) }
+    private val withRawResponse: CartServiceAsync.WithRawResponse by lazy {
+        WithRawResponseImpl(clientOptions)
+    }
 
     override fun withRawResponse(): CartServiceAsync.WithRawResponse = withRawResponse
 
-    override fun convert(params: CartConvertParams, requestOptions: RequestOptions): CompletableFuture<CartConvertResponse> =
+    override fun convert(
+        params: CartConvertParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<CartConvertResponse> =
         // post /cart/convert
         withRawResponse().convert(params, requestOptions).thenApply { it.parse() }
 
-    override fun get(params: CartGetParams, requestOptions: RequestOptions): CompletableFuture<CartGetResponse> =
+    override fun get(
+        params: CartGetParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<CartGetResponse> =
         // get /cart
         withRawResponse().get(params, requestOptions).thenApply { it.parse() }
 
-    override fun redeemGiftCard(params: CartRedeemGiftCardParams, requestOptions: RequestOptions): CompletableFuture<CartRedeemGiftCardResponse> =
+    override fun redeemGiftCard(
+        params: CartRedeemGiftCardParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<CartRedeemGiftCardResponse> =
         // put /cart/gift-card
         withRawResponse().redeemGiftCard(params, requestOptions).thenApply { it.parse() }
 
-    override fun removeGiftCard(params: CartRemoveGiftCardParams, requestOptions: RequestOptions): CompletableFuture<CartRemoveGiftCardResponse> =
+    override fun removeGiftCard(
+        params: CartRemoveGiftCardParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<CartRemoveGiftCardResponse> =
         // delete /cart/gift-card
         withRawResponse().removeGiftCard(params, requestOptions).thenApply { it.parse() }
 
-    override fun setAddress(params: CartSetAddressParams, requestOptions: RequestOptions): CompletableFuture<CartSetAddressResponse> =
+    override fun setAddress(
+        params: CartSetAddressParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<CartSetAddressResponse> =
         // put /cart/address
         withRawResponse().setAddress(params, requestOptions).thenApply { it.parse() }
 
-    override fun setCard(params: CartSetCardParams, requestOptions: RequestOptions): CompletableFuture<CartSetCardResponse> =
+    override fun setCard(
+        params: CartSetCardParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<CartSetCardResponse> =
         // put /cart/card
         withRawResponse().setCard(params, requestOptions).thenApply { it.parse() }
 
-    override fun setItem(params: CartSetItemParams, requestOptions: RequestOptions): CompletableFuture<CartSetItemResponse> =
+    override fun setItem(
+        params: CartSetItemParams,
+        requestOptions: RequestOptions,
+    ): CompletableFuture<CartSetItemResponse> =
         // put /cart/item
         withRawResponse().setItem(params, requestOptions).thenApply { it.parse() }
 
-    class WithRawResponseImpl internal constructor(
-        private val clientOptions: ClientOptions,
-
-    ) : CartServiceAsync.WithRawResponse {
+    class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
+        CartServiceAsync.WithRawResponse {
 
         private val errorHandler: Handler<TerminalError> = errorHandler(clientOptions.jsonMapper)
 
-        private val convertHandler: Handler<CartConvertResponse> = jsonHandler<CartConvertResponse>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
+        private val convertHandler: Handler<CartConvertResponse> =
+            jsonHandler<CartConvertResponse>(clientOptions.jsonMapper)
+                .withErrorHandler(errorHandler)
 
-        override fun convert(params: CartConvertParams, requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<CartConvertResponse>> {
-          val request = HttpRequest.builder()
-            .method(HttpMethod.POST)
-            .addPathSegments("cart", "convert")
-            .body(json(clientOptions.jsonMapper, params._body()))
-            .build()
-            .prepareAsync(clientOptions, params)
-          val requestOptions = requestOptions
-              .applyDefaults(RequestOptions.from(clientOptions))
-          return request.thenComposeAsync { clientOptions.httpClient.executeAsync(
-            it, requestOptions
-          ) }.thenApply { response -> response.parseable {
-              response.use {
-                  convertHandler.handle(it)
-              }
-              .also {
-                  if (requestOptions.responseValidation!!) {
-                    it.validate()
-                  }
-              }
-          } }
+        override fun convert(
+            params: CartConvertParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<CartConvertResponse>> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.POST)
+                    .addPathSegments("cart", "convert")
+                    .body(json(clientOptions.jsonMapper, params._body()))
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    response.parseable {
+                        response
+                            .use { convertHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
+                    }
+                }
         }
 
-        private val getHandler: Handler<CartGetResponse> = jsonHandler<CartGetResponse>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
+        private val getHandler: Handler<CartGetResponse> =
+            jsonHandler<CartGetResponse>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
 
-        override fun get(params: CartGetParams, requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<CartGetResponse>> {
-          val request = HttpRequest.builder()
-            .method(HttpMethod.GET)
-            .addPathSegments("cart")
-            .build()
-            .prepareAsync(clientOptions, params)
-          val requestOptions = requestOptions
-              .applyDefaults(RequestOptions.from(clientOptions))
-          return request.thenComposeAsync { clientOptions.httpClient.executeAsync(
-            it, requestOptions
-          ) }.thenApply { response -> response.parseable {
-              response.use {
-                  getHandler.handle(it)
-              }
-              .also {
-                  if (requestOptions.responseValidation!!) {
-                    it.validate()
-                  }
-              }
-          } }
+        override fun get(
+            params: CartGetParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<CartGetResponse>> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.GET)
+                    .addPathSegments("cart")
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    response.parseable {
+                        response
+                            .use { getHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
+                    }
+                }
         }
 
-        private val redeemGiftCardHandler: Handler<CartRedeemGiftCardResponse> = jsonHandler<CartRedeemGiftCardResponse>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
+        private val redeemGiftCardHandler: Handler<CartRedeemGiftCardResponse> =
+            jsonHandler<CartRedeemGiftCardResponse>(clientOptions.jsonMapper)
+                .withErrorHandler(errorHandler)
 
-        override fun redeemGiftCard(params: CartRedeemGiftCardParams, requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<CartRedeemGiftCardResponse>> {
-          val request = HttpRequest.builder()
-            .method(HttpMethod.PUT)
-            .addPathSegments("cart", "gift-card")
-            .body(json(clientOptions.jsonMapper, params._body()))
-            .build()
-            .prepareAsync(clientOptions, params)
-          val requestOptions = requestOptions
-              .applyDefaults(RequestOptions.from(clientOptions))
-          return request.thenComposeAsync { clientOptions.httpClient.executeAsync(
-            it, requestOptions
-          ) }.thenApply { response -> response.parseable {
-              response.use {
-                  redeemGiftCardHandler.handle(it)
-              }
-              .also {
-                  if (requestOptions.responseValidation!!) {
-                    it.validate()
-                  }
-              }
-          } }
+        override fun redeemGiftCard(
+            params: CartRedeemGiftCardParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<CartRedeemGiftCardResponse>> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.PUT)
+                    .addPathSegments("cart", "gift-card")
+                    .body(json(clientOptions.jsonMapper, params._body()))
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    response.parseable {
+                        response
+                            .use { redeemGiftCardHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
+                    }
+                }
         }
 
-        private val removeGiftCardHandler: Handler<CartRemoveGiftCardResponse> = jsonHandler<CartRemoveGiftCardResponse>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
+        private val removeGiftCardHandler: Handler<CartRemoveGiftCardResponse> =
+            jsonHandler<CartRemoveGiftCardResponse>(clientOptions.jsonMapper)
+                .withErrorHandler(errorHandler)
 
-        override fun removeGiftCard(params: CartRemoveGiftCardParams, requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<CartRemoveGiftCardResponse>> {
-          val request = HttpRequest.builder()
-            .method(HttpMethod.DELETE)
-            .addPathSegments("cart", "gift-card")
-            .apply { params._body().ifPresent{ body(json(clientOptions.jsonMapper, it)) } }
-            .build()
-            .prepareAsync(clientOptions, params)
-          val requestOptions = requestOptions
-              .applyDefaults(RequestOptions.from(clientOptions))
-          return request.thenComposeAsync { clientOptions.httpClient.executeAsync(
-            it, requestOptions
-          ) }.thenApply { response -> response.parseable {
-              response.use {
-                  removeGiftCardHandler.handle(it)
-              }
-              .also {
-                  if (requestOptions.responseValidation!!) {
-                    it.validate()
-                  }
-              }
-          } }
+        override fun removeGiftCard(
+            params: CartRemoveGiftCardParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<CartRemoveGiftCardResponse>> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.DELETE)
+                    .addPathSegments("cart", "gift-card")
+                    .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    response.parseable {
+                        response
+                            .use { removeGiftCardHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
+                    }
+                }
         }
 
-        private val setAddressHandler: Handler<CartSetAddressResponse> = jsonHandler<CartSetAddressResponse>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
+        private val setAddressHandler: Handler<CartSetAddressResponse> =
+            jsonHandler<CartSetAddressResponse>(clientOptions.jsonMapper)
+                .withErrorHandler(errorHandler)
 
-        override fun setAddress(params: CartSetAddressParams, requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<CartSetAddressResponse>> {
-          val request = HttpRequest.builder()
-            .method(HttpMethod.PUT)
-            .addPathSegments("cart", "address")
-            .body(json(clientOptions.jsonMapper, params._body()))
-            .build()
-            .prepareAsync(clientOptions, params)
-          val requestOptions = requestOptions
-              .applyDefaults(RequestOptions.from(clientOptions))
-          return request.thenComposeAsync { clientOptions.httpClient.executeAsync(
-            it, requestOptions
-          ) }.thenApply { response -> response.parseable {
-              response.use {
-                  setAddressHandler.handle(it)
-              }
-              .also {
-                  if (requestOptions.responseValidation!!) {
-                    it.validate()
-                  }
-              }
-          } }
+        override fun setAddress(
+            params: CartSetAddressParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<CartSetAddressResponse>> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.PUT)
+                    .addPathSegments("cart", "address")
+                    .body(json(clientOptions.jsonMapper, params._body()))
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    response.parseable {
+                        response
+                            .use { setAddressHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
+                    }
+                }
         }
 
-        private val setCardHandler: Handler<CartSetCardResponse> = jsonHandler<CartSetCardResponse>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
+        private val setCardHandler: Handler<CartSetCardResponse> =
+            jsonHandler<CartSetCardResponse>(clientOptions.jsonMapper)
+                .withErrorHandler(errorHandler)
 
-        override fun setCard(params: CartSetCardParams, requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<CartSetCardResponse>> {
-          val request = HttpRequest.builder()
-            .method(HttpMethod.PUT)
-            .addPathSegments("cart", "card")
-            .body(json(clientOptions.jsonMapper, params._body()))
-            .build()
-            .prepareAsync(clientOptions, params)
-          val requestOptions = requestOptions
-              .applyDefaults(RequestOptions.from(clientOptions))
-          return request.thenComposeAsync { clientOptions.httpClient.executeAsync(
-            it, requestOptions
-          ) }.thenApply { response -> response.parseable {
-              response.use {
-                  setCardHandler.handle(it)
-              }
-              .also {
-                  if (requestOptions.responseValidation!!) {
-                    it.validate()
-                  }
-              }
-          } }
+        override fun setCard(
+            params: CartSetCardParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<CartSetCardResponse>> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.PUT)
+                    .addPathSegments("cart", "card")
+                    .body(json(clientOptions.jsonMapper, params._body()))
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    response.parseable {
+                        response
+                            .use { setCardHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
+                    }
+                }
         }
 
-        private val setItemHandler: Handler<CartSetItemResponse> = jsonHandler<CartSetItemResponse>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
+        private val setItemHandler: Handler<CartSetItemResponse> =
+            jsonHandler<CartSetItemResponse>(clientOptions.jsonMapper)
+                .withErrorHandler(errorHandler)
 
-        override fun setItem(params: CartSetItemParams, requestOptions: RequestOptions): CompletableFuture<HttpResponseFor<CartSetItemResponse>> {
-          val request = HttpRequest.builder()
-            .method(HttpMethod.PUT)
-            .addPathSegments("cart", "item")
-            .body(json(clientOptions.jsonMapper, params._body()))
-            .build()
-            .prepareAsync(clientOptions, params)
-          val requestOptions = requestOptions
-              .applyDefaults(RequestOptions.from(clientOptions))
-          return request.thenComposeAsync { clientOptions.httpClient.executeAsync(
-            it, requestOptions
-          ) }.thenApply { response -> response.parseable {
-              response.use {
-                  setItemHandler.handle(it)
-              }
-              .also {
-                  if (requestOptions.responseValidation!!) {
-                    it.validate()
-                  }
-              }
-          } }
+        override fun setItem(
+            params: CartSetItemParams,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<CartSetItemResponse>> {
+            val request =
+                HttpRequest.builder()
+                    .method(HttpMethod.PUT)
+                    .addPathSegments("cart", "item")
+                    .body(json(clientOptions.jsonMapper, params._body()))
+                    .build()
+                    .prepareAsync(clientOptions, params)
+            val requestOptions = requestOptions.applyDefaults(RequestOptions.from(clientOptions))
+            return request
+                .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
+                .thenApply { response ->
+                    response.parseable {
+                        response
+                            .use { setItemHandler.handle(it) }
+                            .also {
+                                if (requestOptions.responseValidation!!) {
+                                    it.validate()
+                                }
+                            }
+                    }
+                }
         }
     }
 }
