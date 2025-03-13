@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.3.0 (2025-03-13)
+
+Full Changelog: [v1.2.0...v1.3.0](https://github.com/terminaldotshop/terminal-sdk-java/compare/v1.2.0...v1.3.0)
+
+### Features
+
+* **api:** remove gift cards ([#133](https://github.com/terminaldotshop/terminal-sdk-java/issues/133)) ([6561251](https://github.com/terminaldotshop/terminal-sdk-java/commit/65612511c42ea9954f905dff9dac75ca517dbca3))
+
+
+### Chores
+
+* **internal:** version bump ([#131](https://github.com/terminaldotshop/terminal-sdk-java/issues/131)) ([0657fb0](https://github.com/terminaldotshop/terminal-sdk-java/commit/0657fb041eea2757c8b09b3b4b552952715063f0))
+
 ## 1.2.0 (2025-03-13)
 
 Full Changelog: [v1.1.0...v1.2.0](https://github.com/terminaldotshop/terminal-sdk-java/compare/v1.1.0...v1.2.0)
