@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.2.0 (2025-03-13)
+
+Full Changelog: [v1.1.0...v1.2.0](https://github.com/terminaldotshop/terminal-sdk-java/compare/v1.1.0...v1.2.0)
+
+### Features
+
+* **api:** clear cart api ([#130](https://github.com/terminaldotshop/terminal-sdk-java/issues/130)) ([371b574](https://github.com/terminaldotshop/terminal-sdk-java/commit/371b574b6ce3079f4bf5765d5d2dd6a431117c49))
+
+
+### Chores
+
+* **internal:** codegen related update ([#128](https://github.com/terminaldotshop/terminal-sdk-java/issues/128)) ([0957443](https://github.com/terminaldotshop/terminal-sdk-java/commit/0957443475400528630f80378015916bd39ee3d7))
+* **internal:** codegen related update ([#129](https://github.com/terminaldotshop/terminal-sdk-java/issues/129)) ([a5ae347](https://github.com/terminaldotshop/terminal-sdk-java/commit/a5ae3476db2876af819e600e7ba415a94bbd9de1))
+* update SDK settings ([#126](https://github.com/terminaldotshop/terminal-sdk-java/issues/126)) ([a3baf15](https://github.com/terminaldotshop/terminal-sdk-java/commit/a3baf15325862b9d3b8202b92b92da4d70e57e2f))
+
 ## 1.1.0 (2025-03-11)
 
 Full Changelog: [v1.0.0...v1.1.0](https://github.com/terminaldotshop/terminal-sdk-java/compare/v1.0.0...v1.1.0)
