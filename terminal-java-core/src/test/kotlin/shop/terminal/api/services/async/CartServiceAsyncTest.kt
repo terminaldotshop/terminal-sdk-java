@@ -16,6 +16,21 @@ import shop.terminal.api.models.cart.CartSetItemParams
 class CartServiceAsyncTest {
 
     @Test
+    fun clear() {
+        val client =
+            TerminalOkHttpClientAsync.builder()
+                .baseUrl(TestServerExtension.BASE_URL)
+                .bearerToken("My Bearer Token")
+                .build()
+        val cartServiceAsync = client.cart()
+
+        val responseFuture = cartServiceAsync.clear()
+
+        val response = responseFuture.get()
+        response.validate()
+    }
+
+    @Test
     fun convert() {
         val client =
             TerminalOkHttpClientAsync.builder()

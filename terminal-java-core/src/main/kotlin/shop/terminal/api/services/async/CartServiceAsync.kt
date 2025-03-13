@@ -6,6 +6,8 @@ import com.google.errorprone.annotations.MustBeClosed
 import java.util.concurrent.CompletableFuture
 import shop.terminal.api.core.RequestOptions
 import shop.terminal.api.core.http.HttpResponseFor
+import shop.terminal.api.models.cart.CartClearParams
+import shop.terminal.api.models.cart.CartClearResponse
 import shop.terminal.api.models.cart.CartConvertParams
 import shop.terminal.api.models.cart.CartConvertResponse
 import shop.terminal.api.models.cart.CartGetParams
@@ -27,6 +29,24 @@ interface CartServiceAsync {
      * Returns a view of this service that provides access to raw HTTP responses for each method.
      */
     fun withRawResponse(): WithRawResponse
+
+    /** Clear the current user's cart. */
+    fun clear(): CompletableFuture<CartClearResponse> = clear(CartClearParams.none())
+
+    /** @see [clear] */
+    fun clear(
+        params: CartClearParams = CartClearParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<CartClearResponse>
+
+    /** @see [clear] */
+    fun clear(
+        params: CartClearParams = CartClearParams.none()
+    ): CompletableFuture<CartClearResponse> = clear(params, RequestOptions.none())
+
+    /** @see [clear] */
+    fun clear(requestOptions: RequestOptions): CompletableFuture<CartClearResponse> =
+        clear(CartClearParams.none(), requestOptions)
 
     /** Convert the current user's cart to an order. */
     fun convert(): CompletableFuture<CartConvertResponse> = convert(CartConvertParams.none())
@@ -127,6 +147,35 @@ interface CartServiceAsync {
 
     /** A view of [CartServiceAsync] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
+
+        /**
+         * Returns a raw HTTP response for `delete /cart`, but is otherwise the same as
+         * [CartServiceAsync.clear].
+         */
+        @MustBeClosed
+        fun clear(): CompletableFuture<HttpResponseFor<CartClearResponse>> =
+            clear(CartClearParams.none())
+
+        /** @see [clear] */
+        @MustBeClosed
+        fun clear(
+            params: CartClearParams = CartClearParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<CartClearResponse>>
+
+        /** @see [clear] */
+        @MustBeClosed
+        fun clear(
+            params: CartClearParams = CartClearParams.none()
+        ): CompletableFuture<HttpResponseFor<CartClearResponse>> =
+            clear(params, RequestOptions.none())
+
+        /** @see [clear] */
+        @MustBeClosed
+        fun clear(
+            requestOptions: RequestOptions
+        ): CompletableFuture<HttpResponseFor<CartClearResponse>> =
+            clear(CartClearParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `post /cart/convert`, but is otherwise the same as
