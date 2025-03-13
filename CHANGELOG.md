@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.5.0 (2025-03-13)
+
+Full Changelog: [v1.4.0...v1.5.0](https://github.com/terminaldotshop/terminal-sdk-java/compare/v1.4.0...v1.5.0)
+
+### Features
+
+* **api:** region type ([#139](https://github.com/terminaldotshop/terminal-sdk-java/issues/139)) ([e10e4c2](https://github.com/terminaldotshop/terminal-sdk-java/commit/e10e4c2c51ed476d25bd2c7bc29f2296c85f543e))
+
+
+### Chores
+
+* **internal:** version bump ([#137](https://github.com/terminaldotshop/terminal-sdk-java/issues/137)) ([274c35a](https://github.com/terminaldotshop/terminal-sdk-java/commit/274c35a435f81196bd0527e7169f9bfd321b852b))
+
 ## 1.4.0 (2025-03-13)
 
 Full Changelog: [v1.3.0...v1.4.0](https://github.com/terminaldotshop/terminal-sdk-java/compare/v1.3.0...v1.4.0)
