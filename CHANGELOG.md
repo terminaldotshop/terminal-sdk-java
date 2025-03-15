@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.6.1 (2025-03-15)
+
+Full Changelog: [v1.6.0...v1.6.1](https://github.com/terminaldotshop/terminal-sdk-java/compare/v1.6.0...v1.6.1)
+
+### Chores
+
+* **internal:** remove extra empty newlines ([#145](https://github.com/terminaldotshop/terminal-sdk-java/issues/145)) ([0e118a6](https://github.com/terminaldotshop/terminal-sdk-java/commit/0e118a6c9c3785fb84b30d532a07999c7614416f))
+* **internal:** version bump ([#143](https://github.com/terminaldotshop/terminal-sdk-java/issues/143)) ([9f4b61d](https://github.com/terminaldotshop/terminal-sdk-java/commit/9f4b61d579eb9c6dd582da73dcc2d3d14e0ea004))
+
+
+### Documentation
+
+* deduplicate and refine comments ([#146](https://github.com/terminaldotshop/terminal-sdk-java/issues/146)) ([eacf587](https://github.com/terminaldotshop/terminal-sdk-java/commit/eacf587928ade4a0dd0c72ecc49933c4385fa320))
+
 ## 1.6.0 (2025-03-13)
 
 Full Changelog: [v1.5.0...v1.6.0](https://github.com/terminaldotshop/terminal-sdk-java/compare/v1.5.0...v1.6.0)

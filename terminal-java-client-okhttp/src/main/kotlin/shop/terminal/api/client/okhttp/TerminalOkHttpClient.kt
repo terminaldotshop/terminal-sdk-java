@@ -150,6 +150,7 @@ class TerminalOkHttpClient private constructor() {
 
         fun appId(appId: String?) = apply { clientOptions.appId(appId) }
 
+        /** Alias for calling [Builder.appId] with `appId.orElse(null)`. */
         fun appId(appId: Optional<String>) = appId(appId.getOrNull())
 
         fun fromEnv() = apply { clientOptions.fromEnv() }
