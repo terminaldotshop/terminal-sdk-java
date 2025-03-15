@@ -64,7 +64,7 @@ private constructor(
         /** Subscription to a Terminal shop product. */
         fun subscription(subscription: Subscription?) = apply { this.subscription = subscription }
 
-        /** Subscription to a Terminal shop product. */
+        /** Alias for calling [Builder.subscription] with `subscription.orElse(null)`. */
         fun subscription(subscription: Optional<Subscription>) =
             subscription(subscription.getOrNull())
 
