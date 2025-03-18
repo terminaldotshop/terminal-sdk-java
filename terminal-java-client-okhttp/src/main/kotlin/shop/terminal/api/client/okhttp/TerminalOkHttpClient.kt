@@ -155,6 +155,11 @@ class TerminalOkHttpClient private constructor() {
 
         fun fromEnv() = apply { clientOptions.fromEnv() }
 
+        /**
+         * Returns an immutable instance of [TerminalClient].
+         *
+         * Further updates to this [Builder] will not mutate the returned instance.
+         */
         fun build(): TerminalClient =
             TerminalClientImpl(
                 clientOptions
