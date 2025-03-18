@@ -329,6 +329,21 @@ private constructor(
             keys.forEach(::removeAdditionalProperty)
         }
 
+        /**
+         * Returns an immutable instance of [Product].
+         *
+         * Further updates to this [Builder] will not mutate the returned instance.
+         *
+         * The following fields are required:
+         * ```java
+         * .id()
+         * .description()
+         * .name()
+         * .variants()
+         * ```
+         *
+         * @throws IllegalStateException if any required field is unset.
+         */
         fun build(): Product =
             Product(
                 checkRequired("id", id),
@@ -654,6 +669,11 @@ private constructor(
                 keys.forEach(::removeAdditionalProperty)
             }
 
+            /**
+             * Returns an immutable instance of [Tags].
+             *
+             * Further updates to this [Builder] will not mutate the returned instance.
+             */
             fun build(): Tags =
                 Tags(app, color, featured, marketEu, marketNa, additionalProperties.toImmutable())
         }
