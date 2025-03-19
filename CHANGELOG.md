@@ -1,5 +1,33 @@
 # Changelog
 
+## 1.6.2 (2025-03-19)
+
+Full Changelog: [v1.6.1...v1.6.2](https://github.com/terminaldotshop/terminal-sdk-java/compare/v1.6.1...v1.6.2)
+
+### Bug Fixes
+
+* **client:** support kotlin 1.8 runtime ([#151](https://github.com/terminaldotshop/terminal-sdk-java/issues/151)) ([49f3ad4](https://github.com/terminaldotshop/terminal-sdk-java/commit/49f3ad4633204cac01b820a37ea5824189e7ba82))
+
+
+### Chores
+
+* **internal:** codegen related update ([#147](https://github.com/terminaldotshop/terminal-sdk-java/issues/147)) ([61c6d00](https://github.com/terminaldotshop/terminal-sdk-java/commit/61c6d000909df4731776f34390ed02dc99f0df82))
+* **internal:** delete duplicate tests ([0de2e66](https://github.com/terminaldotshop/terminal-sdk-java/commit/0de2e66ed011d33707a53e0da8dd00cee2d400a7))
+* **internal:** generate more tests ([ebc23f6](https://github.com/terminaldotshop/terminal-sdk-java/commit/ebc23f6780b557659a697365728b1d051f57632d))
+* **internal:** refactor enum query param serialization ([#152](https://github.com/terminaldotshop/terminal-sdk-java/issues/152)) ([6b55ee3](https://github.com/terminaldotshop/terminal-sdk-java/commit/6b55ee39b79bbfec94f08f6c5e63ebf737863051))
+* **internal:** refactor some test assertions ([0de2e66](https://github.com/terminaldotshop/terminal-sdk-java/commit/0de2e66ed011d33707a53e0da8dd00cee2d400a7))
+* **internal:** reformat some tests ([#150](https://github.com/terminaldotshop/terminal-sdk-java/issues/150)) ([ebc23f6](https://github.com/terminaldotshop/terminal-sdk-java/commit/ebc23f6780b557659a697365728b1d051f57632d))
+* **internal:** remove extra empty newlines ([#145](https://github.com/terminaldotshop/terminal-sdk-java/issues/145)) ([2798854](https://github.com/terminaldotshop/terminal-sdk-java/commit/27988544de09f2c25c3d69f47b84dfe436ae46c4))
+* **internal:** rename `getPathParam` ([#149](https://github.com/terminaldotshop/terminal-sdk-java/issues/149)) ([0de2e66](https://github.com/terminaldotshop/terminal-sdk-java/commit/0de2e66ed011d33707a53e0da8dd00cee2d400a7))
+* **internal:** reorder some params methodsc ([0de2e66](https://github.com/terminaldotshop/terminal-sdk-java/commit/0de2e66ed011d33707a53e0da8dd00cee2d400a7))
+* **internal:** version bump ([#143](https://github.com/terminaldotshop/terminal-sdk-java/issues/143)) ([1ef7b68](https://github.com/terminaldotshop/terminal-sdk-java/commit/1ef7b68f64738289e66fa9b100603f84b8488385))
+
+
+### Documentation
+
+* add `build` method comments ([#148](https://github.com/terminaldotshop/terminal-sdk-java/issues/148)) ([6f5429e](https://github.com/terminaldotshop/terminal-sdk-java/commit/6f5429ea1eae3e0eb334001c3dcf3296a2ccc325))
+* deduplicate and refine comments ([#146](https://github.com/terminaldotshop/terminal-sdk-java/issues/146)) ([f23bbe0](https://github.com/terminaldotshop/terminal-sdk-java/commit/f23bbe03061333a4d5deabf26c55790fa28f492a))
+
 ## 1.6.1 (2025-03-19)
 
 Full Changelog: [v1.6.0...v1.6.1](https://github.com/terminaldotshop/terminal-sdk-java/compare/v1.6.0...v1.6.1)
