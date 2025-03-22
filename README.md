@@ -7,7 +7,7 @@
 
 <!-- x-release-please-end -->
 
-The Terminal Java SDK provides convenient access to the Terminal REST API from applications written in Java.
+The Terminal Java SDK provides convenient access to the [Terminal REST API](https://terminal.shop/docs) from applications written in Java.
 
 The Terminal Java SDK is similar to the Terminal Kotlin SDK but with minor differences that make it more ergonomic for use in Java, such as `Optional` instead of nullable values, `Stream` instead of `Sequence`, and `CompletableFuture` instead of suspend functions.
 
@@ -33,9 +33,9 @@ implementation("shop.terminal.api:terminal-java:1.6.2")
 
 ```xml
 <dependency>
-    <groupId>shop.terminal.api</groupId>
-    <artifactId>terminal-java</artifactId>
-    <version>1.6.2</version>
+  <groupId>shop.terminal.api</groupId>
+  <artifactId>terminal-java</artifactId>
+  <version>1.6.2</version>
 </dependency>
 ```
 
