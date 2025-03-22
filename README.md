@@ -2,18 +2,22 @@
 
 <!-- x-release-please-start-version -->
 
-[![Maven Central](https://img.shields.io/maven-central/v/shop.terminal.api/terminal-java)](https://central.sonatype.com/artifact/shop.terminal.api/terminal-java/1.6.2)
-[![javadoc](https://javadoc.io/badge2/shop.terminal.api/terminal-java/1.6.2/javadoc.svg)](https://javadoc.io/doc/shop.terminal.api/terminal-java/1.6.2)
+[![Maven Central](https://img.shields.io/maven-central/v/shop.terminal.api/terminal-java)](https://central.sonatype.com/artifact/shop.terminal.api/terminal-java/2.0.0)
+[![javadoc](https://javadoc.io/badge2/shop.terminal.api/terminal-java/2.0.0/javadoc.svg)](https://javadoc.io/doc/shop.terminal.api/terminal-java/2.0.0)
 
 <!-- x-release-please-end -->
 
-The Terminal Java SDK provides convenient access to the Terminal REST API from applications written in Java.
+The Terminal Java SDK provides convenient access to the [Terminal REST API](https://terminal.shop/docs) from applications written in Java.
 
 The Terminal Java SDK is similar to the Terminal Kotlin SDK but with minor differences that make it more ergonomic for use in Java, such as `Optional` instead of nullable values, `Stream` instead of `Sequence`, and `CompletableFuture` instead of suspend functions.
 
 It is generated with [Stainless](https://www.stainless.com/).
 
-The REST API documentation can be found on [terminal.shop](https://terminal.shop/docs). Javadocs are also available on [javadoc.io](https://javadoc.io/doc/shop.terminal.api/terminal-java/1.6.1).
+<!-- x-release-please-start-version -->
+
+The REST API documentation can be found on [terminal.shop](https://terminal.shop/docs). Javadocs are also available on [javadoc.io](https://javadoc.io/doc/shop.terminal.api/terminal-java/2.0.0).
+
+<!-- x-release-please-end -->
 
 ## Installation
 
@@ -22,16 +26,16 @@ The REST API documentation can be found on [terminal.shop](https://terminal.shop
 ### Gradle
 
 ```kotlin
-implementation("shop.terminal.api:terminal-java:1.6.2")
+implementation("shop.terminal.api:terminal-java:2.0.0")
 ```
 
 ### Maven
 
 ```xml
 <dependency>
-    <groupId>shop.terminal.api</groupId>
-    <artifactId>terminal-java</artifactId>
-    <version>1.6.2</version>
+  <groupId>shop.terminal.api</groupId>
+  <artifactId>terminal-java</artifactId>
+  <version>2.0.0</version>
 </dependency>
 ```
 
@@ -181,16 +185,16 @@ The SDK throws custom unchecked exception types:
 
 - [`TerminalServiceException`](terminal-java-core/src/main/kotlin/shop/terminal/api/errors/TerminalServiceException.kt): Base class for HTTP errors. See this table for which exception subclass is thrown for each HTTP status code:
 
-  | Status | Exception                       |
-  | ------ | ------------------------------- |
-  | 400    | `BadRequestException`           |
-  | 401    | `AuthenticationException`       |
-  | 403    | `PermissionDeniedException`     |
-  | 404    | `NotFoundException`             |
-  | 422    | `UnprocessableEntityException`  |
-  | 429    | `RateLimitException`            |
-  | 5xx    | `InternalServerException`       |
-  | others | `UnexpectedStatusCodeException` |
+  | Status | Exception                                                                                                                       |
+  | ------ | ------------------------------------------------------------------------------------------------------------------------------- |
+  | 400    | [`BadRequestException`](terminal-java-core/src/main/kotlin/shop/terminal/api/errors/BadRequestException.kt)                     |
+  | 401    | [`UnauthorizedException`](terminal-java-core/src/main/kotlin/shop/terminal/api/errors/UnauthorizedException.kt)                 |
+  | 403    | [`PermissionDeniedException`](terminal-java-core/src/main/kotlin/shop/terminal/api/errors/PermissionDeniedException.kt)         |
+  | 404    | [`NotFoundException`](terminal-java-core/src/main/kotlin/shop/terminal/api/errors/NotFoundException.kt)                         |
+  | 422    | [`UnprocessableEntityException`](terminal-java-core/src/main/kotlin/shop/terminal/api/errors/UnprocessableEntityException.kt)   |
+  | 429    | [`RateLimitException`](terminal-java-core/src/main/kotlin/shop/terminal/api/errors/RateLimitException.kt)                       |
+  | 5xx    | [`InternalServerException`](terminal-java-core/src/main/kotlin/shop/terminal/api/errors/InternalServerException.kt)             |
+  | others | [`UnexpectedStatusCodeException`](terminal-java-core/src/main/kotlin/shop/terminal/api/errors/UnexpectedStatusCodeException.kt) |
 
 - [`TerminalIoException`](terminal-java-core/src/main/kotlin/shop/terminal/api/errors/TerminalIoException.kt): I/O networking errors.
 
