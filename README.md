@@ -185,16 +185,16 @@ The SDK throws custom unchecked exception types:
 
 - [`TerminalServiceException`](terminal-java-core/src/main/kotlin/shop/terminal/api/errors/TerminalServiceException.kt): Base class for HTTP errors. See this table for which exception subclass is thrown for each HTTP status code:
 
-  | Status | Exception                       |
-  | ------ | ------------------------------- |
-  | 400    | `BadRequestException`           |
-  | 401    | `AuthenticationException`       |
-  | 403    | `PermissionDeniedException`     |
-  | 404    | `NotFoundException`             |
-  | 422    | `UnprocessableEntityException`  |
-  | 429    | `RateLimitException`            |
-  | 5xx    | `InternalServerException`       |
-  | others | `UnexpectedStatusCodeException` |
+  | Status | Exception                                                                                                                       |
+  | ------ | ------------------------------------------------------------------------------------------------------------------------------- |
+  | 400    | [`BadRequestException`](terminal-java-core/src/main/kotlin/shop/terminal/api/errors/BadRequestException.kt)                     |
+  | 401    | [`UnauthorizedException`](terminal-java-core/src/main/kotlin/shop/terminal/api/errors/UnauthorizedException.kt)                 |
+  | 403    | [`PermissionDeniedException`](terminal-java-core/src/main/kotlin/shop/terminal/api/errors/PermissionDeniedException.kt)         |
+  | 404    | [`NotFoundException`](terminal-java-core/src/main/kotlin/shop/terminal/api/errors/NotFoundException.kt)                         |
+  | 422    | [`UnprocessableEntityException`](terminal-java-core/src/main/kotlin/shop/terminal/api/errors/UnprocessableEntityException.kt)   |
+  | 429    | [`RateLimitException`](terminal-java-core/src/main/kotlin/shop/terminal/api/errors/RateLimitException.kt)                       |
+  | 5xx    | [`InternalServerException`](terminal-java-core/src/main/kotlin/shop/terminal/api/errors/InternalServerException.kt)             |
+  | others | [`UnexpectedStatusCodeException`](terminal-java-core/src/main/kotlin/shop/terminal/api/errors/UnexpectedStatusCodeException.kt) |
 
 - [`TerminalIoException`](terminal-java-core/src/main/kotlin/shop/terminal/api/errors/TerminalIoException.kt): I/O networking errors.
 
