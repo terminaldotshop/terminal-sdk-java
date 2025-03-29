@@ -1,5 +1,44 @@
 # Changelog
 
+## 2.0.0 (2025-03-29)
+
+Full Changelog: [v1.6.2...v2.0.0](https://github.com/terminaldotshop/terminal-sdk-java/compare/v1.6.2...v2.0.0)
+
+### ⚠ BREAKING CHANGES
+
+* **client:** refactor exception structure and methods ([#158](https://github.com/terminaldotshop/terminal-sdk-java/issues/158))
+
+### Features
+
+* **client:** support a lower jackson version ([#164](https://github.com/terminaldotshop/terminal-sdk-java/issues/164)) ([86f1bf0](https://github.com/terminaldotshop/terminal-sdk-java/commit/86f1bf001cf0a7ff1783bf361d3f25c4da732e9d))
+* **client:** throw on incompatible jackson version ([86f1bf0](https://github.com/terminaldotshop/terminal-sdk-java/commit/86f1bf001cf0a7ff1783bf361d3f25c4da732e9d))
+
+
+### Bug Fixes
+
+* **client:** don't call `validate()` during deserialization if we don't have to ([#166](https://github.com/terminaldotshop/terminal-sdk-java/issues/166)) ([7dd33de](https://github.com/terminaldotshop/terminal-sdk-java/commit/7dd33de473972a9286a78366c0655410ab615c47))
+* **client:** map deserialization bug ([a4ba129](https://github.com/terminaldotshop/terminal-sdk-java/commit/a4ba1294923516a0e586022885e582fc7b634fdd))
+
+
+### Chores
+
+* **api:** more examples ([#156](https://github.com/terminaldotshop/terminal-sdk-java/issues/156)) ([c7785ea](https://github.com/terminaldotshop/terminal-sdk-java/commit/c7785ea9cdeb1e348fa45945c4746a5aded32c6a))
+* **client:** refactor exception structure and methods ([#158](https://github.com/terminaldotshop/terminal-sdk-java/issues/158)) ([f4a5c2b](https://github.com/terminaldotshop/terminal-sdk-java/commit/f4a5c2bcb8474a496f19876f18857b7552b5bbb7))
+* **internal:** add missing release please block ([#157](https://github.com/terminaldotshop/terminal-sdk-java/issues/157)) ([422dffc](https://github.com/terminaldotshop/terminal-sdk-java/commit/422dffc5992d9fe149c1dca8a4795a1b028252e9))
+* **internal:** delete unused methods and annotations ([#165](https://github.com/terminaldotshop/terminal-sdk-java/issues/165)) ([a4ba129](https://github.com/terminaldotshop/terminal-sdk-java/commit/a4ba1294923516a0e586022885e582fc7b634fdd))
+* **internal:** fix example formatting ([#160](https://github.com/terminaldotshop/terminal-sdk-java/issues/160)) ([24a2903](https://github.com/terminaldotshop/terminal-sdk-java/commit/24a290356714d252bf64917be80adeb504baf1a6))
+* **internal:** make multipart assertions more robust ([3f53cc9](https://github.com/terminaldotshop/terminal-sdk-java/commit/3f53cc9db346849329eeea1ecb0b2efc9908bf66))
+* **internal:** remove unnecessary `assertNotNull` calls ([3f53cc9](https://github.com/terminaldotshop/terminal-sdk-java/commit/3f53cc9db346849329eeea1ecb0b2efc9908bf66))
+* **internal:** remove unnecessary import ([#161](https://github.com/terminaldotshop/terminal-sdk-java/issues/161)) ([612af98](https://github.com/terminaldotshop/terminal-sdk-java/commit/612af98d2d279ba19356bf3ce085dd43c691bb81))
+* **internal:** version bump ([#154](https://github.com/terminaldotshop/terminal-sdk-java/issues/154)) ([f235da2](https://github.com/terminaldotshop/terminal-sdk-java/commit/f235da25b4a466fdef23bd774bd7213632692cdc))
+
+
+### Documentation
+
+* minor readme tweak ([#163](https://github.com/terminaldotshop/terminal-sdk-java/issues/163)) ([8660c34](https://github.com/terminaldotshop/terminal-sdk-java/commit/8660c343057323f84b5e1a8610546c90c9eb6a69))
+* refine comments on multipart params ([#159](https://github.com/terminaldotshop/terminal-sdk-java/issues/159)) ([3f53cc9](https://github.com/terminaldotshop/terminal-sdk-java/commit/3f53cc9db346849329eeea1ecb0b2efc9908bf66))
+* update readme exception docs ([#162](https://github.com/terminaldotshop/terminal-sdk-java/issues/162)) ([854c1f7](https://github.com/terminaldotshop/terminal-sdk-java/commit/854c1f7bebd9ef61ad5835a0d7d4b9d1405e3bff))
+
 ## 1.6.2 (2025-03-19)
 
 Full Changelog: [v1.6.1...v1.6.2](https://github.com/terminaldotshop/terminal-sdk-java/compare/v1.6.1...v1.6.2)
