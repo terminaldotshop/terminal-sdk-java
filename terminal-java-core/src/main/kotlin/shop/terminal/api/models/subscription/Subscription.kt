@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Collections
 import java.util.Objects
 import java.util.Optional
 import shop.terminal.api.core.BaseDeserializer
@@ -22,37 +23,35 @@ import shop.terminal.api.core.ExcludeMissing
 import shop.terminal.api.core.JsonField
 import shop.terminal.api.core.JsonMissing
 import shop.terminal.api.core.JsonValue
-import shop.terminal.api.core.NoAutoDetect
 import shop.terminal.api.core.checkRequired
 import shop.terminal.api.core.getOrThrow
-import shop.terminal.api.core.immutableEmptyMap
-import shop.terminal.api.core.toImmutable
 import shop.terminal.api.errors.TerminalInvalidDataException
 
 /** Subscription to a Terminal shop product. */
-@NoAutoDetect
 class Subscription
-@JsonCreator
 private constructor(
-    @JsonProperty("id") @ExcludeMissing private val id: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("addressID")
-    @ExcludeMissing
-    private val addressId: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("cardID")
-    @ExcludeMissing
-    private val cardId: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("productVariantID")
-    @ExcludeMissing
-    private val productVariantId: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("quantity")
-    @ExcludeMissing
-    private val quantity: JsonField<Long> = JsonMissing.of(),
-    @JsonProperty("next") @ExcludeMissing private val next: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("schedule")
-    @ExcludeMissing
-    private val schedule: JsonField<Schedule> = JsonMissing.of(),
-    @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
+    private val id: JsonField<String>,
+    private val addressId: JsonField<String>,
+    private val cardId: JsonField<String>,
+    private val productVariantId: JsonField<String>,
+    private val quantity: JsonField<Long>,
+    private val next: JsonField<String>,
+    private val schedule: JsonField<Schedule>,
+    private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
+
+    @JsonCreator
+    private constructor(
+        @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("addressID") @ExcludeMissing addressId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("cardID") @ExcludeMissing cardId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("productVariantID")
+        @ExcludeMissing
+        productVariantId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("quantity") @ExcludeMissing quantity: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("next") @ExcludeMissing next: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("schedule") @ExcludeMissing schedule: JsonField<Schedule> = JsonMissing.of(),
+    ) : this(id, addressId, cardId, productVariantId, quantity, next, schedule, mutableMapOf())
 
     /**
      * Unique object identifier. The format and length of IDs may change over time.
@@ -162,26 +161,15 @@ private constructor(
      */
     @JsonProperty("schedule") @ExcludeMissing fun _schedule(): JsonField<Schedule> = schedule
 
+    @JsonAnySetter
+    private fun putAdditionalProperty(key: String, value: JsonValue) {
+        additionalProperties.put(key, value)
+    }
+
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-    private var validated: Boolean = false
-
-    fun validate(): Subscription = apply {
-        if (validated) {
-            return@apply
-        }
-
-        id()
-        addressId()
-        cardId()
-        productVariantId()
-        quantity()
-        next()
-        schedule().ifPresent { it.validate() }
-        validated = true
-    }
+    fun _additionalProperties(): Map<String, JsonValue> =
+        Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -359,8 +347,25 @@ private constructor(
                 checkRequired("quantity", quantity),
                 next,
                 schedule,
-                additionalProperties.toImmutable(),
+                additionalProperties.toMutableMap(),
             )
+    }
+
+    private var validated: Boolean = false
+
+    fun validate(): Subscription = apply {
+        if (validated) {
+            return@apply
+        }
+
+        id()
+        addressId()
+        cardId()
+        productVariantId()
+        quantity()
+        next()
+        schedule().ifPresent { it.validate() }
+        validated = true
     }
 
     /** Schedule of the subscription. */
@@ -499,16 +504,16 @@ private constructor(
             }
         }
 
-        @NoAutoDetect
         class Fixed
-        @JsonCreator
         private constructor(
-            @JsonProperty("type")
-            @ExcludeMissing
-            private val type: JsonField<Type> = JsonMissing.of(),
-            @JsonAnySetter
-            private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
+            private val type: JsonField<Type>,
+            private val additionalProperties: MutableMap<String, JsonValue>,
         ) {
+
+            @JsonCreator
+            private constructor(
+                @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of()
+            ) : this(type, mutableMapOf())
 
             /**
              * @throws TerminalInvalidDataException if the JSON field has an unexpected type or is
@@ -524,20 +529,15 @@ private constructor(
              */
             @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
 
+            @JsonAnySetter
+            private fun putAdditionalProperty(key: String, value: JsonValue) {
+                additionalProperties.put(key, value)
+            }
+
             @JsonAnyGetter
             @ExcludeMissing
-            fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-            private var validated: Boolean = false
-
-            fun validate(): Fixed = apply {
-                if (validated) {
-                    return@apply
-                }
-
-                type()
-                validated = true
-            }
+            fun _additionalProperties(): Map<String, JsonValue> =
+                Collections.unmodifiableMap(additionalProperties)
 
             fun toBuilder() = Builder().from(this)
 
@@ -612,7 +612,18 @@ private constructor(
                  * @throws IllegalStateException if any required field is unset.
                  */
                 fun build(): Fixed =
-                    Fixed(checkRequired("type", type), additionalProperties.toImmutable())
+                    Fixed(checkRequired("type", type), additionalProperties.toMutableMap())
+            }
+
+            private var validated: Boolean = false
+
+            fun validate(): Fixed = apply {
+                if (validated) {
+                    return@apply
+                }
+
+                type()
+                validated = true
             }
 
             class Type @JsonCreator private constructor(private val value: JsonField<String>) :
@@ -730,19 +741,20 @@ private constructor(
                 "Fixed{type=$type, additionalProperties=$additionalProperties}"
         }
 
-        @NoAutoDetect
         class Weekly
-        @JsonCreator
         private constructor(
-            @JsonProperty("interval")
-            @ExcludeMissing
-            private val interval: JsonField<Long> = JsonMissing.of(),
-            @JsonProperty("type")
-            @ExcludeMissing
-            private val type: JsonField<Type> = JsonMissing.of(),
-            @JsonAnySetter
-            private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
+            private val interval: JsonField<Long>,
+            private val type: JsonField<Type>,
+            private val additionalProperties: MutableMap<String, JsonValue>,
         ) {
+
+            @JsonCreator
+            private constructor(
+                @JsonProperty("interval")
+                @ExcludeMissing
+                interval: JsonField<Long> = JsonMissing.of(),
+                @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of(),
+            ) : this(interval, type, mutableMapOf())
 
             /**
              * @throws TerminalInvalidDataException if the JSON field has an unexpected type or is
@@ -773,21 +785,15 @@ private constructor(
              */
             @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
 
+            @JsonAnySetter
+            private fun putAdditionalProperty(key: String, value: JsonValue) {
+                additionalProperties.put(key, value)
+            }
+
             @JsonAnyGetter
             @ExcludeMissing
-            fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-            private var validated: Boolean = false
-
-            fun validate(): Weekly = apply {
-                if (validated) {
-                    return@apply
-                }
-
-                interval()
-                type()
-                validated = true
-            }
+            fun _additionalProperties(): Map<String, JsonValue> =
+                Collections.unmodifiableMap(additionalProperties)
 
             fun toBuilder() = Builder().from(this)
 
@@ -880,8 +886,20 @@ private constructor(
                     Weekly(
                         checkRequired("interval", interval),
                         checkRequired("type", type),
-                        additionalProperties.toImmutable(),
+                        additionalProperties.toMutableMap(),
                     )
+            }
+
+            private var validated: Boolean = false
+
+            fun validate(): Weekly = apply {
+                if (validated) {
+                    return@apply
+                }
+
+                interval()
+                type()
+                validated = true
             }
 
             class Type @JsonCreator private constructor(private val value: JsonField<String>) :

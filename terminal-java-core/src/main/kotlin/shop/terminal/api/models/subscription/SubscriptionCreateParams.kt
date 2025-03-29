@@ -6,7 +6,6 @@ import java.util.Objects
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 import shop.terminal.api.core.JsonValue
-import shop.terminal.api.core.NoAutoDetect
 import shop.terminal.api.core.Params
 import shop.terminal.api.core.http.Headers
 import shop.terminal.api.core.http.QueryParams
@@ -30,12 +29,6 @@ private constructor(
 
     fun _additionalQueryParams(): QueryParams = additionalQueryParams
 
-    @JvmSynthetic internal fun _body(): Optional<Subscription> = Optional.ofNullable(subscription)
-
-    override fun _headers(): Headers = additionalHeaders
-
-    override fun _queryParams(): QueryParams = additionalQueryParams
-
     fun toBuilder() = Builder().from(this)
 
     companion object {
@@ -47,7 +40,6 @@ private constructor(
     }
 
     /** A builder for [SubscriptionCreateParams]. */
-    @NoAutoDetect
     class Builder internal constructor() {
 
         private var subscription: Subscription? = null
@@ -178,6 +170,12 @@ private constructor(
                 additionalQueryParams.build(),
             )
     }
+
+    @JvmSynthetic internal fun _body(): Optional<Subscription> = Optional.ofNullable(subscription)
+
+    override fun _headers(): Headers = additionalHeaders
+
+    override fun _queryParams(): QueryParams = additionalQueryParams
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {
