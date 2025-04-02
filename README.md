@@ -56,7 +56,7 @@ import shop.terminal.api.models.product.ProductListResponse;
 // Configures using the `TERMINAL_BEARER_TOKEN` environment variable
 TerminalClient client = TerminalOkHttpClient.fromEnv();
 
-ProductListResponse product = client.product().list();
+ProductListResponse products = client.product().list();
 ```
 
 ## Client configuration
@@ -133,7 +133,7 @@ import shop.terminal.api.models.product.ProductListResponse;
 // Configures using the `TERMINAL_BEARER_TOKEN` environment variable
 TerminalClient client = TerminalOkHttpClient.fromEnv();
 
-CompletableFuture<ProductListResponse> product = client.async().product().list();
+CompletableFuture<ProductListResponse> products = client.async().product().list();
 ```
 
 Or create an asynchronous client from the beginning:
@@ -148,7 +148,7 @@ import shop.terminal.api.models.product.ProductListResponse;
 // Configures using the `TERMINAL_BEARER_TOKEN` environment variable
 TerminalClientAsync client = TerminalOkHttpClientAsync.fromEnv();
 
-CompletableFuture<ProductListResponse> product = client.product().list();
+CompletableFuture<ProductListResponse> products = client.product().list();
 ```
 
 The asynchronous client supports the same options as the synchronous one, except most methods return `CompletableFuture`s.
@@ -165,10 +165,10 @@ import shop.terminal.api.core.http.HttpResponseFor;
 import shop.terminal.api.models.product.ProductListParams;
 import shop.terminal.api.models.product.ProductListResponse;
 
-HttpResponseFor<ProductListResponse> product = client.product().withRawResponse().list();
+HttpResponseFor<ProductListResponse> products = client.product().withRawResponse().list();
 
-int statusCode = product.statusCode();
-Headers headers = product.headers();
+int statusCode = products.statusCode();
+Headers headers = products.headers();
 ```
 
 You can still deserialize the response into an instance of a Java class if needed:
@@ -176,7 +176,7 @@ You can still deserialize the response into an instance of a Java class if neede
 ```java
 import shop.terminal.api.models.product.ProductListResponse;
 
-ProductListResponse parsedProduct = product.parse();
+ProductListResponse parsedProducts = products.parse();
 ```
 
 ## Error handling
@@ -256,7 +256,7 @@ To set a custom timeout, configure the method call using the `timeout` method:
 import shop.terminal.api.models.product.ProductListParams;
 import shop.terminal.api.models.product.ProductListResponse;
 
-ProductListResponse product = client.product().list(RequestOptions.builder().timeout(Duration.ofSeconds(30)).build());
+ProductListResponse products = client.product().list(RequestOptions.builder().timeout(Duration.ofSeconds(30)).build());
 ```
 
 Or configure the default for all method calls at the client level:
@@ -439,7 +439,7 @@ If you would prefer to check that the response is completely well-typed upfront,
 ```java
 import shop.terminal.api.models.product.ProductListResponse;
 
-ProductListResponse product = client.product().list(params).validate();
+ProductListResponse products = client.product().list(params).validate();
 ```
 
 Or configure the method call to validate the response using the `responseValidation` method:
@@ -448,7 +448,7 @@ Or configure the method call to validate the response using the `responseValidat
 import shop.terminal.api.models.product.ProductListParams;
 import shop.terminal.api.models.product.ProductListResponse;
 
-ProductListResponse product = client.product().list(RequestOptions.builder().responseValidation(true).build());
+ProductListResponse products = client.product().list(RequestOptions.builder().responseValidation(true).build());
 ```
 
 Or configure the default for all method calls at the client level:
