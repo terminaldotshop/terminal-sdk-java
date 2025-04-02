@@ -43,10 +43,10 @@ internal class AppServiceAsyncTest {
                 .build()
         val appServiceAsync = client.app()
 
-        val appFuture = appServiceAsync.list()
+        val appsFuture = appServiceAsync.list()
 
-        val app = appFuture.get()
-        app.validate()
+        val apps = appsFuture.get()
+        apps.validate()
     }
 
     @Test
