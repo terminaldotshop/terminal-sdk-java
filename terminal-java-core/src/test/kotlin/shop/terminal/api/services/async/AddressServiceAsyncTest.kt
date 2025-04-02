@@ -49,10 +49,10 @@ internal class AddressServiceAsyncTest {
                 .build()
         val addressServiceAsync = client.address()
 
-        val addressFuture = addressServiceAsync.list()
+        val addressesFuture = addressServiceAsync.list()
 
-        val address = addressFuture.get()
-        address.validate()
+        val addresses = addressesFuture.get()
+        addresses.validate()
     }
 
     @Test

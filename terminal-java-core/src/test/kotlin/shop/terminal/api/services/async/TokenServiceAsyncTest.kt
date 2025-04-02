@@ -36,10 +36,10 @@ internal class TokenServiceAsyncTest {
                 .build()
         val tokenServiceAsync = client.token()
 
-        val tokenFuture = tokenServiceAsync.list()
+        val tokensFuture = tokenServiceAsync.list()
 
-        val token = tokenFuture.get()
-        token.validate()
+        val tokens = tokensFuture.get()
+        tokens.validate()
     }
 
     @Test
