@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Collections
 import java.util.Objects
+import kotlin.jvm.optionals.getOrNull
 import shop.terminal.api.core.ExcludeMissing
 import shop.terminal.api.core.JsonField
 import shop.terminal.api.core.JsonMissing
@@ -145,6 +146,21 @@ private constructor(
         data().validate()
         validated = true
     }
+
+    fun isValid(): Boolean =
+        try {
+            validate()
+            true
+        } catch (e: TerminalInvalidDataException) {
+            false
+        }
+
+    /**
+     * Returns a score indicating how many valid values are contained in this object recursively.
+     *
+     * Used for best match union deserialization.
+     */
+    @JvmSynthetic internal fun validity(): Int = (data.asKnown().getOrNull()?.validity() ?: 0)
 
     /** Initial app data. */
     class Data
@@ -685,11 +701,38 @@ private constructor(
             orders().forEach { it.validate() }
             products().forEach { it.validate() }
             profile().validate()
-            region()
+            region().validate()
             subscriptions().forEach { it.validate() }
             tokens().forEach { it.validate() }
             validated = true
         }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: TerminalInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic
+        internal fun validity(): Int =
+            (addresses.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+                (apps.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+                (cards.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+                (cart.asKnown().getOrNull()?.validity() ?: 0) +
+                (orders.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+                (products.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+                (profile.asKnown().getOrNull()?.validity() ?: 0) +
+                (region.asKnown().getOrNull()?.validity() ?: 0) +
+                (subscriptions.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+                (tokens.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

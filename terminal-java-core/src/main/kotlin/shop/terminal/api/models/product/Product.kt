@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import java.util.Collections
 import java.util.Objects
 import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 import shop.terminal.api.core.Enum
 import shop.terminal.api.core.ExcludeMissing
 import shop.terminal.api.core.JsonField
@@ -366,10 +367,33 @@ private constructor(
         name()
         variants().forEach { it.validate() }
         order()
-        subscription()
+        subscription().ifPresent { it.validate() }
         tags().ifPresent { it.validate() }
         validated = true
     }
+
+    fun isValid(): Boolean =
+        try {
+            validate()
+            true
+        } catch (e: TerminalInvalidDataException) {
+            false
+        }
+
+    /**
+     * Returns a score indicating how many valid values are contained in this object recursively.
+     *
+     * Used for best match union deserialization.
+     */
+    @JvmSynthetic
+    internal fun validity(): Int =
+        (if (id.asKnown().isPresent) 1 else 0) +
+            (if (description.asKnown().isPresent) 1 else 0) +
+            (if (name.asKnown().isPresent) 1 else 0) +
+            (variants.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+            (if (order.asKnown().isPresent) 1 else 0) +
+            (subscription.asKnown().getOrNull()?.validity() ?: 0) +
+            (tags.asKnown().getOrNull()?.validity() ?: 0)
 
     /** Whether the product must be or can be subscribed to. */
     class Subscription @JsonCreator private constructor(private val value: JsonField<String>) :
@@ -461,6 +485,33 @@ private constructor(
             _value().asString().orElseThrow {
                 TerminalInvalidDataException("Value is not a String")
             }
+
+        private var validated: Boolean = false
+
+        fun validate(): Subscription = apply {
+            if (validated) {
+                return@apply
+            }
+
+            known()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: TerminalInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -701,6 +752,28 @@ private constructor(
             marketNa()
             validated = true
         }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: TerminalInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic
+        internal fun validity(): Int =
+            (if (app.asKnown().isPresent) 1 else 0) +
+                (if (color.asKnown().isPresent) 1 else 0) +
+                (if (featured.asKnown().isPresent) 1 else 0) +
+                (if (marketEu.asKnown().isPresent) 1 else 0) +
+                (if (marketNa.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
