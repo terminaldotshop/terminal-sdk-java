@@ -171,7 +171,7 @@ private constructor(
             )
     }
 
-    @JvmSynthetic internal fun _body(): Optional<Subscription> = Optional.ofNullable(subscription)
+    fun _body(): Optional<Subscription> = Optional.ofNullable(subscription)
 
     override fun _headers(): Headers = additionalHeaders
 
