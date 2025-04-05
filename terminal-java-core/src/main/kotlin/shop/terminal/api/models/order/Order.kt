@@ -87,7 +87,7 @@ private constructor(
      * @throws TerminalInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun index(): Optional<Long> = Optional.ofNullable(index.getNullable("index"))
+    fun index(): Optional<Long> = index.getOptional("index")
 
     /**
      * Returns the raw JSON value of [id].
@@ -598,8 +598,7 @@ private constructor(
          * @throws TerminalInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
-        fun description(): Optional<String> =
-            Optional.ofNullable(description.getNullable("description"))
+        fun description(): Optional<String> = description.getOptional("description")
 
         /**
          * ID of the product variant of the item in the order.
@@ -607,8 +606,7 @@ private constructor(
          * @throws TerminalInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
-        fun productVariantId(): Optional<String> =
-            Optional.ofNullable(productVariantId.getNullable("productVariantID"))
+        fun productVariantId(): Optional<String> = productVariantId.getOptional("productVariantID")
 
         /**
          * Returns the raw JSON value of [id].
@@ -935,7 +933,7 @@ private constructor(
          * @throws TerminalInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
-        fun phone(): Optional<String> = Optional.ofNullable(phone.getNullable("phone"))
+        fun phone(): Optional<String> = phone.getOptional("phone")
 
         /**
          * Province or state of the address.
@@ -943,7 +941,7 @@ private constructor(
          * @throws TerminalInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
-        fun province(): Optional<String> = Optional.ofNullable(province.getNullable("province"))
+        fun province(): Optional<String> = province.getOptional("province")
 
         /**
          * Apartment, suite, etc. of the address.
@@ -951,7 +949,7 @@ private constructor(
          * @throws TerminalInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
-        fun street2(): Optional<String> = Optional.ofNullable(street2.getNullable("street2"))
+        fun street2(): Optional<String> = street2.getOptional("street2")
 
         /**
          * Returns the raw JSON value of [city].
@@ -1292,7 +1290,7 @@ private constructor(
          * @throws TerminalInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
-        fun number(): Optional<String> = Optional.ofNullable(number.getNullable("number"))
+        fun number(): Optional<String> = number.getOptional("number")
 
         /**
          * Shipping service of the order.
@@ -1300,7 +1298,7 @@ private constructor(
          * @throws TerminalInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
-        fun service(): Optional<String> = Optional.ofNullable(service.getNullable("service"))
+        fun service(): Optional<String> = service.getOptional("service")
 
         /**
          * Tracking URL of the order.
@@ -1308,7 +1306,7 @@ private constructor(
          * @throws TerminalInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
-        fun url(): Optional<String> = Optional.ofNullable(url.getNullable("url"))
+        fun url(): Optional<String> = url.getOptional("url")
 
         /**
          * Returns the raw JSON value of [number].
