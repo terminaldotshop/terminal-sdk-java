@@ -71,7 +71,7 @@ private constructor(
      * @throws TerminalInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun addressId(): Optional<String> = Optional.ofNullable(addressId.getNullable("addressID"))
+    fun addressId(): Optional<String> = addressId.getOptional("addressID")
 
     /**
      * ID of the card selected on the current user's cart.
@@ -79,7 +79,7 @@ private constructor(
      * @throws TerminalInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun cardId(): Optional<String> = Optional.ofNullable(cardId.getNullable("cardID"))
+    fun cardId(): Optional<String> = cardId.getOptional("cardID")
 
     /**
      * Shipping information for the current user's cart.
@@ -87,7 +87,7 @@ private constructor(
      * @throws TerminalInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun shipping(): Optional<Shipping> = Optional.ofNullable(shipping.getNullable("shipping"))
+    fun shipping(): Optional<Shipping> = shipping.getOptional("shipping")
 
     /**
      * Returns the raw JSON value of [amount].
@@ -374,7 +374,7 @@ private constructor(
          * @throws TerminalInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
-        fun shipping(): Optional<Long> = Optional.ofNullable(shipping.getNullable("shipping"))
+        fun shipping(): Optional<Long> = shipping.getOptional("shipping")
 
         /**
          * Total amount after any discounts, in cents (USD).
@@ -382,7 +382,7 @@ private constructor(
          * @throws TerminalInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
-        fun total(): Optional<Long> = Optional.ofNullable(total.getNullable("total"))
+        fun total(): Optional<Long> = total.getOptional("total")
 
         /**
          * Returns the raw JSON value of [subtotal].
@@ -872,7 +872,7 @@ private constructor(
          * @throws TerminalInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
-        fun service(): Optional<String> = Optional.ofNullable(service.getNullable("service"))
+        fun service(): Optional<String> = service.getOptional("service")
 
         /**
          * Shipping timeframe provided by the shipping carrier.
@@ -880,7 +880,7 @@ private constructor(
          * @throws TerminalInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
-        fun timeframe(): Optional<String> = Optional.ofNullable(timeframe.getNullable("timeframe"))
+        fun timeframe(): Optional<String> = timeframe.getOptional("timeframe")
 
         /**
          * Returns the raw JSON value of [service].

@@ -101,7 +101,7 @@ private constructor(
      * @throws TerminalInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun next(): Optional<String> = Optional.ofNullable(next.getNullable("next"))
+    fun next(): Optional<String> = next.getOptional("next")
 
     /**
      * Schedule of the subscription.
@@ -109,7 +109,7 @@ private constructor(
      * @throws TerminalInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun schedule(): Optional<Schedule> = Optional.ofNullable(schedule.getNullable("schedule"))
+    fun schedule(): Optional<Schedule> = schedule.getOptional("schedule")
 
     /**
      * Returns the raw JSON value of [id].
