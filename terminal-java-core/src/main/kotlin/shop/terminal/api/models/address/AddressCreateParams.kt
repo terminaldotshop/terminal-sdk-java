@@ -509,7 +509,7 @@ private constructor(
          * @throws TerminalInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
-        fun phone(): Optional<String> = Optional.ofNullable(phone.getNullable("phone"))
+        fun phone(): Optional<String> = phone.getOptional("phone")
 
         /**
          * Province or state of the address.
@@ -517,7 +517,7 @@ private constructor(
          * @throws TerminalInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
-        fun province(): Optional<String> = Optional.ofNullable(province.getNullable("province"))
+        fun province(): Optional<String> = province.getOptional("province")
 
         /**
          * Apartment, suite, etc. of the address.
@@ -525,7 +525,7 @@ private constructor(
          * @throws TerminalInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
-        fun street2(): Optional<String> = Optional.ofNullable(street2.getNullable("street2"))
+        fun street2(): Optional<String> = street2.getOptional("street2")
 
         /**
          * Returns the raw JSON value of [city].

@@ -191,7 +191,7 @@ private constructor(
          * @throws TerminalInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
-        fun email(): Optional<String> = Optional.ofNullable(email.getNullable("email"))
+        fun email(): Optional<String> = email.getOptional("email")
 
         /**
          * The user's fingerprint, derived from their public SSH key.
@@ -199,8 +199,7 @@ private constructor(
          * @throws TerminalInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
-        fun fingerprint(): Optional<String> =
-            Optional.ofNullable(fingerprint.getNullable("fingerprint"))
+        fun fingerprint(): Optional<String> = fingerprint.getOptional("fingerprint")
 
         /**
          * Name of the user.
@@ -208,7 +207,7 @@ private constructor(
          * @throws TerminalInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
-        fun name(): Optional<String> = Optional.ofNullable(name.getNullable("name"))
+        fun name(): Optional<String> = name.getOptional("name")
 
         /**
          * Stripe customer ID of the user.

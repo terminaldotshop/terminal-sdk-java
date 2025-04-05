@@ -88,7 +88,7 @@ private constructor(
      * @throws TerminalInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun order(): Optional<Long> = Optional.ofNullable(order.getNullable("order"))
+    fun order(): Optional<Long> = order.getOptional("order")
 
     /**
      * Whether the product must be or can be subscribed to.
@@ -96,8 +96,7 @@ private constructor(
      * @throws TerminalInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun subscription(): Optional<Subscription> =
-        Optional.ofNullable(subscription.getNullable("subscription"))
+    fun subscription(): Optional<Subscription> = subscription.getOptional("subscription")
 
     /**
      * Tags for the product.
@@ -105,7 +104,7 @@ private constructor(
      * @throws TerminalInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun tags(): Optional<Tags> = Optional.ofNullable(tags.getNullable("tags"))
+    fun tags(): Optional<Tags> = tags.getOptional("tags")
 
     /**
      * Returns the raw JSON value of [id].
@@ -556,31 +555,31 @@ private constructor(
          * @throws TerminalInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
-        fun app(): Optional<String> = Optional.ofNullable(app.getNullable("app"))
+        fun app(): Optional<String> = app.getOptional("app")
 
         /**
          * @throws TerminalInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
-        fun color(): Optional<String> = Optional.ofNullable(color.getNullable("color"))
+        fun color(): Optional<String> = color.getOptional("color")
 
         /**
          * @throws TerminalInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
-        fun featured(): Optional<Boolean> = Optional.ofNullable(featured.getNullable("featured"))
+        fun featured(): Optional<Boolean> = featured.getOptional("featured")
 
         /**
          * @throws TerminalInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
-        fun marketEu(): Optional<Boolean> = Optional.ofNullable(marketEu.getNullable("market_eu"))
+        fun marketEu(): Optional<Boolean> = marketEu.getOptional("market_eu")
 
         /**
          * @throws TerminalInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
-        fun marketNa(): Optional<Boolean> = Optional.ofNullable(marketNa.getNullable("market_na"))
+        fun marketNa(): Optional<Boolean> = marketNa.getOptional("market_na")
 
         /**
          * Returns the raw JSON value of [app].
