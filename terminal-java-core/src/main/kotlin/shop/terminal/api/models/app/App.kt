@@ -6,32 +6,34 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import java.util.Collections
 import java.util.Objects
 import shop.terminal.api.core.ExcludeMissing
 import shop.terminal.api.core.JsonField
 import shop.terminal.api.core.JsonMissing
 import shop.terminal.api.core.JsonValue
-import shop.terminal.api.core.NoAutoDetect
 import shop.terminal.api.core.checkRequired
-import shop.terminal.api.core.immutableEmptyMap
-import shop.terminal.api.core.toImmutable
 import shop.terminal.api.errors.TerminalInvalidDataException
 
 /** A Terminal App used for configuring an OAuth 2.0 client. */
-@NoAutoDetect
 class App
-@JsonCreator
 private constructor(
-    @JsonProperty("id") @ExcludeMissing private val id: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("name") @ExcludeMissing private val name: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("redirectURI")
-    @ExcludeMissing
-    private val redirectUri: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("secret")
-    @ExcludeMissing
-    private val secret: JsonField<String> = JsonMissing.of(),
-    @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
+    private val id: JsonField<String>,
+    private val name: JsonField<String>,
+    private val redirectUri: JsonField<String>,
+    private val secret: JsonField<String>,
+    private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
+
+    @JsonCreator
+    private constructor(
+        @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("redirectURI")
+        @ExcludeMissing
+        redirectUri: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("secret") @ExcludeMissing secret: JsonField<String> = JsonMissing.of(),
+    ) : this(id, name, redirectUri, secret, mutableMapOf())
 
     /**
      * Unique object identifier. The format and length of IDs may change over time.
@@ -93,23 +95,15 @@ private constructor(
      */
     @JsonProperty("secret") @ExcludeMissing fun _secret(): JsonField<String> = secret
 
+    @JsonAnySetter
+    private fun putAdditionalProperty(key: String, value: JsonValue) {
+        additionalProperties.put(key, value)
+    }
+
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-    private var validated: Boolean = false
-
-    fun validate(): App = apply {
-        if (validated) {
-            return@apply
-        }
-
-        id()
-        name()
-        redirectUri()
-        secret()
-        validated = true
-    }
+    fun _additionalProperties(): Map<String, JsonValue> =
+        Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -232,9 +226,43 @@ private constructor(
                 checkRequired("name", name),
                 checkRequired("redirectUri", redirectUri),
                 checkRequired("secret", secret),
-                additionalProperties.toImmutable(),
+                additionalProperties.toMutableMap(),
             )
     }
+
+    private var validated: Boolean = false
+
+    fun validate(): App = apply {
+        if (validated) {
+            return@apply
+        }
+
+        id()
+        name()
+        redirectUri()
+        secret()
+        validated = true
+    }
+
+    fun isValid(): Boolean =
+        try {
+            validate()
+            true
+        } catch (e: TerminalInvalidDataException) {
+            false
+        }
+
+    /**
+     * Returns a score indicating how many valid values are contained in this object recursively.
+     *
+     * Used for best match union deserialization.
+     */
+    @JvmSynthetic
+    internal fun validity(): Int =
+        (if (id.asKnown().isPresent) 1 else 0) +
+            (if (name.asKnown().isPresent) 1 else 0) +
+            (if (redirectUri.asKnown().isPresent) 1 else 0) +
+            (if (secret.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

@@ -58,10 +58,10 @@ internal class SubscriptionServiceAsyncTest {
                 .build()
         val subscriptionServiceAsync = client.subscription()
 
-        val subscriptionFuture = subscriptionServiceAsync.list()
+        val subscriptionsFuture = subscriptionServiceAsync.list()
 
-        val subscription = subscriptionFuture.get()
-        subscription.validate()
+        val subscriptions = subscriptionsFuture.get()
+        subscriptions.validate()
     }
 
     @Test

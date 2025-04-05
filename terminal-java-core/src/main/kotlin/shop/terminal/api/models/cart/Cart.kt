@@ -6,44 +6,40 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import java.util.Collections
 import java.util.Objects
 import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 import shop.terminal.api.core.ExcludeMissing
 import shop.terminal.api.core.JsonField
 import shop.terminal.api.core.JsonMissing
 import shop.terminal.api.core.JsonValue
-import shop.terminal.api.core.NoAutoDetect
 import shop.terminal.api.core.checkKnown
 import shop.terminal.api.core.checkRequired
-import shop.terminal.api.core.immutableEmptyMap
 import shop.terminal.api.core.toImmutable
 import shop.terminal.api.errors.TerminalInvalidDataException
 
 /** The current Terminal shop user's cart. */
-@NoAutoDetect
 class Cart
-@JsonCreator
 private constructor(
-    @JsonProperty("amount")
-    @ExcludeMissing
-    private val amount: JsonField<Amount> = JsonMissing.of(),
-    @JsonProperty("items")
-    @ExcludeMissing
-    private val items: JsonField<List<Item>> = JsonMissing.of(),
-    @JsonProperty("subtotal")
-    @ExcludeMissing
-    private val subtotal: JsonField<Long> = JsonMissing.of(),
-    @JsonProperty("addressID")
-    @ExcludeMissing
-    private val addressId: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("cardID")
-    @ExcludeMissing
-    private val cardId: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("shipping")
-    @ExcludeMissing
-    private val shipping: JsonField<Shipping> = JsonMissing.of(),
-    @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
+    private val amount: JsonField<Amount>,
+    private val items: JsonField<List<Item>>,
+    private val subtotal: JsonField<Long>,
+    private val addressId: JsonField<String>,
+    private val cardId: JsonField<String>,
+    private val shipping: JsonField<Shipping>,
+    private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
+
+    @JsonCreator
+    private constructor(
+        @JsonProperty("amount") @ExcludeMissing amount: JsonField<Amount> = JsonMissing.of(),
+        @JsonProperty("items") @ExcludeMissing items: JsonField<List<Item>> = JsonMissing.of(),
+        @JsonProperty("subtotal") @ExcludeMissing subtotal: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("addressID") @ExcludeMissing addressId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("cardID") @ExcludeMissing cardId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("shipping") @ExcludeMissing shipping: JsonField<Shipping> = JsonMissing.of(),
+    ) : this(amount, items, subtotal, addressId, cardId, shipping, mutableMapOf())
 
     /**
      * The subtotal and shipping amounts for the current user's cart.
@@ -75,7 +71,7 @@ private constructor(
      * @throws TerminalInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun addressId(): Optional<String> = Optional.ofNullable(addressId.getNullable("addressID"))
+    fun addressId(): Optional<String> = addressId.getOptional("addressID")
 
     /**
      * ID of the card selected on the current user's cart.
@@ -83,7 +79,7 @@ private constructor(
      * @throws TerminalInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun cardId(): Optional<String> = Optional.ofNullable(cardId.getNullable("cardID"))
+    fun cardId(): Optional<String> = cardId.getOptional("cardID")
 
     /**
      * Shipping information for the current user's cart.
@@ -91,7 +87,7 @@ private constructor(
      * @throws TerminalInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun shipping(): Optional<Shipping> = Optional.ofNullable(shipping.getNullable("shipping"))
+    fun shipping(): Optional<Shipping> = shipping.getOptional("shipping")
 
     /**
      * Returns the raw JSON value of [amount].
@@ -135,25 +131,15 @@ private constructor(
      */
     @JsonProperty("shipping") @ExcludeMissing fun _shipping(): JsonField<Shipping> = shipping
 
+    @JsonAnySetter
+    private fun putAdditionalProperty(key: String, value: JsonValue) {
+        additionalProperties.put(key, value)
+    }
+
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-    private var validated: Boolean = false
-
-    fun validate(): Cart = apply {
-        if (validated) {
-            return@apply
-        }
-
-        amount().validate()
-        items().forEach { it.validate() }
-        subtotal()
-        addressId()
-        cardId()
-        shipping().ifPresent { it.validate() }
-        validated = true
-    }
+    fun _additionalProperties(): Map<String, JsonValue> =
+        Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -316,27 +302,63 @@ private constructor(
                 addressId,
                 cardId,
                 shipping,
-                additionalProperties.toImmutable(),
+                additionalProperties.toMutableMap(),
             )
     }
 
+    private var validated: Boolean = false
+
+    fun validate(): Cart = apply {
+        if (validated) {
+            return@apply
+        }
+
+        amount().validate()
+        items().forEach { it.validate() }
+        subtotal()
+        addressId()
+        cardId()
+        shipping().ifPresent { it.validate() }
+        validated = true
+    }
+
+    fun isValid(): Boolean =
+        try {
+            validate()
+            true
+        } catch (e: TerminalInvalidDataException) {
+            false
+        }
+
+    /**
+     * Returns a score indicating how many valid values are contained in this object recursively.
+     *
+     * Used for best match union deserialization.
+     */
+    @JvmSynthetic
+    internal fun validity(): Int =
+        (amount.asKnown().getOrNull()?.validity() ?: 0) +
+            (items.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+            (if (subtotal.asKnown().isPresent) 1 else 0) +
+            (if (addressId.asKnown().isPresent) 1 else 0) +
+            (if (cardId.asKnown().isPresent) 1 else 0) +
+            (shipping.asKnown().getOrNull()?.validity() ?: 0)
+
     /** The subtotal and shipping amounts for the current user's cart. */
-    @NoAutoDetect
     class Amount
-    @JsonCreator
     private constructor(
-        @JsonProperty("subtotal")
-        @ExcludeMissing
-        private val subtotal: JsonField<Long> = JsonMissing.of(),
-        @JsonProperty("shipping")
-        @ExcludeMissing
-        private val shipping: JsonField<Long> = JsonMissing.of(),
-        @JsonProperty("total")
-        @ExcludeMissing
-        private val total: JsonField<Long> = JsonMissing.of(),
-        @JsonAnySetter
-        private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
+        private val subtotal: JsonField<Long>,
+        private val shipping: JsonField<Long>,
+        private val total: JsonField<Long>,
+        private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
+
+        @JsonCreator
+        private constructor(
+            @JsonProperty("subtotal") @ExcludeMissing subtotal: JsonField<Long> = JsonMissing.of(),
+            @JsonProperty("shipping") @ExcludeMissing shipping: JsonField<Long> = JsonMissing.of(),
+            @JsonProperty("total") @ExcludeMissing total: JsonField<Long> = JsonMissing.of(),
+        ) : this(subtotal, shipping, total, mutableMapOf())
 
         /**
          * Subtotal of the current user's cart, in cents (USD).
@@ -352,7 +374,7 @@ private constructor(
          * @throws TerminalInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
-        fun shipping(): Optional<Long> = Optional.ofNullable(shipping.getNullable("shipping"))
+        fun shipping(): Optional<Long> = shipping.getOptional("shipping")
 
         /**
          * Total amount after any discounts, in cents (USD).
@@ -360,7 +382,7 @@ private constructor(
          * @throws TerminalInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
-        fun total(): Optional<Long> = Optional.ofNullable(total.getNullable("total"))
+        fun total(): Optional<Long> = total.getOptional("total")
 
         /**
          * Returns the raw JSON value of [subtotal].
@@ -383,22 +405,15 @@ private constructor(
          */
         @JsonProperty("total") @ExcludeMissing fun _total(): JsonField<Long> = total
 
+        @JsonAnySetter
+        private fun putAdditionalProperty(key: String, value: JsonValue) {
+            additionalProperties.put(key, value)
+        }
+
         @JsonAnyGetter
         @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-        private var validated: Boolean = false
-
-        fun validate(): Amount = apply {
-            if (validated) {
-                return@apply
-            }
-
-            subtotal()
-            shipping()
-            total()
-            validated = true
-        }
+        fun _additionalProperties(): Map<String, JsonValue> =
+            Collections.unmodifiableMap(additionalProperties)
 
         fun toBuilder() = Builder().from(this)
 
@@ -503,9 +518,42 @@ private constructor(
                     checkRequired("subtotal", subtotal),
                     shipping,
                     total,
-                    additionalProperties.toImmutable(),
+                    additionalProperties.toMutableMap(),
                 )
         }
+
+        private var validated: Boolean = false
+
+        fun validate(): Amount = apply {
+            if (validated) {
+                return@apply
+            }
+
+            subtotal()
+            shipping()
+            total()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: TerminalInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic
+        internal fun validity(): Int =
+            (if (subtotal.asKnown().isPresent) 1 else 0) +
+                (if (shipping.asKnown().isPresent) 1 else 0) +
+                (if (total.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -526,23 +574,24 @@ private constructor(
     }
 
     /** An item in the current Terminal shop user's cart. */
-    @NoAutoDetect
     class Item
-    @JsonCreator
     private constructor(
-        @JsonProperty("id") @ExcludeMissing private val id: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("productVariantID")
-        @ExcludeMissing
-        private val productVariantId: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("quantity")
-        @ExcludeMissing
-        private val quantity: JsonField<Long> = JsonMissing.of(),
-        @JsonProperty("subtotal")
-        @ExcludeMissing
-        private val subtotal: JsonField<Long> = JsonMissing.of(),
-        @JsonAnySetter
-        private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
+        private val id: JsonField<String>,
+        private val productVariantId: JsonField<String>,
+        private val quantity: JsonField<Long>,
+        private val subtotal: JsonField<Long>,
+        private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
+
+        @JsonCreator
+        private constructor(
+            @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("productVariantID")
+            @ExcludeMissing
+            productVariantId: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("quantity") @ExcludeMissing quantity: JsonField<Long> = JsonMissing.of(),
+            @JsonProperty("subtotal") @ExcludeMissing subtotal: JsonField<Long> = JsonMissing.of(),
+        ) : this(id, productVariantId, quantity, subtotal, mutableMapOf())
 
         /**
          * Unique object identifier. The format and length of IDs may change over time.
@@ -607,23 +656,15 @@ private constructor(
          */
         @JsonProperty("subtotal") @ExcludeMissing fun _subtotal(): JsonField<Long> = subtotal
 
+        @JsonAnySetter
+        private fun putAdditionalProperty(key: String, value: JsonValue) {
+            additionalProperties.put(key, value)
+        }
+
         @JsonAnyGetter
         @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-        private var validated: Boolean = false
-
-        fun validate(): Item = apply {
-            if (validated) {
-                return@apply
-            }
-
-            id()
-            productVariantId()
-            quantity()
-            subtotal()
-            validated = true
-        }
+        fun _additionalProperties(): Map<String, JsonValue> =
+            Collections.unmodifiableMap(additionalProperties)
 
         fun toBuilder() = Builder().from(this)
 
@@ -752,9 +793,44 @@ private constructor(
                     checkRequired("productVariantId", productVariantId),
                     checkRequired("quantity", quantity),
                     checkRequired("subtotal", subtotal),
-                    additionalProperties.toImmutable(),
+                    additionalProperties.toMutableMap(),
                 )
         }
+
+        private var validated: Boolean = false
+
+        fun validate(): Item = apply {
+            if (validated) {
+                return@apply
+            }
+
+            id()
+            productVariantId()
+            quantity()
+            subtotal()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: TerminalInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic
+        internal fun validity(): Int =
+            (if (id.asKnown().isPresent) 1 else 0) +
+                (if (productVariantId.asKnown().isPresent) 1 else 0) +
+                (if (quantity.asKnown().isPresent) 1 else 0) +
+                (if (subtotal.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -775,19 +851,20 @@ private constructor(
     }
 
     /** Shipping information for the current user's cart. */
-    @NoAutoDetect
     class Shipping
-    @JsonCreator
     private constructor(
-        @JsonProperty("service")
-        @ExcludeMissing
-        private val service: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("timeframe")
-        @ExcludeMissing
-        private val timeframe: JsonField<String> = JsonMissing.of(),
-        @JsonAnySetter
-        private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
+        private val service: JsonField<String>,
+        private val timeframe: JsonField<String>,
+        private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
+
+        @JsonCreator
+        private constructor(
+            @JsonProperty("service") @ExcludeMissing service: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("timeframe")
+            @ExcludeMissing
+            timeframe: JsonField<String> = JsonMissing.of(),
+        ) : this(service, timeframe, mutableMapOf())
 
         /**
          * Shipping service name.
@@ -795,7 +872,7 @@ private constructor(
          * @throws TerminalInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
-        fun service(): Optional<String> = Optional.ofNullable(service.getNullable("service"))
+        fun service(): Optional<String> = service.getOptional("service")
 
         /**
          * Shipping timeframe provided by the shipping carrier.
@@ -803,7 +880,7 @@ private constructor(
          * @throws TerminalInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
-        fun timeframe(): Optional<String> = Optional.ofNullable(timeframe.getNullable("timeframe"))
+        fun timeframe(): Optional<String> = timeframe.getOptional("timeframe")
 
         /**
          * Returns the raw JSON value of [service].
@@ -819,21 +896,15 @@ private constructor(
          */
         @JsonProperty("timeframe") @ExcludeMissing fun _timeframe(): JsonField<String> = timeframe
 
+        @JsonAnySetter
+        private fun putAdditionalProperty(key: String, value: JsonValue) {
+            additionalProperties.put(key, value)
+        }
+
         @JsonAnyGetter
         @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-        private var validated: Boolean = false
-
-        fun validate(): Shipping = apply {
-            if (validated) {
-                return@apply
-            }
-
-            service()
-            timeframe()
-            validated = true
-        }
+        fun _additionalProperties(): Map<String, JsonValue> =
+            Collections.unmodifiableMap(additionalProperties)
 
         fun toBuilder() = Builder().from(this)
 
@@ -905,8 +976,40 @@ private constructor(
              *
              * Further updates to this [Builder] will not mutate the returned instance.
              */
-            fun build(): Shipping = Shipping(service, timeframe, additionalProperties.toImmutable())
+            fun build(): Shipping =
+                Shipping(service, timeframe, additionalProperties.toMutableMap())
         }
+
+        private var validated: Boolean = false
+
+        fun validate(): Shipping = apply {
+            if (validated) {
+                return@apply
+            }
+
+            service()
+            timeframe()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: TerminalInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic
+        internal fun validity(): Int =
+            (if (service.asKnown().isPresent) 1 else 0) +
+                (if (timeframe.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

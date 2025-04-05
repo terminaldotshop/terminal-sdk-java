@@ -6,42 +6,43 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import java.util.Collections
 import java.util.Objects
 import java.util.Optional
 import shop.terminal.api.core.ExcludeMissing
 import shop.terminal.api.core.JsonField
 import shop.terminal.api.core.JsonMissing
 import shop.terminal.api.core.JsonValue
-import shop.terminal.api.core.NoAutoDetect
 import shop.terminal.api.core.checkRequired
-import shop.terminal.api.core.immutableEmptyMap
-import shop.terminal.api.core.toImmutable
 import shop.terminal.api.errors.TerminalInvalidDataException
 
 /** Physical address associated with a Terminal shop user. */
-@NoAutoDetect
 class Address
-@JsonCreator
 private constructor(
-    @JsonProperty("id") @ExcludeMissing private val id: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("city") @ExcludeMissing private val city: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("country")
-    @ExcludeMissing
-    private val country: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("name") @ExcludeMissing private val name: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("street1")
-    @ExcludeMissing
-    private val street1: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("zip") @ExcludeMissing private val zip: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("phone") @ExcludeMissing private val phone: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("province")
-    @ExcludeMissing
-    private val province: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("street2")
-    @ExcludeMissing
-    private val street2: JsonField<String> = JsonMissing.of(),
-    @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
+    private val id: JsonField<String>,
+    private val city: JsonField<String>,
+    private val country: JsonField<String>,
+    private val name: JsonField<String>,
+    private val street1: JsonField<String>,
+    private val zip: JsonField<String>,
+    private val phone: JsonField<String>,
+    private val province: JsonField<String>,
+    private val street2: JsonField<String>,
+    private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
+
+    @JsonCreator
+    private constructor(
+        @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("city") @ExcludeMissing city: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("country") @ExcludeMissing country: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("street1") @ExcludeMissing street1: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("zip") @ExcludeMissing zip: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("phone") @ExcludeMissing phone: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("province") @ExcludeMissing province: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("street2") @ExcludeMissing street2: JsonField<String> = JsonMissing.of(),
+    ) : this(id, city, country, name, street1, zip, phone, province, street2, mutableMapOf())
 
     /**
      * Unique object identifier. The format and length of IDs may change over time.
@@ -97,7 +98,7 @@ private constructor(
      * @throws TerminalInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun phone(): Optional<String> = Optional.ofNullable(phone.getNullable("phone"))
+    fun phone(): Optional<String> = phone.getOptional("phone")
 
     /**
      * Province or state of the address.
@@ -105,7 +106,7 @@ private constructor(
      * @throws TerminalInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun province(): Optional<String> = Optional.ofNullable(province.getNullable("province"))
+    fun province(): Optional<String> = province.getOptional("province")
 
     /**
      * Apartment, suite, etc. of the address.
@@ -113,7 +114,7 @@ private constructor(
      * @throws TerminalInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun street2(): Optional<String> = Optional.ofNullable(street2.getNullable("street2"))
+    fun street2(): Optional<String> = street2.getOptional("street2")
 
     /**
      * Returns the raw JSON value of [id].
@@ -178,28 +179,15 @@ private constructor(
      */
     @JsonProperty("street2") @ExcludeMissing fun _street2(): JsonField<String> = street2
 
+    @JsonAnySetter
+    private fun putAdditionalProperty(key: String, value: JsonValue) {
+        additionalProperties.put(key, value)
+    }
+
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-    private var validated: Boolean = false
-
-    fun validate(): Address = apply {
-        if (validated) {
-            return@apply
-        }
-
-        id()
-        city()
-        country()
-        name()
-        street1()
-        zip()
-        phone()
-        province()
-        street2()
-        validated = true
-    }
+    fun _additionalProperties(): Map<String, JsonValue> =
+        Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -395,9 +383,53 @@ private constructor(
                 phone,
                 province,
                 street2,
-                additionalProperties.toImmutable(),
+                additionalProperties.toMutableMap(),
             )
     }
+
+    private var validated: Boolean = false
+
+    fun validate(): Address = apply {
+        if (validated) {
+            return@apply
+        }
+
+        id()
+        city()
+        country()
+        name()
+        street1()
+        zip()
+        phone()
+        province()
+        street2()
+        validated = true
+    }
+
+    fun isValid(): Boolean =
+        try {
+            validate()
+            true
+        } catch (e: TerminalInvalidDataException) {
+            false
+        }
+
+    /**
+     * Returns a score indicating how many valid values are contained in this object recursively.
+     *
+     * Used for best match union deserialization.
+     */
+    @JvmSynthetic
+    internal fun validity(): Int =
+        (if (id.asKnown().isPresent) 1 else 0) +
+            (if (city.asKnown().isPresent) 1 else 0) +
+            (if (country.asKnown().isPresent) 1 else 0) +
+            (if (name.asKnown().isPresent) 1 else 0) +
+            (if (street1.asKnown().isPresent) 1 else 0) +
+            (if (zip.asKnown().isPresent) 1 else 0) +
+            (if (phone.asKnown().isPresent) 1 else 0) +
+            (if (province.asKnown().isPresent) 1 else 0) +
+            (if (street2.asKnown().isPresent) 1 else 0)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) {

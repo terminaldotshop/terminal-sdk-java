@@ -6,30 +6,35 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import java.util.Collections
 import java.util.Objects
+import kotlin.jvm.optionals.getOrNull
 import shop.terminal.api.core.ExcludeMissing
 import shop.terminal.api.core.JsonField
 import shop.terminal.api.core.JsonMissing
 import shop.terminal.api.core.JsonValue
-import shop.terminal.api.core.NoAutoDetect
 import shop.terminal.api.core.checkRequired
-import shop.terminal.api.core.immutableEmptyMap
-import shop.terminal.api.core.toImmutable
 import shop.terminal.api.errors.TerminalInvalidDataException
 
 /** Credit card used for payments in the Terminal shop. */
-@NoAutoDetect
 class Card
-@JsonCreator
 private constructor(
-    @JsonProperty("id") @ExcludeMissing private val id: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("brand") @ExcludeMissing private val brand: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("expiration")
-    @ExcludeMissing
-    private val expiration: JsonField<Expiration> = JsonMissing.of(),
-    @JsonProperty("last4") @ExcludeMissing private val last4: JsonField<String> = JsonMissing.of(),
-    @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
+    private val id: JsonField<String>,
+    private val brand: JsonField<String>,
+    private val expiration: JsonField<Expiration>,
+    private val last4: JsonField<String>,
+    private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
+
+    @JsonCreator
+    private constructor(
+        @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("brand") @ExcludeMissing brand: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("expiration")
+        @ExcludeMissing
+        expiration: JsonField<Expiration> = JsonMissing.of(),
+        @JsonProperty("last4") @ExcludeMissing last4: JsonField<String> = JsonMissing.of(),
+    ) : this(id, brand, expiration, last4, mutableMapOf())
 
     /**
      * Unique object identifier. The format and length of IDs may change over time.
@@ -93,23 +98,15 @@ private constructor(
      */
     @JsonProperty("last4") @ExcludeMissing fun _last4(): JsonField<String> = last4
 
+    @JsonAnySetter
+    private fun putAdditionalProperty(key: String, value: JsonValue) {
+        additionalProperties.put(key, value)
+    }
+
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-    private var validated: Boolean = false
-
-    fun validate(): Card = apply {
-        if (validated) {
-            return@apply
-        }
-
-        id()
-        brand()
-        expiration().validate()
-        last4()
-        validated = true
-    }
+    fun _additionalProperties(): Map<String, JsonValue> =
+        Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -232,22 +229,57 @@ private constructor(
                 checkRequired("brand", brand),
                 checkRequired("expiration", expiration),
                 checkRequired("last4", last4),
-                additionalProperties.toImmutable(),
+                additionalProperties.toMutableMap(),
             )
     }
 
+    private var validated: Boolean = false
+
+    fun validate(): Card = apply {
+        if (validated) {
+            return@apply
+        }
+
+        id()
+        brand()
+        expiration().validate()
+        last4()
+        validated = true
+    }
+
+    fun isValid(): Boolean =
+        try {
+            validate()
+            true
+        } catch (e: TerminalInvalidDataException) {
+            false
+        }
+
+    /**
+     * Returns a score indicating how many valid values are contained in this object recursively.
+     *
+     * Used for best match union deserialization.
+     */
+    @JvmSynthetic
+    internal fun validity(): Int =
+        (if (id.asKnown().isPresent) 1 else 0) +
+            (if (brand.asKnown().isPresent) 1 else 0) +
+            (expiration.asKnown().getOrNull()?.validity() ?: 0) +
+            (if (last4.asKnown().isPresent) 1 else 0)
+
     /** Expiration of the card. */
-    @NoAutoDetect
     class Expiration
-    @JsonCreator
     private constructor(
-        @JsonProperty("month")
-        @ExcludeMissing
-        private val month: JsonField<Long> = JsonMissing.of(),
-        @JsonProperty("year") @ExcludeMissing private val year: JsonField<Long> = JsonMissing.of(),
-        @JsonAnySetter
-        private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
+        private val month: JsonField<Long>,
+        private val year: JsonField<Long>,
+        private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
+
+        @JsonCreator
+        private constructor(
+            @JsonProperty("month") @ExcludeMissing month: JsonField<Long> = JsonMissing.of(),
+            @JsonProperty("year") @ExcludeMissing year: JsonField<Long> = JsonMissing.of(),
+        ) : this(month, year, mutableMapOf())
 
         /**
          * Expiration month of the card.
@@ -279,21 +311,15 @@ private constructor(
          */
         @JsonProperty("year") @ExcludeMissing fun _year(): JsonField<Long> = year
 
+        @JsonAnySetter
+        private fun putAdditionalProperty(key: String, value: JsonValue) {
+            additionalProperties.put(key, value)
+        }
+
         @JsonAnyGetter
         @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-        private var validated: Boolean = false
-
-        fun validate(): Expiration = apply {
-            if (validated) {
-                return@apply
-            }
-
-            month()
-            year()
-            validated = true
-        }
+        fun _additionalProperties(): Map<String, JsonValue> =
+            Collections.unmodifiableMap(additionalProperties)
 
         fun toBuilder() = Builder().from(this)
 
@@ -385,9 +411,39 @@ private constructor(
                 Expiration(
                     checkRequired("month", month),
                     checkRequired("year", year),
-                    additionalProperties.toImmutable(),
+                    additionalProperties.toMutableMap(),
                 )
         }
+
+        private var validated: Boolean = false
+
+        fun validate(): Expiration = apply {
+            if (validated) {
+                return@apply
+            }
+
+            month()
+            year()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: TerminalInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic
+        internal fun validity(): Int =
+            (if (month.asKnown().isPresent) 1 else 0) + (if (year.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

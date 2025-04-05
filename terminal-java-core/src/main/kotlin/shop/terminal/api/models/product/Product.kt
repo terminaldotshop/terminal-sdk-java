@@ -6,40 +6,49 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
+import java.util.Collections
 import java.util.Objects
 import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 import shop.terminal.api.core.Enum
 import shop.terminal.api.core.ExcludeMissing
 import shop.terminal.api.core.JsonField
 import shop.terminal.api.core.JsonMissing
 import shop.terminal.api.core.JsonValue
-import shop.terminal.api.core.NoAutoDetect
 import shop.terminal.api.core.checkKnown
 import shop.terminal.api.core.checkRequired
-import shop.terminal.api.core.immutableEmptyMap
 import shop.terminal.api.core.toImmutable
 import shop.terminal.api.errors.TerminalInvalidDataException
 
 /** Product sold in the Terminal shop. */
-@NoAutoDetect
 class Product
-@JsonCreator
 private constructor(
-    @JsonProperty("id") @ExcludeMissing private val id: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("description")
-    @ExcludeMissing
-    private val description: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("name") @ExcludeMissing private val name: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("variants")
-    @ExcludeMissing
-    private val variants: JsonField<List<ProductVariant>> = JsonMissing.of(),
-    @JsonProperty("order") @ExcludeMissing private val order: JsonField<Long> = JsonMissing.of(),
-    @JsonProperty("subscription")
-    @ExcludeMissing
-    private val subscription: JsonField<Subscription> = JsonMissing.of(),
-    @JsonProperty("tags") @ExcludeMissing private val tags: JsonField<Tags> = JsonMissing.of(),
-    @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
+    private val id: JsonField<String>,
+    private val description: JsonField<String>,
+    private val name: JsonField<String>,
+    private val variants: JsonField<List<ProductVariant>>,
+    private val order: JsonField<Long>,
+    private val subscription: JsonField<Subscription>,
+    private val tags: JsonField<Tags>,
+    private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
+
+    @JsonCreator
+    private constructor(
+        @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("description")
+        @ExcludeMissing
+        description: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("name") @ExcludeMissing name: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("variants")
+        @ExcludeMissing
+        variants: JsonField<List<ProductVariant>> = JsonMissing.of(),
+        @JsonProperty("order") @ExcludeMissing order: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("subscription")
+        @ExcludeMissing
+        subscription: JsonField<Subscription> = JsonMissing.of(),
+        @JsonProperty("tags") @ExcludeMissing tags: JsonField<Tags> = JsonMissing.of(),
+    ) : this(id, description, name, variants, order, subscription, tags, mutableMapOf())
 
     /**
      * Unique object identifier. The format and length of IDs may change over time.
@@ -79,7 +88,7 @@ private constructor(
      * @throws TerminalInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun order(): Optional<Long> = Optional.ofNullable(order.getNullable("order"))
+    fun order(): Optional<Long> = order.getOptional("order")
 
     /**
      * Whether the product must be or can be subscribed to.
@@ -87,8 +96,7 @@ private constructor(
      * @throws TerminalInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun subscription(): Optional<Subscription> =
-        Optional.ofNullable(subscription.getNullable("subscription"))
+    fun subscription(): Optional<Subscription> = subscription.getOptional("subscription")
 
     /**
      * Tags for the product.
@@ -96,7 +104,7 @@ private constructor(
      * @throws TerminalInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun tags(): Optional<Tags> = Optional.ofNullable(tags.getNullable("tags"))
+    fun tags(): Optional<Tags> = tags.getOptional("tags")
 
     /**
      * Returns the raw JSON value of [id].
@@ -151,26 +159,15 @@ private constructor(
      */
     @JsonProperty("tags") @ExcludeMissing fun _tags(): JsonField<Tags> = tags
 
+    @JsonAnySetter
+    private fun putAdditionalProperty(key: String, value: JsonValue) {
+        additionalProperties.put(key, value)
+    }
+
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-    private var validated: Boolean = false
-
-    fun validate(): Product = apply {
-        if (validated) {
-            return@apply
-        }
-
-        id()
-        description()
-        name()
-        variants().forEach { it.validate() }
-        order()
-        subscription()
-        tags().ifPresent { it.validate() }
-        validated = true
-    }
+    fun _additionalProperties(): Map<String, JsonValue> =
+        Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -353,9 +350,49 @@ private constructor(
                 order,
                 subscription,
                 tags,
-                additionalProperties.toImmutable(),
+                additionalProperties.toMutableMap(),
             )
     }
+
+    private var validated: Boolean = false
+
+    fun validate(): Product = apply {
+        if (validated) {
+            return@apply
+        }
+
+        id()
+        description()
+        name()
+        variants().forEach { it.validate() }
+        order()
+        subscription().ifPresent { it.validate() }
+        tags().ifPresent { it.validate() }
+        validated = true
+    }
+
+    fun isValid(): Boolean =
+        try {
+            validate()
+            true
+        } catch (e: TerminalInvalidDataException) {
+            false
+        }
+
+    /**
+     * Returns a score indicating how many valid values are contained in this object recursively.
+     *
+     * Used for best match union deserialization.
+     */
+    @JvmSynthetic
+    internal fun validity(): Int =
+        (if (id.asKnown().isPresent) 1 else 0) +
+            (if (description.asKnown().isPresent) 1 else 0) +
+            (if (name.asKnown().isPresent) 1 else 0) +
+            (variants.asKnown().getOrNull()?.sumOf { it.validity().toInt() } ?: 0) +
+            (if (order.asKnown().isPresent) 1 else 0) +
+            (subscription.asKnown().getOrNull()?.validity() ?: 0) +
+            (tags.asKnown().getOrNull()?.validity() ?: 0)
 
     /** Whether the product must be or can be subscribed to. */
     class Subscription @JsonCreator private constructor(private val value: JsonField<String>) :
@@ -448,6 +485,33 @@ private constructor(
                 TerminalInvalidDataException("Value is not a String")
             }
 
+        private var validated: Boolean = false
+
+        fun validate(): Subscription = apply {
+            if (validated) {
+                return@apply
+            }
+
+            known()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: TerminalInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
         override fun equals(other: Any?): Boolean {
             if (this === other) {
                 return true
@@ -462,56 +526,60 @@ private constructor(
     }
 
     /** Tags for the product. */
-    @NoAutoDetect
     class Tags
-    @JsonCreator
     private constructor(
-        @JsonProperty("app") @ExcludeMissing private val app: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("color")
-        @ExcludeMissing
-        private val color: JsonField<String> = JsonMissing.of(),
-        @JsonProperty("featured")
-        @ExcludeMissing
-        private val featured: JsonField<Boolean> = JsonMissing.of(),
-        @JsonProperty("market_eu")
-        @ExcludeMissing
-        private val marketEu: JsonField<Boolean> = JsonMissing.of(),
-        @JsonProperty("market_na")
-        @ExcludeMissing
-        private val marketNa: JsonField<Boolean> = JsonMissing.of(),
-        @JsonAnySetter
-        private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
+        private val app: JsonField<String>,
+        private val color: JsonField<String>,
+        private val featured: JsonField<Boolean>,
+        private val marketEu: JsonField<Boolean>,
+        private val marketNa: JsonField<Boolean>,
+        private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
 
-        /**
-         * @throws TerminalInvalidDataException if the JSON field has an unexpected type (e.g. if
-         *   the server responded with an unexpected value).
-         */
-        fun app(): Optional<String> = Optional.ofNullable(app.getNullable("app"))
+        @JsonCreator
+        private constructor(
+            @JsonProperty("app") @ExcludeMissing app: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("color") @ExcludeMissing color: JsonField<String> = JsonMissing.of(),
+            @JsonProperty("featured")
+            @ExcludeMissing
+            featured: JsonField<Boolean> = JsonMissing.of(),
+            @JsonProperty("market_eu")
+            @ExcludeMissing
+            marketEu: JsonField<Boolean> = JsonMissing.of(),
+            @JsonProperty("market_na")
+            @ExcludeMissing
+            marketNa: JsonField<Boolean> = JsonMissing.of(),
+        ) : this(app, color, featured, marketEu, marketNa, mutableMapOf())
 
         /**
          * @throws TerminalInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
-        fun color(): Optional<String> = Optional.ofNullable(color.getNullable("color"))
+        fun app(): Optional<String> = app.getOptional("app")
 
         /**
          * @throws TerminalInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
-        fun featured(): Optional<Boolean> = Optional.ofNullable(featured.getNullable("featured"))
+        fun color(): Optional<String> = color.getOptional("color")
 
         /**
          * @throws TerminalInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
-        fun marketEu(): Optional<Boolean> = Optional.ofNullable(marketEu.getNullable("market_eu"))
+        fun featured(): Optional<Boolean> = featured.getOptional("featured")
 
         /**
          * @throws TerminalInvalidDataException if the JSON field has an unexpected type (e.g. if
          *   the server responded with an unexpected value).
          */
-        fun marketNa(): Optional<Boolean> = Optional.ofNullable(marketNa.getNullable("market_na"))
+        fun marketEu(): Optional<Boolean> = marketEu.getOptional("market_eu")
+
+        /**
+         * @throws TerminalInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun marketNa(): Optional<Boolean> = marketNa.getOptional("market_na")
 
         /**
          * Returns the raw JSON value of [app].
@@ -548,24 +616,15 @@ private constructor(
          */
         @JsonProperty("market_na") @ExcludeMissing fun _marketNa(): JsonField<Boolean> = marketNa
 
+        @JsonAnySetter
+        private fun putAdditionalProperty(key: String, value: JsonValue) {
+            additionalProperties.put(key, value)
+        }
+
         @JsonAnyGetter
         @ExcludeMissing
-        fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-        private var validated: Boolean = false
-
-        fun validate(): Tags = apply {
-            if (validated) {
-                return@apply
-            }
-
-            app()
-            color()
-            featured()
-            marketEu()
-            marketNa()
-            validated = true
-        }
+        fun _additionalProperties(): Map<String, JsonValue> =
+            Collections.unmodifiableMap(additionalProperties)
 
         fun toBuilder() = Builder().from(this)
 
@@ -675,8 +734,45 @@ private constructor(
              * Further updates to this [Builder] will not mutate the returned instance.
              */
             fun build(): Tags =
-                Tags(app, color, featured, marketEu, marketNa, additionalProperties.toImmutable())
+                Tags(app, color, featured, marketEu, marketNa, additionalProperties.toMutableMap())
         }
+
+        private var validated: Boolean = false
+
+        fun validate(): Tags = apply {
+            if (validated) {
+                return@apply
+            }
+
+            app()
+            color()
+            featured()
+            marketEu()
+            marketNa()
+            validated = true
+        }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: TerminalInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic
+        internal fun validity(): Int =
+            (if (app.asKnown().isPresent) 1 else 0) +
+                (if (color.asKnown().isPresent) 1 else 0) +
+                (if (featured.asKnown().isPresent) 1 else 0) +
+                (if (marketEu.asKnown().isPresent) 1 else 0) +
+                (if (marketNa.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {

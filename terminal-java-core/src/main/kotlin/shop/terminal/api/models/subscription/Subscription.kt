@@ -13,8 +13,10 @@ import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
+import java.util.Collections
 import java.util.Objects
 import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 import shop.terminal.api.core.BaseDeserializer
 import shop.terminal.api.core.BaseSerializer
 import shop.terminal.api.core.Enum
@@ -22,37 +24,36 @@ import shop.terminal.api.core.ExcludeMissing
 import shop.terminal.api.core.JsonField
 import shop.terminal.api.core.JsonMissing
 import shop.terminal.api.core.JsonValue
-import shop.terminal.api.core.NoAutoDetect
+import shop.terminal.api.core.allMaxBy
 import shop.terminal.api.core.checkRequired
 import shop.terminal.api.core.getOrThrow
-import shop.terminal.api.core.immutableEmptyMap
-import shop.terminal.api.core.toImmutable
 import shop.terminal.api.errors.TerminalInvalidDataException
 
 /** Subscription to a Terminal shop product. */
-@NoAutoDetect
 class Subscription
-@JsonCreator
 private constructor(
-    @JsonProperty("id") @ExcludeMissing private val id: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("addressID")
-    @ExcludeMissing
-    private val addressId: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("cardID")
-    @ExcludeMissing
-    private val cardId: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("productVariantID")
-    @ExcludeMissing
-    private val productVariantId: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("quantity")
-    @ExcludeMissing
-    private val quantity: JsonField<Long> = JsonMissing.of(),
-    @JsonProperty("next") @ExcludeMissing private val next: JsonField<String> = JsonMissing.of(),
-    @JsonProperty("schedule")
-    @ExcludeMissing
-    private val schedule: JsonField<Schedule> = JsonMissing.of(),
-    @JsonAnySetter private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
+    private val id: JsonField<String>,
+    private val addressId: JsonField<String>,
+    private val cardId: JsonField<String>,
+    private val productVariantId: JsonField<String>,
+    private val quantity: JsonField<Long>,
+    private val next: JsonField<String>,
+    private val schedule: JsonField<Schedule>,
+    private val additionalProperties: MutableMap<String, JsonValue>,
 ) {
+
+    @JsonCreator
+    private constructor(
+        @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("addressID") @ExcludeMissing addressId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("cardID") @ExcludeMissing cardId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("productVariantID")
+        @ExcludeMissing
+        productVariantId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("quantity") @ExcludeMissing quantity: JsonField<Long> = JsonMissing.of(),
+        @JsonProperty("next") @ExcludeMissing next: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("schedule") @ExcludeMissing schedule: JsonField<Schedule> = JsonMissing.of(),
+    ) : this(id, addressId, cardId, productVariantId, quantity, next, schedule, mutableMapOf())
 
     /**
      * Unique object identifier. The format and length of IDs may change over time.
@@ -100,7 +101,7 @@ private constructor(
      * @throws TerminalInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun next(): Optional<String> = Optional.ofNullable(next.getNullable("next"))
+    fun next(): Optional<String> = next.getOptional("next")
 
     /**
      * Schedule of the subscription.
@@ -108,7 +109,7 @@ private constructor(
      * @throws TerminalInvalidDataException if the JSON field has an unexpected type (e.g. if the
      *   server responded with an unexpected value).
      */
-    fun schedule(): Optional<Schedule> = Optional.ofNullable(schedule.getNullable("schedule"))
+    fun schedule(): Optional<Schedule> = schedule.getOptional("schedule")
 
     /**
      * Returns the raw JSON value of [id].
@@ -162,26 +163,15 @@ private constructor(
      */
     @JsonProperty("schedule") @ExcludeMissing fun _schedule(): JsonField<Schedule> = schedule
 
+    @JsonAnySetter
+    private fun putAdditionalProperty(key: String, value: JsonValue) {
+        additionalProperties.put(key, value)
+    }
+
     @JsonAnyGetter
     @ExcludeMissing
-    fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-    private var validated: Boolean = false
-
-    fun validate(): Subscription = apply {
-        if (validated) {
-            return@apply
-        }
-
-        id()
-        addressId()
-        cardId()
-        productVariantId()
-        quantity()
-        next()
-        schedule().ifPresent { it.validate() }
-        validated = true
-    }
+    fun _additionalProperties(): Map<String, JsonValue> =
+        Collections.unmodifiableMap(additionalProperties)
 
     fun toBuilder() = Builder().from(this)
 
@@ -359,9 +349,49 @@ private constructor(
                 checkRequired("quantity", quantity),
                 next,
                 schedule,
-                additionalProperties.toImmutable(),
+                additionalProperties.toMutableMap(),
             )
     }
+
+    private var validated: Boolean = false
+
+    fun validate(): Subscription = apply {
+        if (validated) {
+            return@apply
+        }
+
+        id()
+        addressId()
+        cardId()
+        productVariantId()
+        quantity()
+        next()
+        schedule().ifPresent { it.validate() }
+        validated = true
+    }
+
+    fun isValid(): Boolean =
+        try {
+            validate()
+            true
+        } catch (e: TerminalInvalidDataException) {
+            false
+        }
+
+    /**
+     * Returns a score indicating how many valid values are contained in this object recursively.
+     *
+     * Used for best match union deserialization.
+     */
+    @JvmSynthetic
+    internal fun validity(): Int =
+        (if (id.asKnown().isPresent) 1 else 0) +
+            (if (addressId.asKnown().isPresent) 1 else 0) +
+            (if (cardId.asKnown().isPresent) 1 else 0) +
+            (if (productVariantId.asKnown().isPresent) 1 else 0) +
+            (if (quantity.asKnown().isPresent) 1 else 0) +
+            (if (next.asKnown().isPresent) 1 else 0) +
+            (schedule.asKnown().getOrNull()?.validity() ?: 0)
 
     /** Schedule of the subscription. */
     @JsonDeserialize(using = Schedule.Deserializer::class)
@@ -387,13 +417,12 @@ private constructor(
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
-        fun <T> accept(visitor: Visitor<T>): T {
-            return when {
+        fun <T> accept(visitor: Visitor<T>): T =
+            when {
                 fixed != null -> visitor.visitFixed(fixed)
                 weekly != null -> visitor.visitWeekly(weekly)
                 else -> visitor.unknown(_json)
             }
-        }
 
         private var validated: Boolean = false
 
@@ -415,6 +444,32 @@ private constructor(
             )
             validated = true
         }
+
+        fun isValid(): Boolean =
+            try {
+                validate()
+                true
+            } catch (e: TerminalInvalidDataException) {
+                false
+            }
+
+        /**
+         * Returns a score indicating how many valid values are contained in this object
+         * recursively.
+         *
+         * Used for best match union deserialization.
+         */
+        @JvmSynthetic
+        internal fun validity(): Int =
+            accept(
+                object : Visitor<Int> {
+                    override fun visitFixed(fixed: Fixed) = fixed.validity()
+
+                    override fun visitWeekly(weekly: Weekly) = weekly.validity()
+
+                    override fun unknown(json: JsonValue?) = 0
+                }
+            )
 
         override fun equals(other: Any?): Boolean {
             if (this === other) {
@@ -470,16 +525,28 @@ private constructor(
             override fun ObjectCodec.deserialize(node: JsonNode): Schedule {
                 val json = JsonValue.fromJsonNode(node)
 
-                tryDeserialize(node, jacksonTypeRef<Fixed>()) { it.validate() }
-                    ?.let {
-                        return Schedule(fixed = it, _json = json)
-                    }
-                tryDeserialize(node, jacksonTypeRef<Weekly>()) { it.validate() }
-                    ?.let {
-                        return Schedule(weekly = it, _json = json)
-                    }
-
-                return Schedule(_json = json)
+                val bestMatches =
+                    sequenceOf(
+                            tryDeserialize(node, jacksonTypeRef<Fixed>())?.let {
+                                Schedule(fixed = it, _json = json)
+                            },
+                            tryDeserialize(node, jacksonTypeRef<Weekly>())?.let {
+                                Schedule(weekly = it, _json = json)
+                            },
+                        )
+                        .filterNotNull()
+                        .allMaxBy { it.validity() }
+                        .toList()
+                return when (bestMatches.size) {
+                    // This can happen if what we're deserializing is completely incompatible with
+                    // all the possible variants (e.g. deserializing from boolean).
+                    0 -> Schedule(_json = json)
+                    1 -> bestMatches.single()
+                    // If there's more than one match with the highest validity, then use the first
+                    // completely valid match, or simply the first match if none are completely
+                    // valid.
+                    else -> bestMatches.firstOrNull { it.isValid() } ?: bestMatches.first()
+                }
             }
         }
 
@@ -499,16 +566,16 @@ private constructor(
             }
         }
 
-        @NoAutoDetect
         class Fixed
-        @JsonCreator
         private constructor(
-            @JsonProperty("type")
-            @ExcludeMissing
-            private val type: JsonField<Type> = JsonMissing.of(),
-            @JsonAnySetter
-            private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
+            private val type: JsonField<Type>,
+            private val additionalProperties: MutableMap<String, JsonValue>,
         ) {
+
+            @JsonCreator
+            private constructor(
+                @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of()
+            ) : this(type, mutableMapOf())
 
             /**
              * @throws TerminalInvalidDataException if the JSON field has an unexpected type or is
@@ -524,20 +591,15 @@ private constructor(
              */
             @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
 
+            @JsonAnySetter
+            private fun putAdditionalProperty(key: String, value: JsonValue) {
+                additionalProperties.put(key, value)
+            }
+
             @JsonAnyGetter
             @ExcludeMissing
-            fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-            private var validated: Boolean = false
-
-            fun validate(): Fixed = apply {
-                if (validated) {
-                    return@apply
-                }
-
-                type()
-                validated = true
-            }
+            fun _additionalProperties(): Map<String, JsonValue> =
+                Collections.unmodifiableMap(additionalProperties)
 
             fun toBuilder() = Builder().from(this)
 
@@ -612,8 +674,36 @@ private constructor(
                  * @throws IllegalStateException if any required field is unset.
                  */
                 fun build(): Fixed =
-                    Fixed(checkRequired("type", type), additionalProperties.toImmutable())
+                    Fixed(checkRequired("type", type), additionalProperties.toMutableMap())
             }
+
+            private var validated: Boolean = false
+
+            fun validate(): Fixed = apply {
+                if (validated) {
+                    return@apply
+                }
+
+                type().validate()
+                validated = true
+            }
+
+            fun isValid(): Boolean =
+                try {
+                    validate()
+                    true
+                } catch (e: TerminalInvalidDataException) {
+                    false
+                }
+
+            /**
+             * Returns a score indicating how many valid values are contained in this object
+             * recursively.
+             *
+             * Used for best match union deserialization.
+             */
+            @JvmSynthetic
+            internal fun validity(): Int = (type.asKnown().getOrNull()?.validity() ?: 0)
 
             class Type @JsonCreator private constructor(private val value: JsonField<String>) :
                 Enum {
@@ -699,6 +789,33 @@ private constructor(
                         TerminalInvalidDataException("Value is not a String")
                     }
 
+                private var validated: Boolean = false
+
+                fun validate(): Type = apply {
+                    if (validated) {
+                        return@apply
+                    }
+
+                    known()
+                    validated = true
+                }
+
+                fun isValid(): Boolean =
+                    try {
+                        validate()
+                        true
+                    } catch (e: TerminalInvalidDataException) {
+                        false
+                    }
+
+                /**
+                 * Returns a score indicating how many valid values are contained in this object
+                 * recursively.
+                 *
+                 * Used for best match union deserialization.
+                 */
+                @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
+
                 override fun equals(other: Any?): Boolean {
                     if (this === other) {
                         return true
@@ -730,19 +847,20 @@ private constructor(
                 "Fixed{type=$type, additionalProperties=$additionalProperties}"
         }
 
-        @NoAutoDetect
         class Weekly
-        @JsonCreator
         private constructor(
-            @JsonProperty("interval")
-            @ExcludeMissing
-            private val interval: JsonField<Long> = JsonMissing.of(),
-            @JsonProperty("type")
-            @ExcludeMissing
-            private val type: JsonField<Type> = JsonMissing.of(),
-            @JsonAnySetter
-            private val additionalProperties: Map<String, JsonValue> = immutableEmptyMap(),
+            private val interval: JsonField<Long>,
+            private val type: JsonField<Type>,
+            private val additionalProperties: MutableMap<String, JsonValue>,
         ) {
+
+            @JsonCreator
+            private constructor(
+                @JsonProperty("interval")
+                @ExcludeMissing
+                interval: JsonField<Long> = JsonMissing.of(),
+                @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of(),
+            ) : this(interval, type, mutableMapOf())
 
             /**
              * @throws TerminalInvalidDataException if the JSON field has an unexpected type or is
@@ -773,21 +891,15 @@ private constructor(
              */
             @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
 
+            @JsonAnySetter
+            private fun putAdditionalProperty(key: String, value: JsonValue) {
+                additionalProperties.put(key, value)
+            }
+
             @JsonAnyGetter
             @ExcludeMissing
-            fun _additionalProperties(): Map<String, JsonValue> = additionalProperties
-
-            private var validated: Boolean = false
-
-            fun validate(): Weekly = apply {
-                if (validated) {
-                    return@apply
-                }
-
-                interval()
-                type()
-                validated = true
-            }
+            fun _additionalProperties(): Map<String, JsonValue> =
+                Collections.unmodifiableMap(additionalProperties)
 
             fun toBuilder() = Builder().from(this)
 
@@ -880,9 +992,40 @@ private constructor(
                     Weekly(
                         checkRequired("interval", interval),
                         checkRequired("type", type),
-                        additionalProperties.toImmutable(),
+                        additionalProperties.toMutableMap(),
                     )
             }
+
+            private var validated: Boolean = false
+
+            fun validate(): Weekly = apply {
+                if (validated) {
+                    return@apply
+                }
+
+                interval()
+                type().validate()
+                validated = true
+            }
+
+            fun isValid(): Boolean =
+                try {
+                    validate()
+                    true
+                } catch (e: TerminalInvalidDataException) {
+                    false
+                }
+
+            /**
+             * Returns a score indicating how many valid values are contained in this object
+             * recursively.
+             *
+             * Used for best match union deserialization.
+             */
+            @JvmSynthetic
+            internal fun validity(): Int =
+                (if (interval.asKnown().isPresent) 1 else 0) +
+                    (type.asKnown().getOrNull()?.validity() ?: 0)
 
             class Type @JsonCreator private constructor(private val value: JsonField<String>) :
                 Enum {
@@ -967,6 +1110,33 @@ private constructor(
                     _value().asString().orElseThrow {
                         TerminalInvalidDataException("Value is not a String")
                     }
+
+                private var validated: Boolean = false
+
+                fun validate(): Type = apply {
+                    if (validated) {
+                        return@apply
+                    }
+
+                    known()
+                    validated = true
+                }
+
+                fun isValid(): Boolean =
+                    try {
+                        validate()
+                        true
+                    } catch (e: TerminalInvalidDataException) {
+                        false
+                    }
+
+                /**
+                 * Returns a score indicating how many valid values are contained in this object
+                 * recursively.
+                 *
+                 * Used for best match union deserialization.
+                 */
+                @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
 
                 override fun equals(other: Any?): Boolean {
                     if (this === other) {

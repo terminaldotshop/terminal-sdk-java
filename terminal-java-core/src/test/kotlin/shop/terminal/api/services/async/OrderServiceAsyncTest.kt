@@ -51,10 +51,10 @@ internal class OrderServiceAsyncTest {
                 .build()
         val orderServiceAsync = client.order()
 
-        val orderFuture = orderServiceAsync.list()
+        val ordersFuture = orderServiceAsync.list()
 
-        val order = orderFuture.get()
-        order.validate()
+        val orders = ordersFuture.get()
+        orders.validate()
     }
 
     @Test
