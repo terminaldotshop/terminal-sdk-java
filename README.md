@@ -2,8 +2,8 @@
 
 <!-- x-release-please-start-version -->
 
-[![Maven Central](https://img.shields.io/maven-central/v/shop.terminal.api/terminal-java)](https://central.sonatype.com/artifact/shop.terminal.api/terminal-java/2.0.0)
-[![javadoc](https://javadoc.io/badge2/shop.terminal.api/terminal-java/2.0.0/javadoc.svg)](https://javadoc.io/doc/shop.terminal.api/terminal-java/2.0.0)
+[![Maven Central](https://img.shields.io/maven-central/v/shop.terminal.api/terminal-java)](https://central.sonatype.com/artifact/shop.terminal.api/terminal-java/2.1.0)
+[![javadoc](https://javadoc.io/badge2/shop.terminal.api/terminal-java/2.1.0/javadoc.svg)](https://javadoc.io/doc/shop.terminal.api/terminal-java/2.1.0)
 
 <!-- x-release-please-end -->
 
@@ -15,7 +15,7 @@ It is generated with [Stainless](https://www.stainless.com/).
 
 <!-- x-release-please-start-version -->
 
-The REST API documentation can be found on [terminal.shop](https://terminal.shop/docs). Javadocs are also available on [javadoc.io](https://javadoc.io/doc/shop.terminal.api/terminal-java/2.0.0).
+The REST API documentation can be found on [terminal.shop](https://terminal.shop/docs). Javadocs are also available on [javadoc.io](https://javadoc.io/doc/shop.terminal.api/terminal-java/2.1.0).
 
 <!-- x-release-please-end -->
 
@@ -26,7 +26,7 @@ The REST API documentation can be found on [terminal.shop](https://terminal.shop
 ### Gradle
 
 ```kotlin
-implementation("shop.terminal.api:terminal-java:2.0.0")
+implementation("shop.terminal.api:terminal-java:2.1.0")
 ```
 
 ### Maven
@@ -35,7 +35,7 @@ implementation("shop.terminal.api:terminal-java:2.0.0")
 <dependency>
   <groupId>shop.terminal.api</groupId>
   <artifactId>terminal-java</artifactId>
-  <version>2.0.0</version>
+  <version>2.1.0</version>
 </dependency>
 ```
 
@@ -53,7 +53,7 @@ import shop.terminal.api.client.okhttp.TerminalOkHttpClient;
 import shop.terminal.api.models.product.ProductListParams;
 import shop.terminal.api.models.product.ProductListResponse;
 
-// Configures using the `TERMINAL_BEARER_TOKEN` environment variable
+// Configures using the `TERMINAL_BEARER_TOKEN` and `TERMINAL_BASE_URL` environment variables
 TerminalClient client = TerminalOkHttpClient.fromEnv();
 
 ProductListResponse products = client.product().list();
@@ -67,7 +67,7 @@ Configure the client using environment variables:
 import shop.terminal.api.client.TerminalClient;
 import shop.terminal.api.client.okhttp.TerminalOkHttpClient;
 
-// Configures using the `TERMINAL_BEARER_TOKEN` environment variable
+// Configures using the `TERMINAL_BEARER_TOKEN` and `TERMINAL_BASE_URL` environment variables
 TerminalClient client = TerminalOkHttpClient.fromEnv();
 ```
 
@@ -89,7 +89,7 @@ import shop.terminal.api.client.TerminalClient;
 import shop.terminal.api.client.okhttp.TerminalOkHttpClient;
 
 TerminalClient client = TerminalOkHttpClient.builder()
-    // Configures using the `TERMINAL_BEARER_TOKEN` environment variable
+    // Configures using the `TERMINAL_BEARER_TOKEN` and `TERMINAL_BASE_URL` environment variables
     .fromEnv()
     .appId("My App ID")
     .build();
@@ -97,9 +97,10 @@ TerminalClient client = TerminalOkHttpClient.builder()
 
 See this table for the available options:
 
-| Setter        | Environment variable    | Required | Default value |
-| ------------- | ----------------------- | -------- | ------------- |
-| `bearerToken` | `TERMINAL_BEARER_TOKEN` | true     | -             |
+| Setter        | Environment variable    | Required | Default value                 |
+| ------------- | ----------------------- | -------- | ----------------------------- |
+| `bearerToken` | `TERMINAL_BEARER_TOKEN` | true     | -                             |
+| `baseUrl`     | `TERMINAL_BASE_URL`     | true     | `"https://api.terminal.shop"` |
 
 > [!TIP]
 > Don't create more than one client in the same application. Each client has a connection pool and
@@ -130,7 +131,7 @@ import shop.terminal.api.client.okhttp.TerminalOkHttpClient;
 import shop.terminal.api.models.product.ProductListParams;
 import shop.terminal.api.models.product.ProductListResponse;
 
-// Configures using the `TERMINAL_BEARER_TOKEN` environment variable
+// Configures using the `TERMINAL_BEARER_TOKEN` and `TERMINAL_BASE_URL` environment variables
 TerminalClient client = TerminalOkHttpClient.fromEnv();
 
 CompletableFuture<ProductListResponse> products = client.async().product().list();
@@ -145,7 +146,7 @@ import shop.terminal.api.client.okhttp.TerminalOkHttpClientAsync;
 import shop.terminal.api.models.product.ProductListParams;
 import shop.terminal.api.models.product.ProductListResponse;
 
-// Configures using the `TERMINAL_BEARER_TOKEN` environment variable
+// Configures using the `TERMINAL_BEARER_TOKEN` and `TERMINAL_BASE_URL` environment variables
 TerminalClientAsync client = TerminalOkHttpClientAsync.fromEnv();
 
 CompletableFuture<ProductListResponse> products = client.product().list();
