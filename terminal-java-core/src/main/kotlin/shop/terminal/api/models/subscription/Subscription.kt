@@ -35,6 +35,7 @@ private constructor(
     private val id: JsonField<String>,
     private val addressId: JsonField<String>,
     private val cardId: JsonField<String>,
+    private val created: JsonField<String>,
     private val productVariantId: JsonField<String>,
     private val quantity: JsonField<Long>,
     private val next: JsonField<String>,
@@ -47,13 +48,24 @@ private constructor(
         @JsonProperty("id") @ExcludeMissing id: JsonField<String> = JsonMissing.of(),
         @JsonProperty("addressID") @ExcludeMissing addressId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("cardID") @ExcludeMissing cardId: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("created") @ExcludeMissing created: JsonField<String> = JsonMissing.of(),
         @JsonProperty("productVariantID")
         @ExcludeMissing
         productVariantId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("quantity") @ExcludeMissing quantity: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("next") @ExcludeMissing next: JsonField<String> = JsonMissing.of(),
         @JsonProperty("schedule") @ExcludeMissing schedule: JsonField<Schedule> = JsonMissing.of(),
-    ) : this(id, addressId, cardId, productVariantId, quantity, next, schedule, mutableMapOf())
+    ) : this(
+        id,
+        addressId,
+        cardId,
+        created,
+        productVariantId,
+        quantity,
+        next,
+        schedule,
+        mutableMapOf(),
+    )
 
     /**
      * Unique object identifier. The format and length of IDs may change over time.
@@ -78,6 +90,14 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun cardId(): String = cardId.getRequired("cardID")
+
+    /**
+     * Date the subscription was created.
+     *
+     * @throws TerminalInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun created(): String = created.getRequired("created")
 
     /**
      * ID of the product variant being subscribed to.
@@ -133,6 +153,13 @@ private constructor(
     @JsonProperty("cardID") @ExcludeMissing fun _cardId(): JsonField<String> = cardId
 
     /**
+     * Returns the raw JSON value of [created].
+     *
+     * Unlike [created], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("created") @ExcludeMissing fun _created(): JsonField<String> = created
+
+    /**
      * Returns the raw JSON value of [productVariantId].
      *
      * Unlike [productVariantId], this method doesn't throw if the JSON field has an unexpected
@@ -185,6 +212,7 @@ private constructor(
          * .id()
          * .addressId()
          * .cardId()
+         * .created()
          * .productVariantId()
          * .quantity()
          * ```
@@ -198,6 +226,7 @@ private constructor(
         private var id: JsonField<String>? = null
         private var addressId: JsonField<String>? = null
         private var cardId: JsonField<String>? = null
+        private var created: JsonField<String>? = null
         private var productVariantId: JsonField<String>? = null
         private var quantity: JsonField<Long>? = null
         private var next: JsonField<String> = JsonMissing.of()
@@ -209,6 +238,7 @@ private constructor(
             id = subscription.id
             addressId = subscription.addressId
             cardId = subscription.cardId
+            created = subscription.created
             productVariantId = subscription.productVariantId
             quantity = subscription.quantity
             next = subscription.next
@@ -249,6 +279,17 @@ private constructor(
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun cardId(cardId: JsonField<String>) = apply { this.cardId = cardId }
+
+        /** Date the subscription was created. */
+        fun created(created: String) = created(JsonField.of(created))
+
+        /**
+         * Sets [Builder.created] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.created] with a well-typed [String] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun created(created: JsonField<String>) = apply { this.created = created }
 
         /** ID of the product variant being subscribed to. */
         fun productVariantId(productVariantId: String) =
@@ -334,6 +375,7 @@ private constructor(
          * .id()
          * .addressId()
          * .cardId()
+         * .created()
          * .productVariantId()
          * .quantity()
          * ```
@@ -345,6 +387,7 @@ private constructor(
                 checkRequired("id", id),
                 checkRequired("addressId", addressId),
                 checkRequired("cardId", cardId),
+                checkRequired("created", created),
                 checkRequired("productVariantId", productVariantId),
                 checkRequired("quantity", quantity),
                 next,
@@ -363,6 +406,7 @@ private constructor(
         id()
         addressId()
         cardId()
+        created()
         productVariantId()
         quantity()
         next()
@@ -388,6 +432,7 @@ private constructor(
         (if (id.asKnown().isPresent) 1 else 0) +
             (if (addressId.asKnown().isPresent) 1 else 0) +
             (if (cardId.asKnown().isPresent) 1 else 0) +
+            (if (created.asKnown().isPresent) 1 else 0) +
             (if (productVariantId.asKnown().isPresent) 1 else 0) +
             (if (quantity.asKnown().isPresent) 1 else 0) +
             (if (next.asKnown().isPresent) 1 else 0) +
@@ -1175,15 +1220,15 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is Subscription && id == other.id && addressId == other.addressId && cardId == other.cardId && productVariantId == other.productVariantId && quantity == other.quantity && next == other.next && schedule == other.schedule && additionalProperties == other.additionalProperties /* spotless:on */
+        return /* spotless:off */ other is Subscription && id == other.id && addressId == other.addressId && cardId == other.cardId && created == other.created && productVariantId == other.productVariantId && quantity == other.quantity && next == other.next && schedule == other.schedule && additionalProperties == other.additionalProperties /* spotless:on */
     }
 
     /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(id, addressId, cardId, productVariantId, quantity, next, schedule, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(id, addressId, cardId, created, productVariantId, quantity, next, schedule, additionalProperties) }
     /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Subscription{id=$id, addressId=$addressId, cardId=$cardId, productVariantId=$productVariantId, quantity=$quantity, next=$next, schedule=$schedule, additionalProperties=$additionalProperties}"
+        "Subscription{id=$id, addressId=$addressId, cardId=$cardId, created=$created, productVariantId=$productVariantId, quantity=$quantity, next=$next, schedule=$schedule, additionalProperties=$additionalProperties}"
 }
