@@ -1,5 +1,30 @@
 # Changelog
 
+## 2.1.0 (2025-04-15)
+
+Full Changelog: [v2.0.0...v2.1.0](https://github.com/terminaldotshop/terminal-sdk-java/compare/v2.0.0...v2.1.0)
+
+### Features
+
+* **api:** include created timestamps ([bfb98a6](https://github.com/terminaldotshop/terminal-sdk-java/commit/bfb98a67cc57d60aec4ad3554dac911e8b66b500))
+* **client:** support setting base URL via env var ([0674db0](https://github.com/terminaldotshop/terminal-sdk-java/commit/0674db0c6d7662caf02c0b1fdc5ef694e6d2e18b))
+
+
+### Bug Fixes
+
+* **client:** bump to better jackson version ([3cca64e](https://github.com/terminaldotshop/terminal-sdk-java/commit/3cca64ed36cf00f79bfd19dfde8f46553495b61c))
+
+
+### Chores
+
+* **internal:** expand CI branch coverage ([7d5f8eb](https://github.com/terminaldotshop/terminal-sdk-java/commit/7d5f8eb8ec451dcacf3ff14a007a32ba3a1fa9d9))
+* **internal:** reduce CI branch coverage ([eeceeb4](https://github.com/terminaldotshop/terminal-sdk-java/commit/eeceeb416be60f1e3762d39627ca881ce4de59b7))
+
+
+### Documentation
+
+* update documentation links to be more uniform ([f740c2b](https://github.com/terminaldotshop/terminal-sdk-java/commit/f740c2b70cc726d9fa248df1f3e853fa09c9c10a))
+
 ## 2.0.0 (2025-04-09)
 
 Full Changelog: [v1.6.2...v2.0.0](https://github.com/terminaldotshop/terminal-sdk-java/compare/v1.6.2...v2.0.0)
