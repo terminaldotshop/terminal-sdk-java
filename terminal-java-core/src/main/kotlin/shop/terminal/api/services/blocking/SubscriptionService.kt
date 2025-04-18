@@ -13,6 +13,8 @@ import shop.terminal.api.models.subscription.SubscriptionGetParams
 import shop.terminal.api.models.subscription.SubscriptionGetResponse
 import shop.terminal.api.models.subscription.SubscriptionListParams
 import shop.terminal.api.models.subscription.SubscriptionListResponse
+import shop.terminal.api.models.subscription.SubscriptionUpdateParams
+import shop.terminal.api.models.subscription.SubscriptionUpdateResponse
 
 interface SubscriptionService {
 
@@ -38,6 +40,16 @@ interface SubscriptionService {
     /** @see [create] */
     fun create(requestOptions: RequestOptions): SubscriptionCreateResponse =
         create(SubscriptionCreateParams.none(), requestOptions)
+
+    /** Update card, address, or interval for an existing subscription. */
+    fun update(params: SubscriptionUpdateParams): SubscriptionUpdateResponse =
+        update(params, RequestOptions.none())
+
+    /** @see [update] */
+    fun update(
+        params: SubscriptionUpdateParams,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): SubscriptionUpdateResponse
 
     /** List the subscriptions associated with the current user. */
     fun list(): SubscriptionListResponse = list(SubscriptionListParams.none())
@@ -107,6 +119,21 @@ interface SubscriptionService {
         @MustBeClosed
         fun create(requestOptions: RequestOptions): HttpResponseFor<SubscriptionCreateResponse> =
             create(SubscriptionCreateParams.none(), requestOptions)
+
+        /**
+         * Returns a raw HTTP response for `put /subscription/{id}`, but is otherwise the same as
+         * [SubscriptionService.update].
+         */
+        @MustBeClosed
+        fun update(params: SubscriptionUpdateParams): HttpResponseFor<SubscriptionUpdateResponse> =
+            update(params, RequestOptions.none())
+
+        /** @see [update] */
+        @MustBeClosed
+        fun update(
+            params: SubscriptionUpdateParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<SubscriptionUpdateResponse>
 
         /**
          * Returns a raw HTTP response for `get /subscription`, but is otherwise the same as
