@@ -1,5 +1,25 @@
 # Changelog
 
+## 2.2.0 (2025-04-18)
+
+Full Changelog: [v2.1.0...v2.2.0](https://github.com/terminaldotshop/terminal-sdk-java/compare/v2.1.0...v2.2.0)
+
+### Features
+
+* **api:** update subscription route ([7733ee2](https://github.com/terminaldotshop/terminal-sdk-java/commit/7733ee2277292eb1f7dfb1c5c1cc05f332d2f80d))
+
+
+### Performance Improvements
+
+* **internal:** improve compilation+test speed ([626c3d7](https://github.com/terminaldotshop/terminal-sdk-java/commit/626c3d7271d68734bc2a0c436cb2e287b39a978d))
+
+
+### Documentation
+
+* **client:** update jackson compat error message ([66b14f0](https://github.com/terminaldotshop/terminal-sdk-java/commit/66b14f086a218dc24939c3cc775671dc342ea411))
+* explain http client customization ([fc59af2](https://github.com/terminaldotshop/terminal-sdk-java/commit/fc59af2a7564746cf8e26e5c5bc4fbcd818527b4))
+* explain jackson compat in readme ([427d710](https://github.com/terminaldotshop/terminal-sdk-java/commit/427d7104febec269b807e2cba0e52c285330c00d))
+
 ## 2.1.0 (2025-04-15)
 
 Full Changelog: [v2.0.0...v2.1.0](https://github.com/terminaldotshop/terminal-sdk-java/compare/v2.0.0...v2.1.0)
