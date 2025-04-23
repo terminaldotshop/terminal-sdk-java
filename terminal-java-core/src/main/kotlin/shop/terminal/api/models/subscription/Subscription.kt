@@ -36,6 +36,7 @@ private constructor(
     private val addressId: JsonField<String>,
     private val cardId: JsonField<String>,
     private val created: JsonField<String>,
+    private val price: JsonField<Long>,
     private val productVariantId: JsonField<String>,
     private val quantity: JsonField<Long>,
     private val next: JsonField<String>,
@@ -49,6 +50,7 @@ private constructor(
         @JsonProperty("addressID") @ExcludeMissing addressId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("cardID") @ExcludeMissing cardId: JsonField<String> = JsonMissing.of(),
         @JsonProperty("created") @ExcludeMissing created: JsonField<String> = JsonMissing.of(),
+        @JsonProperty("price") @ExcludeMissing price: JsonField<Long> = JsonMissing.of(),
         @JsonProperty("productVariantID")
         @ExcludeMissing
         productVariantId: JsonField<String> = JsonMissing.of(),
@@ -60,6 +62,7 @@ private constructor(
         addressId,
         cardId,
         created,
+        price,
         productVariantId,
         quantity,
         next,
@@ -98,6 +101,14 @@ private constructor(
      *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
      */
     fun created(): String = created.getRequired("created")
+
+    /**
+     * Price of the subscription in cents (USD).
+     *
+     * @throws TerminalInvalidDataException if the JSON field has an unexpected type or is
+     *   unexpectedly missing or null (e.g. if the server responded with an unexpected value).
+     */
+    fun price(): Long = price.getRequired("price")
 
     /**
      * ID of the product variant being subscribed to.
@@ -160,6 +171,13 @@ private constructor(
     @JsonProperty("created") @ExcludeMissing fun _created(): JsonField<String> = created
 
     /**
+     * Returns the raw JSON value of [price].
+     *
+     * Unlike [price], this method doesn't throw if the JSON field has an unexpected type.
+     */
+    @JsonProperty("price") @ExcludeMissing fun _price(): JsonField<Long> = price
+
+    /**
      * Returns the raw JSON value of [productVariantId].
      *
      * Unlike [productVariantId], this method doesn't throw if the JSON field has an unexpected
@@ -213,6 +231,7 @@ private constructor(
          * .addressId()
          * .cardId()
          * .created()
+         * .price()
          * .productVariantId()
          * .quantity()
          * ```
@@ -227,6 +246,7 @@ private constructor(
         private var addressId: JsonField<String>? = null
         private var cardId: JsonField<String>? = null
         private var created: JsonField<String>? = null
+        private var price: JsonField<Long>? = null
         private var productVariantId: JsonField<String>? = null
         private var quantity: JsonField<Long>? = null
         private var next: JsonField<String> = JsonMissing.of()
@@ -239,6 +259,7 @@ private constructor(
             addressId = subscription.addressId
             cardId = subscription.cardId
             created = subscription.created
+            price = subscription.price
             productVariantId = subscription.productVariantId
             quantity = subscription.quantity
             next = subscription.next
@@ -290,6 +311,17 @@ private constructor(
          * method is primarily for setting the field to an undocumented or not yet supported value.
          */
         fun created(created: JsonField<String>) = apply { this.created = created }
+
+        /** Price of the subscription in cents (USD). */
+        fun price(price: Long) = price(JsonField.of(price))
+
+        /**
+         * Sets [Builder.price] to an arbitrary JSON value.
+         *
+         * You should usually call [Builder.price] with a well-typed [Long] value instead. This
+         * method is primarily for setting the field to an undocumented or not yet supported value.
+         */
+        fun price(price: JsonField<Long>) = apply { this.price = price }
 
         /** ID of the product variant being subscribed to. */
         fun productVariantId(productVariantId: String) =
@@ -376,6 +408,7 @@ private constructor(
          * .addressId()
          * .cardId()
          * .created()
+         * .price()
          * .productVariantId()
          * .quantity()
          * ```
@@ -388,6 +421,7 @@ private constructor(
                 checkRequired("addressId", addressId),
                 checkRequired("cardId", cardId),
                 checkRequired("created", created),
+                checkRequired("price", price),
                 checkRequired("productVariantId", productVariantId),
                 checkRequired("quantity", quantity),
                 next,
@@ -407,6 +441,7 @@ private constructor(
         addressId()
         cardId()
         created()
+        price()
         productVariantId()
         quantity()
         next()
@@ -433,6 +468,7 @@ private constructor(
             (if (addressId.asKnown().isPresent) 1 else 0) +
             (if (cardId.asKnown().isPresent) 1 else 0) +
             (if (created.asKnown().isPresent) 1 else 0) +
+            (if (price.asKnown().isPresent) 1 else 0) +
             (if (productVariantId.asKnown().isPresent) 1 else 0) +
             (if (quantity.asKnown().isPresent) 1 else 0) +
             (if (next.asKnown().isPresent) 1 else 0) +
@@ -1220,15 +1256,15 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is Subscription && id == other.id && addressId == other.addressId && cardId == other.cardId && created == other.created && productVariantId == other.productVariantId && quantity == other.quantity && next == other.next && schedule == other.schedule && additionalProperties == other.additionalProperties /* spotless:on */
+        return /* spotless:off */ other is Subscription && id == other.id && addressId == other.addressId && cardId == other.cardId && created == other.created && price == other.price && productVariantId == other.productVariantId && quantity == other.quantity && next == other.next && schedule == other.schedule && additionalProperties == other.additionalProperties /* spotless:on */
     }
 
     /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(id, addressId, cardId, created, productVariantId, quantity, next, schedule, additionalProperties) }
+    private val hashCode: Int by lazy { Objects.hash(id, addressId, cardId, created, price, productVariantId, quantity, next, schedule, additionalProperties) }
     /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 
     override fun toString() =
-        "Subscription{id=$id, addressId=$addressId, cardId=$cardId, created=$created, productVariantId=$productVariantId, quantity=$quantity, next=$next, schedule=$schedule, additionalProperties=$additionalProperties}"
+        "Subscription{id=$id, addressId=$addressId, cardId=$cardId, created=$created, price=$price, productVariantId=$productVariantId, quantity=$quantity, next=$next, schedule=$schedule, additionalProperties=$additionalProperties}"
 }
