@@ -1,5 +1,18 @@
 # Changelog
 
+## 2.3.0 (2025-04-23)
+
+Full Changelog: [v2.2.0...v2.3.0](https://github.com/terminaldotshop/terminal-sdk-java/compare/v2.2.0...v2.3.0)
+
+### Features
+
+* **api:** include price on subscriptions ([c9b6ddf](https://github.com/terminaldotshop/terminal-sdk-java/commit/c9b6ddf174e6e75d83495189e8ad7153c0f172eb))
+
+
+### Chores
+
+* **ci:** add timeout thresholds for CI jobs ([39c19d1](https://github.com/terminaldotshop/terminal-sdk-java/commit/39c19d107d90e12c0300b90a5ec921f1f4b5ebaf))
+
 ## 2.2.0 (2025-04-18)
 
 Full Changelog: [v2.1.0...v2.2.0](https://github.com/terminaldotshop/terminal-sdk-java/compare/v2.1.0...v2.2.0)
