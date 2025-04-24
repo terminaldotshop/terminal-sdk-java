@@ -1,5 +1,20 @@
 # Changelog
 
+## 2.4.0 (2025-04-24)
+
+Full Changelog: [v2.3.0...v2.4.0](https://github.com/terminaldotshop/terminal-sdk-java/compare/v2.3.0...v2.4.0)
+
+### Features
+
+* **api:** global region, typed tracking status, variant tags ([5490718](https://github.com/terminaldotshop/terminal-sdk-java/commit/5490718dd8dc5d89d0c6b38c8c4f37d079d02416))
+
+
+### Chores
+
+* **ci:** only use depot for staging repos ([dfd5e7c](https://github.com/terminaldotshop/terminal-sdk-java/commit/dfd5e7c1653180d621395c2fe53ee8813703d888))
+* **internal:** codegen related update ([2d5521b](https://github.com/terminaldotshop/terminal-sdk-java/commit/2d5521b0ef05f05ea91bc218b560b50909b97b09))
+* **internal:** java 17 -&gt; 21 on ci ([a9e2560](https://github.com/terminaldotshop/terminal-sdk-java/commit/a9e256003fbb79b9265d5fa1a4463c6a2e18e81e))
+
 ## 2.3.0 (2025-04-23)
 
 Full Changelog: [v2.2.0...v2.3.0](https://github.com/terminaldotshop/terminal-sdk-java/compare/v2.2.0...v2.3.0)
