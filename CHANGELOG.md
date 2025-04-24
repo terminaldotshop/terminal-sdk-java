@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.5.0 (2025-04-24)
+
+Full Changelog: [v2.4.0...v2.5.0](https://github.com/terminaldotshop/terminal-sdk-java/compare/v2.4.0...v2.5.0)
+
+### Features
+
+* **api:** product variant descriptions ([8d6106a](https://github.com/terminaldotshop/terminal-sdk-java/commit/8d6106a6370ac9fa40ed3b4b9123613b23ec95d4))
+
 ## 2.4.0 (2025-04-24)
 
 Full Changelog: [v2.3.0...v2.4.0](https://github.com/terminaldotshop/terminal-sdk-java/compare/v2.3.0...v2.4.0)
