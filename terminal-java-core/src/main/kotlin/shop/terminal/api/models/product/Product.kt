@@ -532,6 +532,7 @@ private constructor(
         private val color: JsonField<String>,
         private val featured: JsonField<Boolean>,
         private val marketEu: JsonField<Boolean>,
+        private val marketGlobal: JsonField<Boolean>,
         private val marketNa: JsonField<Boolean>,
         private val additionalProperties: MutableMap<String, JsonValue>,
     ) {
@@ -546,10 +547,13 @@ private constructor(
             @JsonProperty("market_eu")
             @ExcludeMissing
             marketEu: JsonField<Boolean> = JsonMissing.of(),
+            @JsonProperty("market_global")
+            @ExcludeMissing
+            marketGlobal: JsonField<Boolean> = JsonMissing.of(),
             @JsonProperty("market_na")
             @ExcludeMissing
             marketNa: JsonField<Boolean> = JsonMissing.of(),
-        ) : this(app, color, featured, marketEu, marketNa, mutableMapOf())
+        ) : this(app, color, featured, marketEu, marketGlobal, marketNa, mutableMapOf())
 
         /**
          * @throws TerminalInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -574,6 +578,12 @@ private constructor(
          *   the server responded with an unexpected value).
          */
         fun marketEu(): Optional<Boolean> = marketEu.getOptional("market_eu")
+
+        /**
+         * @throws TerminalInvalidDataException if the JSON field has an unexpected type (e.g. if
+         *   the server responded with an unexpected value).
+         */
+        fun marketGlobal(): Optional<Boolean> = marketGlobal.getOptional("market_global")
 
         /**
          * @throws TerminalInvalidDataException if the JSON field has an unexpected type (e.g. if
@@ -610,6 +620,16 @@ private constructor(
         @JsonProperty("market_eu") @ExcludeMissing fun _marketEu(): JsonField<Boolean> = marketEu
 
         /**
+         * Returns the raw JSON value of [marketGlobal].
+         *
+         * Unlike [marketGlobal], this method doesn't throw if the JSON field has an unexpected
+         * type.
+         */
+        @JsonProperty("market_global")
+        @ExcludeMissing
+        fun _marketGlobal(): JsonField<Boolean> = marketGlobal
+
+        /**
          * Returns the raw JSON value of [marketNa].
          *
          * Unlike [marketNa], this method doesn't throw if the JSON field has an unexpected type.
@@ -641,6 +661,7 @@ private constructor(
             private var color: JsonField<String> = JsonMissing.of()
             private var featured: JsonField<Boolean> = JsonMissing.of()
             private var marketEu: JsonField<Boolean> = JsonMissing.of()
+            private var marketGlobal: JsonField<Boolean> = JsonMissing.of()
             private var marketNa: JsonField<Boolean> = JsonMissing.of()
             private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
@@ -650,6 +671,7 @@ private constructor(
                 color = tags.color
                 featured = tags.featured
                 marketEu = tags.marketEu
+                marketGlobal = tags.marketGlobal
                 marketNa = tags.marketNa
                 additionalProperties = tags.additionalProperties.toMutableMap()
             }
@@ -698,6 +720,19 @@ private constructor(
              */
             fun marketEu(marketEu: JsonField<Boolean>) = apply { this.marketEu = marketEu }
 
+            fun marketGlobal(marketGlobal: Boolean) = marketGlobal(JsonField.of(marketGlobal))
+
+            /**
+             * Sets [Builder.marketGlobal] to an arbitrary JSON value.
+             *
+             * You should usually call [Builder.marketGlobal] with a well-typed [Boolean] value
+             * instead. This method is primarily for setting the field to an undocumented or not yet
+             * supported value.
+             */
+            fun marketGlobal(marketGlobal: JsonField<Boolean>) = apply {
+                this.marketGlobal = marketGlobal
+            }
+
             fun marketNa(marketNa: Boolean) = marketNa(JsonField.of(marketNa))
 
             /**
@@ -734,7 +769,15 @@ private constructor(
              * Further updates to this [Builder] will not mutate the returned instance.
              */
             fun build(): Tags =
-                Tags(app, color, featured, marketEu, marketNa, additionalProperties.toMutableMap())
+                Tags(
+                    app,
+                    color,
+                    featured,
+                    marketEu,
+                    marketGlobal,
+                    marketNa,
+                    additionalProperties.toMutableMap(),
+                )
         }
 
         private var validated: Boolean = false
@@ -748,6 +791,7 @@ private constructor(
             color()
             featured()
             marketEu()
+            marketGlobal()
             marketNa()
             validated = true
         }
@@ -772,6 +816,7 @@ private constructor(
                 (if (color.asKnown().isPresent) 1 else 0) +
                 (if (featured.asKnown().isPresent) 1 else 0) +
                 (if (marketEu.asKnown().isPresent) 1 else 0) +
+                (if (marketGlobal.asKnown().isPresent) 1 else 0) +
                 (if (marketNa.asKnown().isPresent) 1 else 0)
 
         override fun equals(other: Any?): Boolean {
@@ -779,17 +824,17 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is Tags && app == other.app && color == other.color && featured == other.featured && marketEu == other.marketEu && marketNa == other.marketNa && additionalProperties == other.additionalProperties /* spotless:on */
+            return /* spotless:off */ other is Tags && app == other.app && color == other.color && featured == other.featured && marketEu == other.marketEu && marketGlobal == other.marketGlobal && marketNa == other.marketNa && additionalProperties == other.additionalProperties /* spotless:on */
         }
 
         /* spotless:off */
-        private val hashCode: Int by lazy { Objects.hash(app, color, featured, marketEu, marketNa, additionalProperties) }
+        private val hashCode: Int by lazy { Objects.hash(app, color, featured, marketEu, marketGlobal, marketNa, additionalProperties) }
         /* spotless:on */
 
         override fun hashCode(): Int = hashCode
 
         override fun toString() =
-            "Tags{app=$app, color=$color, featured=$featured, marketEu=$marketEu, marketNa=$marketNa, additionalProperties=$additionalProperties}"
+            "Tags{app=$app, color=$color, featured=$featured, marketEu=$marketEu, marketGlobal=$marketGlobal, marketNa=$marketNa, additionalProperties=$additionalProperties}"
     }
 
     override fun equals(other: Any?): Boolean {
