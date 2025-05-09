@@ -8,8 +8,6 @@ import shop.terminal.api.TestServerExtension
 import shop.terminal.api.client.okhttp.TerminalOkHttpClientAsync
 import shop.terminal.api.models.subscription.Subscription
 import shop.terminal.api.models.subscription.SubscriptionCreateParams
-import shop.terminal.api.models.subscription.SubscriptionDeleteParams
-import shop.terminal.api.models.subscription.SubscriptionGetParams
 import shop.terminal.api.models.subscription.SubscriptionUpdateParams
 
 @ExtendWith(TestServerExtension::class)
@@ -104,10 +102,7 @@ internal class SubscriptionServiceAsyncTest {
                 .build()
         val subscriptionServiceAsync = client.subscription()
 
-        val subscriptionFuture =
-            subscriptionServiceAsync.delete(
-                SubscriptionDeleteParams.builder().id("sub_XXXXXXXXXXXXXXXXXXXXXXXXX").build()
-            )
+        val subscriptionFuture = subscriptionServiceAsync.delete("sub_XXXXXXXXXXXXXXXXXXXXXXXXX")
 
         val subscription = subscriptionFuture.get()
         subscription.validate()
@@ -122,10 +117,7 @@ internal class SubscriptionServiceAsyncTest {
                 .build()
         val subscriptionServiceAsync = client.subscription()
 
-        val subscriptionFuture =
-            subscriptionServiceAsync.get(
-                SubscriptionGetParams.builder().id("sub_XXXXXXXXXXXXXXXXXXXXXXXXX").build()
-            )
+        val subscriptionFuture = subscriptionServiceAsync.get("sub_XXXXXXXXXXXXXXXXXXXXXXXXX")
 
         val subscription = subscriptionFuture.get()
         subscription.validate()

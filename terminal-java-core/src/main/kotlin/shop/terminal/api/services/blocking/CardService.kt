@@ -50,13 +50,31 @@ interface CardService {
         list(CardListParams.none(), requestOptions)
 
     /** Delete a credit card associated with the current user. */
-    fun delete(params: CardDeleteParams): CardDeleteResponse = delete(params, RequestOptions.none())
+    fun delete(id: String): CardDeleteResponse = delete(id, CardDeleteParams.none())
+
+    /** @see [delete] */
+    fun delete(
+        id: String,
+        params: CardDeleteParams = CardDeleteParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CardDeleteResponse = delete(params.toBuilder().id(id).build(), requestOptions)
+
+    /** @see [delete] */
+    fun delete(id: String, params: CardDeleteParams = CardDeleteParams.none()): CardDeleteResponse =
+        delete(id, params, RequestOptions.none())
 
     /** @see [delete] */
     fun delete(
         params: CardDeleteParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CardDeleteResponse
+
+    /** @see [delete] */
+    fun delete(params: CardDeleteParams): CardDeleteResponse = delete(params, RequestOptions.none())
+
+    /** @see [delete] */
+    fun delete(id: String, requestOptions: RequestOptions): CardDeleteResponse =
+        delete(id, CardDeleteParams.none(), requestOptions)
 
     /** Create a temporary URL for collecting credit card information for the current user. */
     fun collect(): CardCollectResponse = collect(CardCollectParams.none())
@@ -76,13 +94,31 @@ interface CardService {
         collect(CardCollectParams.none(), requestOptions)
 
     /** Get a credit card by ID associated with the current user. */
-    fun get(params: CardGetParams): CardGetResponse = get(params, RequestOptions.none())
+    fun get(id: String): CardGetResponse = get(id, CardGetParams.none())
+
+    /** @see [get] */
+    fun get(
+        id: String,
+        params: CardGetParams = CardGetParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CardGetResponse = get(params.toBuilder().id(id).build(), requestOptions)
+
+    /** @see [get] */
+    fun get(id: String, params: CardGetParams = CardGetParams.none()): CardGetResponse =
+        get(id, params, RequestOptions.none())
 
     /** @see [get] */
     fun get(
         params: CardGetParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CardGetResponse
+
+    /** @see [get] */
+    fun get(params: CardGetParams): CardGetResponse = get(params, RequestOptions.none())
+
+    /** @see [get] */
+    fun get(id: String, requestOptions: RequestOptions): CardGetResponse =
+        get(id, CardGetParams.none(), requestOptions)
 
     /** A view of [CardService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
@@ -131,8 +167,24 @@ interface CardService {
          * [CardService.delete].
          */
         @MustBeClosed
-        fun delete(params: CardDeleteParams): HttpResponseFor<CardDeleteResponse> =
-            delete(params, RequestOptions.none())
+        fun delete(id: String): HttpResponseFor<CardDeleteResponse> =
+            delete(id, CardDeleteParams.none())
+
+        /** @see [delete] */
+        @MustBeClosed
+        fun delete(
+            id: String,
+            params: CardDeleteParams = CardDeleteParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<CardDeleteResponse> =
+            delete(params.toBuilder().id(id).build(), requestOptions)
+
+        /** @see [delete] */
+        @MustBeClosed
+        fun delete(
+            id: String,
+            params: CardDeleteParams = CardDeleteParams.none(),
+        ): HttpResponseFor<CardDeleteResponse> = delete(id, params, RequestOptions.none())
 
         /** @see [delete] */
         @MustBeClosed
@@ -140,6 +192,18 @@ interface CardService {
             params: CardDeleteParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<CardDeleteResponse>
+
+        /** @see [delete] */
+        @MustBeClosed
+        fun delete(params: CardDeleteParams): HttpResponseFor<CardDeleteResponse> =
+            delete(params, RequestOptions.none())
+
+        /** @see [delete] */
+        @MustBeClosed
+        fun delete(
+            id: String,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<CardDeleteResponse> = delete(id, CardDeleteParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `post /card/collect`, but is otherwise the same as
@@ -171,8 +235,22 @@ interface CardService {
          * [CardService.get].
          */
         @MustBeClosed
-        fun get(params: CardGetParams): HttpResponseFor<CardGetResponse> =
-            get(params, RequestOptions.none())
+        fun get(id: String): HttpResponseFor<CardGetResponse> = get(id, CardGetParams.none())
+
+        /** @see [get] */
+        @MustBeClosed
+        fun get(
+            id: String,
+            params: CardGetParams = CardGetParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<CardGetResponse> = get(params.toBuilder().id(id).build(), requestOptions)
+
+        /** @see [get] */
+        @MustBeClosed
+        fun get(
+            id: String,
+            params: CardGetParams = CardGetParams.none(),
+        ): HttpResponseFor<CardGetResponse> = get(id, params, RequestOptions.none())
 
         /** @see [get] */
         @MustBeClosed
@@ -180,5 +258,15 @@ interface CardService {
             params: CardGetParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<CardGetResponse>
+
+        /** @see [get] */
+        @MustBeClosed
+        fun get(params: CardGetParams): HttpResponseFor<CardGetResponse> =
+            get(params, RequestOptions.none())
+
+        /** @see [get] */
+        @MustBeClosed
+        fun get(id: String, requestOptions: RequestOptions): HttpResponseFor<CardGetResponse> =
+            get(id, CardGetParams.none(), requestOptions)
     }
 }

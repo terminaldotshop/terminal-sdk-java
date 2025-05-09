@@ -7,8 +7,6 @@ import org.junit.jupiter.api.extension.ExtendWith
 import shop.terminal.api.TestServerExtension
 import shop.terminal.api.client.okhttp.TerminalOkHttpClientAsync
 import shop.terminal.api.models.card.CardCreateParams
-import shop.terminal.api.models.card.CardDeleteParams
-import shop.terminal.api.models.card.CardGetParams
 
 @ExtendWith(TestServerExtension::class)
 internal class CardServiceAsyncTest {
@@ -55,10 +53,7 @@ internal class CardServiceAsyncTest {
                 .build()
         val cardServiceAsync = client.card()
 
-        val cardFuture =
-            cardServiceAsync.delete(
-                CardDeleteParams.builder().id("crd_XXXXXXXXXXXXXXXXXXXXXXXXX").build()
-            )
+        val cardFuture = cardServiceAsync.delete("crd_XXXXXXXXXXXXXXXXXXXXXXXXX")
 
         val card = cardFuture.get()
         card.validate()
@@ -88,10 +83,7 @@ internal class CardServiceAsyncTest {
                 .build()
         val cardServiceAsync = client.card()
 
-        val cardFuture =
-            cardServiceAsync.get(
-                CardGetParams.builder().id("crd_XXXXXXXXXXXXXXXXXXXXXXXXX").build()
-            )
+        val cardFuture = cardServiceAsync.get("crd_XXXXXXXXXXXXXXXXXXXXXXXXX")
 
         val card = cardFuture.get()
         card.validate()

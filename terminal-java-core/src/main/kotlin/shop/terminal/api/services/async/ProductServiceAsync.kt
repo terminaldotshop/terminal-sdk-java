@@ -37,14 +37,35 @@ interface ProductServiceAsync {
         list(ProductListParams.none(), requestOptions)
 
     /** Get a product by ID from the Terminal shop. */
-    fun get(params: ProductGetParams): CompletableFuture<ProductGetResponse> =
-        get(params, RequestOptions.none())
+    fun get(id: String): CompletableFuture<ProductGetResponse> = get(id, ProductGetParams.none())
+
+    /** @see [get] */
+    fun get(
+        id: String,
+        params: ProductGetParams = ProductGetParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<ProductGetResponse> =
+        get(params.toBuilder().id(id).build(), requestOptions)
+
+    /** @see [get] */
+    fun get(
+        id: String,
+        params: ProductGetParams = ProductGetParams.none(),
+    ): CompletableFuture<ProductGetResponse> = get(id, params, RequestOptions.none())
 
     /** @see [get] */
     fun get(
         params: ProductGetParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<ProductGetResponse>
+
+    /** @see [get] */
+    fun get(params: ProductGetParams): CompletableFuture<ProductGetResponse> =
+        get(params, RequestOptions.none())
+
+    /** @see [get] */
+    fun get(id: String, requestOptions: RequestOptions): CompletableFuture<ProductGetResponse> =
+        get(id, ProductGetParams.none(), requestOptions)
 
     /**
      * A view of [ProductServiceAsync] that provides access to raw HTTP responses for each method.
@@ -85,8 +106,25 @@ interface ProductServiceAsync {
          * [ProductServiceAsync.get].
          */
         @MustBeClosed
-        fun get(params: ProductGetParams): CompletableFuture<HttpResponseFor<ProductGetResponse>> =
-            get(params, RequestOptions.none())
+        fun get(id: String): CompletableFuture<HttpResponseFor<ProductGetResponse>> =
+            get(id, ProductGetParams.none())
+
+        /** @see [get] */
+        @MustBeClosed
+        fun get(
+            id: String,
+            params: ProductGetParams = ProductGetParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<ProductGetResponse>> =
+            get(params.toBuilder().id(id).build(), requestOptions)
+
+        /** @see [get] */
+        @MustBeClosed
+        fun get(
+            id: String,
+            params: ProductGetParams = ProductGetParams.none(),
+        ): CompletableFuture<HttpResponseFor<ProductGetResponse>> =
+            get(id, params, RequestOptions.none())
 
         /** @see [get] */
         @MustBeClosed
@@ -94,5 +132,18 @@ interface ProductServiceAsync {
             params: ProductGetParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<ProductGetResponse>>
+
+        /** @see [get] */
+        @MustBeClosed
+        fun get(params: ProductGetParams): CompletableFuture<HttpResponseFor<ProductGetResponse>> =
+            get(params, RequestOptions.none())
+
+        /** @see [get] */
+        @MustBeClosed
+        fun get(
+            id: String,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<ProductGetResponse>> =
+            get(id, ProductGetParams.none(), requestOptions)
     }
 }
