@@ -265,7 +265,6 @@ Requests time out after 1 minute by default.
 To set a custom timeout, configure the method call using the `timeout` method:
 
 ```java
-import shop.terminal.api.models.product.ProductListParams;
 import shop.terminal.api.models.product.ProductListResponse;
 
 ProductListResponse products = client.product().list(RequestOptions.builder().timeout(Duration.ofSeconds(30)).build());
@@ -507,7 +506,6 @@ ProductListResponse products = client.product().list(params).validate();
 Or configure the method call to validate the response using the `responseValidation` method:
 
 ```java
-import shop.terminal.api.models.product.ProductListParams;
 import shop.terminal.api.models.product.ProductListResponse;
 
 ProductListResponse products = client.product().list(RequestOptions.builder().responseValidation(true).build());
