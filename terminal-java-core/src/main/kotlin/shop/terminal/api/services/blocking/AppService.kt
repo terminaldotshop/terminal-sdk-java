@@ -48,7 +48,18 @@ interface AppService {
         list(AppListParams.none(), requestOptions)
 
     /** Delete the app with the given ID. */
-    fun delete(params: AppDeleteParams): AppDeleteResponse = delete(params, RequestOptions.none())
+    fun delete(id: String): AppDeleteResponse = delete(id, AppDeleteParams.none())
+
+    /** @see [delete] */
+    fun delete(
+        id: String,
+        params: AppDeleteParams = AppDeleteParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): AppDeleteResponse = delete(params.toBuilder().id(id).build(), requestOptions)
+
+    /** @see [delete] */
+    fun delete(id: String, params: AppDeleteParams = AppDeleteParams.none()): AppDeleteResponse =
+        delete(id, params, RequestOptions.none())
 
     /** @see [delete] */
     fun delete(
@@ -56,14 +67,39 @@ interface AppService {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): AppDeleteResponse
 
+    /** @see [delete] */
+    fun delete(params: AppDeleteParams): AppDeleteResponse = delete(params, RequestOptions.none())
+
+    /** @see [delete] */
+    fun delete(id: String, requestOptions: RequestOptions): AppDeleteResponse =
+        delete(id, AppDeleteParams.none(), requestOptions)
+
     /** Get the app with the given ID. */
-    fun get(params: AppGetParams): AppGetResponse = get(params, RequestOptions.none())
+    fun get(id: String): AppGetResponse = get(id, AppGetParams.none())
+
+    /** @see [get] */
+    fun get(
+        id: String,
+        params: AppGetParams = AppGetParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): AppGetResponse = get(params.toBuilder().id(id).build(), requestOptions)
+
+    /** @see [get] */
+    fun get(id: String, params: AppGetParams = AppGetParams.none()): AppGetResponse =
+        get(id, params, RequestOptions.none())
 
     /** @see [get] */
     fun get(
         params: AppGetParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): AppGetResponse
+
+    /** @see [get] */
+    fun get(params: AppGetParams): AppGetResponse = get(params, RequestOptions.none())
+
+    /** @see [get] */
+    fun get(id: String, requestOptions: RequestOptions): AppGetResponse =
+        get(id, AppGetParams.none(), requestOptions)
 
     /** A view of [AppService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
@@ -111,8 +147,24 @@ interface AppService {
          * [AppService.delete].
          */
         @MustBeClosed
-        fun delete(params: AppDeleteParams): HttpResponseFor<AppDeleteResponse> =
-            delete(params, RequestOptions.none())
+        fun delete(id: String): HttpResponseFor<AppDeleteResponse> =
+            delete(id, AppDeleteParams.none())
+
+        /** @see [delete] */
+        @MustBeClosed
+        fun delete(
+            id: String,
+            params: AppDeleteParams = AppDeleteParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<AppDeleteResponse> =
+            delete(params.toBuilder().id(id).build(), requestOptions)
+
+        /** @see [delete] */
+        @MustBeClosed
+        fun delete(
+            id: String,
+            params: AppDeleteParams = AppDeleteParams.none(),
+        ): HttpResponseFor<AppDeleteResponse> = delete(id, params, RequestOptions.none())
 
         /** @see [delete] */
         @MustBeClosed
@@ -121,13 +173,37 @@ interface AppService {
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<AppDeleteResponse>
 
+        /** @see [delete] */
+        @MustBeClosed
+        fun delete(params: AppDeleteParams): HttpResponseFor<AppDeleteResponse> =
+            delete(params, RequestOptions.none())
+
+        /** @see [delete] */
+        @MustBeClosed
+        fun delete(id: String, requestOptions: RequestOptions): HttpResponseFor<AppDeleteResponse> =
+            delete(id, AppDeleteParams.none(), requestOptions)
+
         /**
          * Returns a raw HTTP response for `get /app/{id}`, but is otherwise the same as
          * [AppService.get].
          */
         @MustBeClosed
-        fun get(params: AppGetParams): HttpResponseFor<AppGetResponse> =
-            get(params, RequestOptions.none())
+        fun get(id: String): HttpResponseFor<AppGetResponse> = get(id, AppGetParams.none())
+
+        /** @see [get] */
+        @MustBeClosed
+        fun get(
+            id: String,
+            params: AppGetParams = AppGetParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<AppGetResponse> = get(params.toBuilder().id(id).build(), requestOptions)
+
+        /** @see [get] */
+        @MustBeClosed
+        fun get(
+            id: String,
+            params: AppGetParams = AppGetParams.none(),
+        ): HttpResponseFor<AppGetResponse> = get(id, params, RequestOptions.none())
 
         /** @see [get] */
         @MustBeClosed
@@ -135,5 +211,15 @@ interface AppService {
             params: AppGetParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<AppGetResponse>
+
+        /** @see [get] */
+        @MustBeClosed
+        fun get(params: AppGetParams): HttpResponseFor<AppGetResponse> =
+            get(params, RequestOptions.none())
+
+        /** @see [get] */
+        @MustBeClosed
+        fun get(id: String, requestOptions: RequestOptions): HttpResponseFor<AppGetResponse> =
+            get(id, AppGetParams.none(), requestOptions)
     }
 }

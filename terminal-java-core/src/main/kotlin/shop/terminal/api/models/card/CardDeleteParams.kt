@@ -4,9 +4,9 @@ package shop.terminal.api.models.card
 
 import java.util.Objects
 import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 import shop.terminal.api.core.JsonValue
 import shop.terminal.api.core.Params
-import shop.terminal.api.core.checkRequired
 import shop.terminal.api.core.http.Headers
 import shop.terminal.api.core.http.QueryParams
 import shop.terminal.api.core.toImmutable
@@ -14,14 +14,14 @@ import shop.terminal.api.core.toImmutable
 /** Delete a credit card associated with the current user. */
 class CardDeleteParams
 private constructor(
-    private val id: String,
+    private val id: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
     private val additionalBodyProperties: Map<String, JsonValue>,
 ) : Params {
 
     /** ID of the card to delete. */
-    fun id(): String = id
+    fun id(): Optional<String> = Optional.ofNullable(id)
 
     fun _additionalBodyProperties(): Map<String, JsonValue> = additionalBodyProperties
 
@@ -33,14 +33,9 @@ private constructor(
 
     companion object {
 
-        /**
-         * Returns a mutable builder for constructing an instance of [CardDeleteParams].
-         *
-         * The following fields are required:
-         * ```java
-         * .id()
-         * ```
-         */
+        @JvmStatic fun none(): CardDeleteParams = builder().build()
+
+        /** Returns a mutable builder for constructing an instance of [CardDeleteParams]. */
         @JvmStatic fun builder() = Builder()
     }
 
@@ -61,7 +56,10 @@ private constructor(
         }
 
         /** ID of the card to delete. */
-        fun id(id: String) = apply { this.id = id }
+        fun id(id: String?) = apply { this.id = id }
+
+        /** Alias for calling [Builder.id] with `id.orElse(null)`. */
+        fun id(id: Optional<String>) = id(id.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -187,17 +185,10 @@ private constructor(
          * Returns an immutable instance of [CardDeleteParams].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
-         *
-         * The following fields are required:
-         * ```java
-         * .id()
-         * ```
-         *
-         * @throws IllegalStateException if any required field is unset.
          */
         fun build(): CardDeleteParams =
             CardDeleteParams(
-                checkRequired("id", id),
+                id,
                 additionalHeaders.build(),
                 additionalQueryParams.build(),
                 additionalBodyProperties.toImmutable(),
@@ -209,7 +200,7 @@ private constructor(
 
     fun _pathParam(index: Int): String =
         when (index) {
-            0 -> id
+            0 -> id ?: ""
             else -> ""
         }
 
