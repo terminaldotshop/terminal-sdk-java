@@ -3,21 +3,22 @@
 package shop.terminal.api.models.address
 
 import java.util.Objects
+import java.util.Optional
+import kotlin.jvm.optionals.getOrNull
 import shop.terminal.api.core.Params
-import shop.terminal.api.core.checkRequired
 import shop.terminal.api.core.http.Headers
 import shop.terminal.api.core.http.QueryParams
 
 /** Get the shipping address with the given ID. */
 class AddressGetParams
 private constructor(
-    private val id: String,
+    private val id: String?,
     private val additionalHeaders: Headers,
     private val additionalQueryParams: QueryParams,
 ) : Params {
 
     /** ID of the shipping address to get. */
-    fun id(): String = id
+    fun id(): Optional<String> = Optional.ofNullable(id)
 
     fun _additionalHeaders(): Headers = additionalHeaders
 
@@ -27,14 +28,9 @@ private constructor(
 
     companion object {
 
-        /**
-         * Returns a mutable builder for constructing an instance of [AddressGetParams].
-         *
-         * The following fields are required:
-         * ```java
-         * .id()
-         * ```
-         */
+        @JvmStatic fun none(): AddressGetParams = builder().build()
+
+        /** Returns a mutable builder for constructing an instance of [AddressGetParams]. */
         @JvmStatic fun builder() = Builder()
     }
 
@@ -53,7 +49,10 @@ private constructor(
         }
 
         /** ID of the shipping address to get. */
-        fun id(id: String) = apply { this.id = id }
+        fun id(id: String?) = apply { this.id = id }
+
+        /** Alias for calling [Builder.id] with `id.orElse(null)`. */
+        fun id(id: Optional<String>) = id(id.getOrNull())
 
         fun additionalHeaders(additionalHeaders: Headers) = apply {
             this.additionalHeaders.clear()
@@ -157,25 +156,14 @@ private constructor(
          * Returns an immutable instance of [AddressGetParams].
          *
          * Further updates to this [Builder] will not mutate the returned instance.
-         *
-         * The following fields are required:
-         * ```java
-         * .id()
-         * ```
-         *
-         * @throws IllegalStateException if any required field is unset.
          */
         fun build(): AddressGetParams =
-            AddressGetParams(
-                checkRequired("id", id),
-                additionalHeaders.build(),
-                additionalQueryParams.build(),
-            )
+            AddressGetParams(id, additionalHeaders.build(), additionalQueryParams.build())
     }
 
     fun _pathParam(index: Int): String =
         when (index) {
-            0 -> id
+            0 -> id ?: ""
             else -> ""
         }
 

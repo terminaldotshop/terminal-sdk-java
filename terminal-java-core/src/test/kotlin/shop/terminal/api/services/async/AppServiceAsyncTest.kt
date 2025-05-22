@@ -7,8 +7,6 @@ import org.junit.jupiter.api.extension.ExtendWith
 import shop.terminal.api.TestServerExtension
 import shop.terminal.api.client.okhttp.TerminalOkHttpClientAsync
 import shop.terminal.api.models.app.AppCreateParams
-import shop.terminal.api.models.app.AppDeleteParams
-import shop.terminal.api.models.app.AppGetParams
 
 @ExtendWith(TestServerExtension::class)
 internal class AppServiceAsyncTest {
@@ -58,10 +56,7 @@ internal class AppServiceAsyncTest {
                 .build()
         val appServiceAsync = client.app()
 
-        val appFuture =
-            appServiceAsync.delete(
-                AppDeleteParams.builder().id("cli_XXXXXXXXXXXXXXXXXXXXXXXXX").build()
-            )
+        val appFuture = appServiceAsync.delete("cli_XXXXXXXXXXXXXXXXXXXXXXXXX")
 
         val app = appFuture.get()
         app.validate()
@@ -76,8 +71,7 @@ internal class AppServiceAsyncTest {
                 .build()
         val appServiceAsync = client.app()
 
-        val appFuture =
-            appServiceAsync.get(AppGetParams.builder().id("cli_XXXXXXXXXXXXXXXXXXXXXXXXX").build())
+        val appFuture = appServiceAsync.get("cli_XXXXXXXXXXXXXXXXXXXXXXXXX")
 
         val app = appFuture.get()
         app.validate()
