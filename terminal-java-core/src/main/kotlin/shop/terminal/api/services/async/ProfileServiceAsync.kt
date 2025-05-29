@@ -2,7 +2,6 @@
 
 package shop.terminal.api.services.async
 
-import com.google.errorprone.annotations.MustBeClosed
 import java.util.concurrent.CompletableFuture
 import shop.terminal.api.core.RequestOptions
 import shop.terminal.api.core.http.HttpResponseFor
@@ -54,14 +53,12 @@ interface ProfileServiceAsync {
          * Returns a raw HTTP response for `put /profile`, but is otherwise the same as
          * [ProfileServiceAsync.update].
          */
-        @MustBeClosed
         fun update(
             params: ProfileUpdateParams
         ): CompletableFuture<HttpResponseFor<ProfileUpdateResponse>> =
             update(params, RequestOptions.none())
 
         /** @see [update] */
-        @MustBeClosed
         fun update(
             params: ProfileUpdateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
@@ -71,24 +68,20 @@ interface ProfileServiceAsync {
          * Returns a raw HTTP response for `get /profile`, but is otherwise the same as
          * [ProfileServiceAsync.me].
          */
-        @MustBeClosed
         fun me(): CompletableFuture<HttpResponseFor<ProfileMeResponse>> = me(ProfileMeParams.none())
 
         /** @see [me] */
-        @MustBeClosed
         fun me(
             params: ProfileMeParams = ProfileMeParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<ProfileMeResponse>>
 
         /** @see [me] */
-        @MustBeClosed
         fun me(
             params: ProfileMeParams = ProfileMeParams.none()
         ): CompletableFuture<HttpResponseFor<ProfileMeResponse>> = me(params, RequestOptions.none())
 
         /** @see [me] */
-        @MustBeClosed
         fun me(
             requestOptions: RequestOptions
         ): CompletableFuture<HttpResponseFor<ProfileMeResponse>> =

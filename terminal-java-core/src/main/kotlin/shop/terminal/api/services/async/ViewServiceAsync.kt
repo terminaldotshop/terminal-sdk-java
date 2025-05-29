@@ -2,7 +2,6 @@
 
 package shop.terminal.api.services.async
 
-import com.google.errorprone.annotations.MustBeClosed
 import java.util.concurrent.CompletableFuture
 import shop.terminal.api.core.RequestOptions
 import shop.terminal.api.core.http.HttpResponseFor
@@ -43,26 +42,22 @@ interface ViewServiceAsync {
          * Returns a raw HTTP response for `get /view/init`, but is otherwise the same as
          * [ViewServiceAsync.init].
          */
-        @MustBeClosed
         fun init(): CompletableFuture<HttpResponseFor<ViewInitResponse>> =
             init(ViewInitParams.none())
 
         /** @see [init] */
-        @MustBeClosed
         fun init(
             params: ViewInitParams = ViewInitParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<ViewInitResponse>>
 
         /** @see [init] */
-        @MustBeClosed
         fun init(
             params: ViewInitParams = ViewInitParams.none()
         ): CompletableFuture<HttpResponseFor<ViewInitResponse>> =
             init(params, RequestOptions.none())
 
         /** @see [init] */
-        @MustBeClosed
         fun init(
             requestOptions: RequestOptions
         ): CompletableFuture<HttpResponseFor<ViewInitResponse>> =

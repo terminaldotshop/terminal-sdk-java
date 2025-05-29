@@ -2,7 +2,6 @@
 
 package shop.terminal.api.services.async
 
-import com.google.errorprone.annotations.MustBeClosed
 import java.util.concurrent.CompletableFuture
 import shop.terminal.api.core.RequestOptions
 import shop.terminal.api.core.http.HttpResponseFor
@@ -176,26 +175,22 @@ interface SubscriptionServiceAsync {
          * Returns a raw HTTP response for `post /subscription`, but is otherwise the same as
          * [SubscriptionServiceAsync.create].
          */
-        @MustBeClosed
         fun create(): CompletableFuture<HttpResponseFor<SubscriptionCreateResponse>> =
             create(SubscriptionCreateParams.none())
 
         /** @see [create] */
-        @MustBeClosed
         fun create(
             params: SubscriptionCreateParams = SubscriptionCreateParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<SubscriptionCreateResponse>>
 
         /** @see [create] */
-        @MustBeClosed
         fun create(
             params: SubscriptionCreateParams = SubscriptionCreateParams.none()
         ): CompletableFuture<HttpResponseFor<SubscriptionCreateResponse>> =
             create(params, RequestOptions.none())
 
         /** @see [create] */
-        @MustBeClosed
         fun create(
             requestOptions: RequestOptions
         ): CompletableFuture<HttpResponseFor<SubscriptionCreateResponse>> =
@@ -205,12 +200,10 @@ interface SubscriptionServiceAsync {
          * Returns a raw HTTP response for `put /subscription/{id}`, but is otherwise the same as
          * [SubscriptionServiceAsync.update].
          */
-        @MustBeClosed
         fun update(id: String): CompletableFuture<HttpResponseFor<SubscriptionUpdateResponse>> =
             update(id, SubscriptionUpdateParams.none())
 
         /** @see [update] */
-        @MustBeClosed
         fun update(
             id: String,
             params: SubscriptionUpdateParams = SubscriptionUpdateParams.none(),
@@ -219,7 +212,6 @@ interface SubscriptionServiceAsync {
             update(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see [update] */
-        @MustBeClosed
         fun update(
             id: String,
             params: SubscriptionUpdateParams = SubscriptionUpdateParams.none(),
@@ -227,21 +219,18 @@ interface SubscriptionServiceAsync {
             update(id, params, RequestOptions.none())
 
         /** @see [update] */
-        @MustBeClosed
         fun update(
             params: SubscriptionUpdateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<SubscriptionUpdateResponse>>
 
         /** @see [update] */
-        @MustBeClosed
         fun update(
             params: SubscriptionUpdateParams
         ): CompletableFuture<HttpResponseFor<SubscriptionUpdateResponse>> =
             update(params, RequestOptions.none())
 
         /** @see [update] */
-        @MustBeClosed
         fun update(
             id: String,
             requestOptions: RequestOptions,
@@ -252,26 +241,22 @@ interface SubscriptionServiceAsync {
          * Returns a raw HTTP response for `get /subscription`, but is otherwise the same as
          * [SubscriptionServiceAsync.list].
          */
-        @MustBeClosed
         fun list(): CompletableFuture<HttpResponseFor<SubscriptionListResponse>> =
             list(SubscriptionListParams.none())
 
         /** @see [list] */
-        @MustBeClosed
         fun list(
             params: SubscriptionListParams = SubscriptionListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<SubscriptionListResponse>>
 
         /** @see [list] */
-        @MustBeClosed
         fun list(
             params: SubscriptionListParams = SubscriptionListParams.none()
         ): CompletableFuture<HttpResponseFor<SubscriptionListResponse>> =
             list(params, RequestOptions.none())
 
         /** @see [list] */
-        @MustBeClosed
         fun list(
             requestOptions: RequestOptions
         ): CompletableFuture<HttpResponseFor<SubscriptionListResponse>> =
@@ -281,12 +266,10 @@ interface SubscriptionServiceAsync {
          * Returns a raw HTTP response for `delete /subscription/{id}`, but is otherwise the same as
          * [SubscriptionServiceAsync.delete].
          */
-        @MustBeClosed
         fun delete(id: String): CompletableFuture<HttpResponseFor<SubscriptionDeleteResponse>> =
             delete(id, SubscriptionDeleteParams.none())
 
         /** @see [delete] */
-        @MustBeClosed
         fun delete(
             id: String,
             params: SubscriptionDeleteParams = SubscriptionDeleteParams.none(),
@@ -295,7 +278,6 @@ interface SubscriptionServiceAsync {
             delete(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see [delete] */
-        @MustBeClosed
         fun delete(
             id: String,
             params: SubscriptionDeleteParams = SubscriptionDeleteParams.none(),
@@ -303,21 +285,18 @@ interface SubscriptionServiceAsync {
             delete(id, params, RequestOptions.none())
 
         /** @see [delete] */
-        @MustBeClosed
         fun delete(
             params: SubscriptionDeleteParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<SubscriptionDeleteResponse>>
 
         /** @see [delete] */
-        @MustBeClosed
         fun delete(
             params: SubscriptionDeleteParams
         ): CompletableFuture<HttpResponseFor<SubscriptionDeleteResponse>> =
             delete(params, RequestOptions.none())
 
         /** @see [delete] */
-        @MustBeClosed
         fun delete(
             id: String,
             requestOptions: RequestOptions,
@@ -328,12 +307,10 @@ interface SubscriptionServiceAsync {
          * Returns a raw HTTP response for `get /subscription/{id}`, but is otherwise the same as
          * [SubscriptionServiceAsync.get].
          */
-        @MustBeClosed
         fun get(id: String): CompletableFuture<HttpResponseFor<SubscriptionGetResponse>> =
             get(id, SubscriptionGetParams.none())
 
         /** @see [get] */
-        @MustBeClosed
         fun get(
             id: String,
             params: SubscriptionGetParams = SubscriptionGetParams.none(),
@@ -342,7 +319,6 @@ interface SubscriptionServiceAsync {
             get(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see [get] */
-        @MustBeClosed
         fun get(
             id: String,
             params: SubscriptionGetParams = SubscriptionGetParams.none(),
@@ -350,21 +326,18 @@ interface SubscriptionServiceAsync {
             get(id, params, RequestOptions.none())
 
         /** @see [get] */
-        @MustBeClosed
         fun get(
             params: SubscriptionGetParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<SubscriptionGetResponse>>
 
         /** @see [get] */
-        @MustBeClosed
         fun get(
             params: SubscriptionGetParams
         ): CompletableFuture<HttpResponseFor<SubscriptionGetResponse>> =
             get(params, RequestOptions.none())
 
         /** @see [get] */
-        @MustBeClosed
         fun get(
             id: String,
             requestOptions: RequestOptions,

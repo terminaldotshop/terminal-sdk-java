@@ -2,7 +2,6 @@
 
 package shop.terminal.api.services.async
 
-import com.google.errorprone.annotations.MustBeClosed
 import java.util.concurrent.CompletableFuture
 import shop.terminal.api.core.RequestOptions
 import shop.terminal.api.core.http.HttpResponseFor
@@ -76,26 +75,22 @@ interface ProductServiceAsync {
          * Returns a raw HTTP response for `get /product`, but is otherwise the same as
          * [ProductServiceAsync.list].
          */
-        @MustBeClosed
         fun list(): CompletableFuture<HttpResponseFor<ProductListResponse>> =
             list(ProductListParams.none())
 
         /** @see [list] */
-        @MustBeClosed
         fun list(
             params: ProductListParams = ProductListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<ProductListResponse>>
 
         /** @see [list] */
-        @MustBeClosed
         fun list(
             params: ProductListParams = ProductListParams.none()
         ): CompletableFuture<HttpResponseFor<ProductListResponse>> =
             list(params, RequestOptions.none())
 
         /** @see [list] */
-        @MustBeClosed
         fun list(
             requestOptions: RequestOptions
         ): CompletableFuture<HttpResponseFor<ProductListResponse>> =
@@ -105,12 +100,10 @@ interface ProductServiceAsync {
          * Returns a raw HTTP response for `get /product/{id}`, but is otherwise the same as
          * [ProductServiceAsync.get].
          */
-        @MustBeClosed
         fun get(id: String): CompletableFuture<HttpResponseFor<ProductGetResponse>> =
             get(id, ProductGetParams.none())
 
         /** @see [get] */
-        @MustBeClosed
         fun get(
             id: String,
             params: ProductGetParams = ProductGetParams.none(),
@@ -119,7 +112,6 @@ interface ProductServiceAsync {
             get(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see [get] */
-        @MustBeClosed
         fun get(
             id: String,
             params: ProductGetParams = ProductGetParams.none(),
@@ -127,19 +119,16 @@ interface ProductServiceAsync {
             get(id, params, RequestOptions.none())
 
         /** @see [get] */
-        @MustBeClosed
         fun get(
             params: ProductGetParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<ProductGetResponse>>
 
         /** @see [get] */
-        @MustBeClosed
         fun get(params: ProductGetParams): CompletableFuture<HttpResponseFor<ProductGetResponse>> =
             get(params, RequestOptions.none())
 
         /** @see [get] */
-        @MustBeClosed
         fun get(
             id: String,
             requestOptions: RequestOptions,

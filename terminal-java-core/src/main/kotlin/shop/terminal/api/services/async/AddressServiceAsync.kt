@@ -2,7 +2,6 @@
 
 package shop.terminal.api.services.async
 
-import com.google.errorprone.annotations.MustBeClosed
 import java.util.concurrent.CompletableFuture
 import shop.terminal.api.core.RequestOptions
 import shop.terminal.api.core.http.HttpResponseFor
@@ -125,14 +124,12 @@ interface AddressServiceAsync {
          * Returns a raw HTTP response for `post /address`, but is otherwise the same as
          * [AddressServiceAsync.create].
          */
-        @MustBeClosed
         fun create(
             params: AddressCreateParams
         ): CompletableFuture<HttpResponseFor<AddressCreateResponse>> =
             create(params, RequestOptions.none())
 
         /** @see [create] */
-        @MustBeClosed
         fun create(
             params: AddressCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
@@ -142,26 +139,22 @@ interface AddressServiceAsync {
          * Returns a raw HTTP response for `get /address`, but is otherwise the same as
          * [AddressServiceAsync.list].
          */
-        @MustBeClosed
         fun list(): CompletableFuture<HttpResponseFor<AddressListResponse>> =
             list(AddressListParams.none())
 
         /** @see [list] */
-        @MustBeClosed
         fun list(
             params: AddressListParams = AddressListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<AddressListResponse>>
 
         /** @see [list] */
-        @MustBeClosed
         fun list(
             params: AddressListParams = AddressListParams.none()
         ): CompletableFuture<HttpResponseFor<AddressListResponse>> =
             list(params, RequestOptions.none())
 
         /** @see [list] */
-        @MustBeClosed
         fun list(
             requestOptions: RequestOptions
         ): CompletableFuture<HttpResponseFor<AddressListResponse>> =
@@ -171,12 +164,10 @@ interface AddressServiceAsync {
          * Returns a raw HTTP response for `delete /address/{id}`, but is otherwise the same as
          * [AddressServiceAsync.delete].
          */
-        @MustBeClosed
         fun delete(id: String): CompletableFuture<HttpResponseFor<AddressDeleteResponse>> =
             delete(id, AddressDeleteParams.none())
 
         /** @see [delete] */
-        @MustBeClosed
         fun delete(
             id: String,
             params: AddressDeleteParams = AddressDeleteParams.none(),
@@ -185,7 +176,6 @@ interface AddressServiceAsync {
             delete(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see [delete] */
-        @MustBeClosed
         fun delete(
             id: String,
             params: AddressDeleteParams = AddressDeleteParams.none(),
@@ -193,21 +183,18 @@ interface AddressServiceAsync {
             delete(id, params, RequestOptions.none())
 
         /** @see [delete] */
-        @MustBeClosed
         fun delete(
             params: AddressDeleteParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<AddressDeleteResponse>>
 
         /** @see [delete] */
-        @MustBeClosed
         fun delete(
             params: AddressDeleteParams
         ): CompletableFuture<HttpResponseFor<AddressDeleteResponse>> =
             delete(params, RequestOptions.none())
 
         /** @see [delete] */
-        @MustBeClosed
         fun delete(
             id: String,
             requestOptions: RequestOptions,
@@ -218,12 +205,10 @@ interface AddressServiceAsync {
          * Returns a raw HTTP response for `get /address/{id}`, but is otherwise the same as
          * [AddressServiceAsync.get].
          */
-        @MustBeClosed
         fun get(id: String): CompletableFuture<HttpResponseFor<AddressGetResponse>> =
             get(id, AddressGetParams.none())
 
         /** @see [get] */
-        @MustBeClosed
         fun get(
             id: String,
             params: AddressGetParams = AddressGetParams.none(),
@@ -232,7 +217,6 @@ interface AddressServiceAsync {
             get(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see [get] */
-        @MustBeClosed
         fun get(
             id: String,
             params: AddressGetParams = AddressGetParams.none(),
@@ -240,19 +224,16 @@ interface AddressServiceAsync {
             get(id, params, RequestOptions.none())
 
         /** @see [get] */
-        @MustBeClosed
         fun get(
             params: AddressGetParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<AddressGetResponse>>
 
         /** @see [get] */
-        @MustBeClosed
         fun get(params: AddressGetParams): CompletableFuture<HttpResponseFor<AddressGetResponse>> =
             get(params, RequestOptions.none())
 
         /** @see [get] */
-        @MustBeClosed
         fun get(
             id: String,
             requestOptions: RequestOptions,
