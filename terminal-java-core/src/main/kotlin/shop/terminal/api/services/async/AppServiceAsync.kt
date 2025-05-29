@@ -2,7 +2,6 @@
 
 package shop.terminal.api.services.async
 
-import com.google.errorprone.annotations.MustBeClosed
 import java.util.concurrent.CompletableFuture
 import shop.terminal.api.core.RequestOptions
 import shop.terminal.api.core.http.HttpResponseFor
@@ -118,12 +117,10 @@ interface AppServiceAsync {
          * Returns a raw HTTP response for `post /app`, but is otherwise the same as
          * [AppServiceAsync.create].
          */
-        @MustBeClosed
         fun create(params: AppCreateParams): CompletableFuture<HttpResponseFor<AppCreateResponse>> =
             create(params, RequestOptions.none())
 
         /** @see [create] */
-        @MustBeClosed
         fun create(
             params: AppCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
@@ -133,24 +130,20 @@ interface AppServiceAsync {
          * Returns a raw HTTP response for `get /app`, but is otherwise the same as
          * [AppServiceAsync.list].
          */
-        @MustBeClosed
         fun list(): CompletableFuture<HttpResponseFor<AppListResponse>> = list(AppListParams.none())
 
         /** @see [list] */
-        @MustBeClosed
         fun list(
             params: AppListParams = AppListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<AppListResponse>>
 
         /** @see [list] */
-        @MustBeClosed
         fun list(
             params: AppListParams = AppListParams.none()
         ): CompletableFuture<HttpResponseFor<AppListResponse>> = list(params, RequestOptions.none())
 
         /** @see [list] */
-        @MustBeClosed
         fun list(
             requestOptions: RequestOptions
         ): CompletableFuture<HttpResponseFor<AppListResponse>> =
@@ -160,12 +153,10 @@ interface AppServiceAsync {
          * Returns a raw HTTP response for `delete /app/{id}`, but is otherwise the same as
          * [AppServiceAsync.delete].
          */
-        @MustBeClosed
         fun delete(id: String): CompletableFuture<HttpResponseFor<AppDeleteResponse>> =
             delete(id, AppDeleteParams.none())
 
         /** @see [delete] */
-        @MustBeClosed
         fun delete(
             id: String,
             params: AppDeleteParams = AppDeleteParams.none(),
@@ -174,7 +165,6 @@ interface AppServiceAsync {
             delete(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see [delete] */
-        @MustBeClosed
         fun delete(
             id: String,
             params: AppDeleteParams = AppDeleteParams.none(),
@@ -182,19 +172,16 @@ interface AppServiceAsync {
             delete(id, params, RequestOptions.none())
 
         /** @see [delete] */
-        @MustBeClosed
         fun delete(
             params: AppDeleteParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<AppDeleteResponse>>
 
         /** @see [delete] */
-        @MustBeClosed
         fun delete(params: AppDeleteParams): CompletableFuture<HttpResponseFor<AppDeleteResponse>> =
             delete(params, RequestOptions.none())
 
         /** @see [delete] */
-        @MustBeClosed
         fun delete(
             id: String,
             requestOptions: RequestOptions,
@@ -205,12 +192,10 @@ interface AppServiceAsync {
          * Returns a raw HTTP response for `get /app/{id}`, but is otherwise the same as
          * [AppServiceAsync.get].
          */
-        @MustBeClosed
         fun get(id: String): CompletableFuture<HttpResponseFor<AppGetResponse>> =
             get(id, AppGetParams.none())
 
         /** @see [get] */
-        @MustBeClosed
         fun get(
             id: String,
             params: AppGetParams = AppGetParams.none(),
@@ -219,7 +204,6 @@ interface AppServiceAsync {
             get(params.toBuilder().id(id).build(), requestOptions)
 
         /** @see [get] */
-        @MustBeClosed
         fun get(
             id: String,
             params: AppGetParams = AppGetParams.none(),
@@ -227,19 +211,16 @@ interface AppServiceAsync {
             get(id, params, RequestOptions.none())
 
         /** @see [get] */
-        @MustBeClosed
         fun get(
             params: AppGetParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<AppGetResponse>>
 
         /** @see [get] */
-        @MustBeClosed
         fun get(params: AppGetParams): CompletableFuture<HttpResponseFor<AppGetResponse>> =
             get(params, RequestOptions.none())
 
         /** @see [get] */
-        @MustBeClosed
         fun get(
             id: String,
             requestOptions: RequestOptions,
