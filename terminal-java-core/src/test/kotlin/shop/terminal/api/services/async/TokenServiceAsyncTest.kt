@@ -6,8 +6,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import shop.terminal.api.TestServerExtension
 import shop.terminal.api.client.okhttp.TerminalOkHttpClientAsync
-import shop.terminal.api.models.token.TokenDeleteParams
-import shop.terminal.api.models.token.TokenGetParams
 
 @ExtendWith(TestServerExtension::class)
 internal class TokenServiceAsyncTest {
@@ -51,10 +49,7 @@ internal class TokenServiceAsyncTest {
                 .build()
         val tokenServiceAsync = client.token()
 
-        val tokenFuture =
-            tokenServiceAsync.delete(
-                TokenDeleteParams.builder().id("pat_XXXXXXXXXXXXXXXXXXXXXXXXX").build()
-            )
+        val tokenFuture = tokenServiceAsync.delete("pat_XXXXXXXXXXXXXXXXXXXXXXXXX")
 
         val token = tokenFuture.get()
         token.validate()
@@ -69,10 +64,7 @@ internal class TokenServiceAsyncTest {
                 .build()
         val tokenServiceAsync = client.token()
 
-        val tokenFuture =
-            tokenServiceAsync.get(
-                TokenGetParams.builder().id("pat_XXXXXXXXXXXXXXXXXXXXXXXXX").build()
-            )
+        val tokenFuture = tokenServiceAsync.get("pat_XXXXXXXXXXXXXXXXXXXXXXXXX")
 
         val token = tokenFuture.get()
         token.validate()
