@@ -95,6 +95,7 @@ class CartServiceAsyncImpl internal constructor(private val clientOptions: Clien
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.DELETE)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("cart")
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
@@ -126,6 +127,7 @@ class CartServiceAsyncImpl internal constructor(private val clientOptions: Clien
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("cart", "convert")
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
@@ -156,6 +158,7 @@ class CartServiceAsyncImpl internal constructor(private val clientOptions: Clien
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("cart")
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -186,6 +189,7 @@ class CartServiceAsyncImpl internal constructor(private val clientOptions: Clien
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.PUT)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("cart", "address")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -217,6 +221,7 @@ class CartServiceAsyncImpl internal constructor(private val clientOptions: Clien
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.PUT)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("cart", "card")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -248,6 +253,7 @@ class CartServiceAsyncImpl internal constructor(private val clientOptions: Clien
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.PUT)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("cart", "item")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()

@@ -64,6 +64,7 @@ class OrderServiceImpl internal constructor(private val clientOptions: ClientOpt
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("order")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -91,6 +92,7 @@ class OrderServiceImpl internal constructor(private val clientOptions: ClientOpt
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("order")
                     .build()
                     .prepare(clientOptions, params)
@@ -120,6 +122,7 @@ class OrderServiceImpl internal constructor(private val clientOptions: ClientOpt
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("order", params._pathParam(0))
                     .build()
                     .prepare(clientOptions, params)
