@@ -19,7 +19,7 @@ private constructor(
     @get:JvmName("checkJacksonVersionCompatibility") val checkJacksonVersionCompatibility: Boolean,
     @get:JvmName("jsonMapper") val jsonMapper: JsonMapper,
     @get:JvmName("clock") val clock: Clock,
-    @get:JvmName("baseUrl") val baseUrl: String,
+    private val baseUrl: String?,
     @get:JvmName("headers") val headers: Headers,
     @get:JvmName("queryParams") val queryParams: QueryParams,
     @get:JvmName("responseValidation") val responseValidation: Boolean,
@@ -34,6 +34,8 @@ private constructor(
             checkJacksonVersionCompatibility()
         }
     }
+
+    fun baseUrl(): String = baseUrl ?: PRODUCTION_URL
 
     fun appId(): Optional<String> = Optional.ofNullable(appId)
 
@@ -66,7 +68,7 @@ private constructor(
         private var checkJacksonVersionCompatibility: Boolean = true
         private var jsonMapper: JsonMapper = jsonMapper()
         private var clock: Clock = Clock.systemUTC()
-        private var baseUrl: String = PRODUCTION_URL
+        private var baseUrl: String? = null
         private var headers: Headers.Builder = Headers.builder()
         private var queryParams: QueryParams.Builder = QueryParams.builder()
         private var responseValidation: Boolean = false
@@ -101,7 +103,10 @@ private constructor(
 
         fun clock(clock: Clock) = apply { this.clock = clock }
 
-        fun baseUrl(baseUrl: String) = apply { this.baseUrl = baseUrl }
+        fun baseUrl(baseUrl: String?) = apply { this.baseUrl = baseUrl }
+
+        /** Alias for calling [Builder.baseUrl] with `baseUrl.orElse(null)`. */
+        fun baseUrl(baseUrl: Optional<String>) = baseUrl(baseUrl.getOrNull())
 
         fun responseValidation(responseValidation: Boolean) = apply {
             this.responseValidation = responseValidation
@@ -197,8 +202,6 @@ private constructor(
         fun removeQueryParams(key: String) = apply { queryParams.remove(key) }
 
         fun removeAllQueryParams(keys: Set<String>) = apply { queryParams.removeAll(keys) }
-
-        fun baseUrl(): String = baseUrl
 
         fun fromEnv() = apply {
             System.getenv("TERMINAL_BASE_URL")?.let { baseUrl(it) }
