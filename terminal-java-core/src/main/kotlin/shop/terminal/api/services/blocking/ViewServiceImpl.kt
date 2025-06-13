@@ -2,6 +2,7 @@
 
 package shop.terminal.api.services.blocking
 
+import java.util.function.Consumer
 import shop.terminal.api.core.ClientOptions
 import shop.terminal.api.core.JsonValue
 import shop.terminal.api.core.RequestOptions
@@ -25,6 +26,9 @@ class ViewServiceImpl internal constructor(private val clientOptions: ClientOpti
 
     override fun withRawResponse(): ViewService.WithRawResponse = withRawResponse
 
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): ViewService =
+        ViewServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+
     override fun init(params: ViewInitParams, requestOptions: RequestOptions): ViewInitResponse =
         // get /view/init
         withRawResponse().init(params, requestOptions).parse()
@@ -33,6 +37,13 @@ class ViewServiceImpl internal constructor(private val clientOptions: ClientOpti
         ViewService.WithRawResponse {
 
         private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
+
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): ViewService.WithRawResponse =
+            ViewServiceImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
 
         private val initHandler: Handler<ViewInitResponse> =
             jsonHandler<ViewInitResponse>(clientOptions.jsonMapper).withErrorHandler(errorHandler)

@@ -2,6 +2,7 @@
 
 package shop.terminal.api.services.blocking
 
+import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 import shop.terminal.api.core.ClientOptions
 import shop.terminal.api.core.JsonValue
@@ -36,6 +37,9 @@ class CardServiceImpl internal constructor(private val clientOptions: ClientOpti
 
     override fun withRawResponse(): CardService.WithRawResponse = withRawResponse
 
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): CardService =
+        CardServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+
     override fun create(
         params: CardCreateParams,
         requestOptions: RequestOptions,
@@ -69,6 +73,13 @@ class CardServiceImpl internal constructor(private val clientOptions: ClientOpti
         CardService.WithRawResponse {
 
         private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
+
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): CardService.WithRawResponse =
+            CardServiceImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
 
         private val createHandler: Handler<CardCreateResponse> =
             jsonHandler<CardCreateResponse>(clientOptions.jsonMapper).withErrorHandler(errorHandler)

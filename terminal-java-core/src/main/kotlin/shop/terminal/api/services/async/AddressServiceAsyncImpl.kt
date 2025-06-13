@@ -3,6 +3,7 @@
 package shop.terminal.api.services.async
 
 import java.util.concurrent.CompletableFuture
+import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 import shop.terminal.api.core.ClientOptions
 import shop.terminal.api.core.JsonValue
@@ -36,6 +37,9 @@ class AddressServiceAsyncImpl internal constructor(private val clientOptions: Cl
 
     override fun withRawResponse(): AddressServiceAsync.WithRawResponse = withRawResponse
 
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): AddressServiceAsync =
+        AddressServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+
     override fun create(
         params: AddressCreateParams,
         requestOptions: RequestOptions,
@@ -68,6 +72,13 @@ class AddressServiceAsyncImpl internal constructor(private val clientOptions: Cl
         AddressServiceAsync.WithRawResponse {
 
         private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
+
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): AddressServiceAsync.WithRawResponse =
+            AddressServiceAsyncImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
 
         private val createHandler: Handler<AddressCreateResponse> =
             jsonHandler<AddressCreateResponse>(clientOptions.jsonMapper)

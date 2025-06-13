@@ -3,6 +3,7 @@
 package shop.terminal.api.services.async
 
 import java.util.concurrent.CompletableFuture
+import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 import shop.terminal.api.core.ClientOptions
 import shop.terminal.api.core.JsonValue
@@ -37,6 +38,9 @@ class SubscriptionServiceAsyncImpl internal constructor(private val clientOption
     }
 
     override fun withRawResponse(): SubscriptionServiceAsync.WithRawResponse = withRawResponse
+
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): SubscriptionServiceAsync =
+        SubscriptionServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun create(
         params: SubscriptionCreateParams,
@@ -77,6 +81,13 @@ class SubscriptionServiceAsyncImpl internal constructor(private val clientOption
         SubscriptionServiceAsync.WithRawResponse {
 
         private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
+
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): SubscriptionServiceAsync.WithRawResponse =
+            SubscriptionServiceAsyncImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
 
         private val createHandler: Handler<SubscriptionCreateResponse> =
             jsonHandler<SubscriptionCreateResponse>(clientOptions.jsonMapper)

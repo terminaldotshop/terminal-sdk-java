@@ -2,6 +2,7 @@
 
 package shop.terminal.api.services.blocking
 
+import java.util.function.Consumer
 import shop.terminal.api.core.ClientOptions
 import shop.terminal.api.core.JsonValue
 import shop.terminal.api.core.RequestOptions
@@ -35,6 +36,9 @@ class CartServiceImpl internal constructor(private val clientOptions: ClientOpti
     }
 
     override fun withRawResponse(): CartService.WithRawResponse = withRawResponse
+
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): CartService =
+        CartServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun clear(params: CartClearParams, requestOptions: RequestOptions): CartClearResponse =
         // delete /cart
@@ -76,6 +80,13 @@ class CartServiceImpl internal constructor(private val clientOptions: ClientOpti
         CartService.WithRawResponse {
 
         private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
+
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): CartService.WithRawResponse =
+            CartServiceImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
 
         private val clearHandler: Handler<CartClearResponse> =
             jsonHandler<CartClearResponse>(clientOptions.jsonMapper).withErrorHandler(errorHandler)

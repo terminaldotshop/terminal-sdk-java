@@ -2,6 +2,8 @@
 
 package shop.terminal.api.client
 
+import java.util.function.Consumer
+import shop.terminal.api.core.ClientOptions
 import shop.terminal.api.services.blocking.AddressService
 import shop.terminal.api.services.blocking.AppService
 import shop.terminal.api.services.blocking.CardService
@@ -43,6 +45,13 @@ interface TerminalClient {
      */
     fun withRawResponse(): WithRawResponse
 
+    /**
+     * Returns a view of this service with the given option modifications applied.
+     *
+     * The original service is not modified.
+     */
+    fun withOptions(modifier: Consumer<ClientOptions.Builder>): TerminalClient
+
     fun product(): ProductService
 
     fun profile(): ProfileService
@@ -80,6 +89,13 @@ interface TerminalClient {
 
     /** A view of [TerminalClient] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
+
+        /**
+         * Returns a view of this service with the given option modifications applied.
+         *
+         * The original service is not modified.
+         */
+        fun withOptions(modifier: Consumer<ClientOptions.Builder>): TerminalClient.WithRawResponse
 
         fun product(): ProductService.WithRawResponse
 

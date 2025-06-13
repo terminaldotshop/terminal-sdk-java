@@ -3,6 +3,7 @@
 package shop.terminal.api.services.async
 
 import java.util.concurrent.CompletableFuture
+import java.util.function.Consumer
 import shop.terminal.api.core.ClientOptions
 import shop.terminal.api.core.JsonValue
 import shop.terminal.api.core.RequestOptions
@@ -30,6 +31,9 @@ class ProfileServiceAsyncImpl internal constructor(private val clientOptions: Cl
 
     override fun withRawResponse(): ProfileServiceAsync.WithRawResponse = withRawResponse
 
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): ProfileServiceAsync =
+        ProfileServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+
     override fun update(
         params: ProfileUpdateParams,
         requestOptions: RequestOptions,
@@ -48,6 +52,13 @@ class ProfileServiceAsyncImpl internal constructor(private val clientOptions: Cl
         ProfileServiceAsync.WithRawResponse {
 
         private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
+
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): ProfileServiceAsync.WithRawResponse =
+            ProfileServiceAsyncImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
 
         private val updateHandler: Handler<ProfileUpdateResponse> =
             jsonHandler<ProfileUpdateResponse>(clientOptions.jsonMapper)

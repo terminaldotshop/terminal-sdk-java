@@ -2,6 +2,7 @@
 
 package shop.terminal.api.services.blocking
 
+import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 import shop.terminal.api.core.ClientOptions
 import shop.terminal.api.core.JsonValue
@@ -35,6 +36,9 @@ class AddressServiceImpl internal constructor(private val clientOptions: ClientO
 
     override fun withRawResponse(): AddressService.WithRawResponse = withRawResponse
 
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): AddressService =
+        AddressServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+
     override fun create(
         params: AddressCreateParams,
         requestOptions: RequestOptions,
@@ -64,6 +68,13 @@ class AddressServiceImpl internal constructor(private val clientOptions: ClientO
         AddressService.WithRawResponse {
 
         private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
+
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): AddressService.WithRawResponse =
+            AddressServiceImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
 
         private val createHandler: Handler<AddressCreateResponse> =
             jsonHandler<AddressCreateResponse>(clientOptions.jsonMapper)

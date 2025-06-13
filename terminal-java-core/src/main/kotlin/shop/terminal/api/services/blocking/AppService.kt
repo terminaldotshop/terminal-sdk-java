@@ -3,6 +3,8 @@
 package shop.terminal.api.services.blocking
 
 import com.google.errorprone.annotations.MustBeClosed
+import java.util.function.Consumer
+import shop.terminal.api.core.ClientOptions
 import shop.terminal.api.core.RequestOptions
 import shop.terminal.api.core.http.HttpResponseFor
 import shop.terminal.api.models.app.AppCreateParams
@@ -20,6 +22,13 @@ interface AppService {
      * Returns a view of this service that provides access to raw HTTP responses for each method.
      */
     fun withRawResponse(): WithRawResponse
+
+    /**
+     * Returns a view of this service with the given option modifications applied.
+     *
+     * The original service is not modified.
+     */
+    fun withOptions(modifier: Consumer<ClientOptions.Builder>): AppService
 
     /** Create an app. */
     fun create(params: AppCreateParams): AppCreateResponse = create(params, RequestOptions.none())
@@ -103,6 +112,13 @@ interface AppService {
 
     /** A view of [AppService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
+
+        /**
+         * Returns a view of this service with the given option modifications applied.
+         *
+         * The original service is not modified.
+         */
+        fun withOptions(modifier: Consumer<ClientOptions.Builder>): AppService.WithRawResponse
 
         /**
          * Returns a raw HTTP response for `post /app`, but is otherwise the same as

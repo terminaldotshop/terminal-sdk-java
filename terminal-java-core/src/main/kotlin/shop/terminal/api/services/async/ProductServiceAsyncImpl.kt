@@ -3,6 +3,7 @@
 package shop.terminal.api.services.async
 
 import java.util.concurrent.CompletableFuture
+import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 import shop.terminal.api.core.ClientOptions
 import shop.terminal.api.core.JsonValue
@@ -31,6 +32,9 @@ class ProductServiceAsyncImpl internal constructor(private val clientOptions: Cl
 
     override fun withRawResponse(): ProductServiceAsync.WithRawResponse = withRawResponse
 
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): ProductServiceAsync =
+        ProductServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+
     override fun list(
         params: ProductListParams,
         requestOptions: RequestOptions,
@@ -49,6 +53,13 @@ class ProductServiceAsyncImpl internal constructor(private val clientOptions: Cl
         ProductServiceAsync.WithRawResponse {
 
         private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
+
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): ProductServiceAsync.WithRawResponse =
+            ProductServiceAsyncImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
 
         private val listHandler: Handler<ProductListResponse> =
             jsonHandler<ProductListResponse>(clientOptions.jsonMapper)
