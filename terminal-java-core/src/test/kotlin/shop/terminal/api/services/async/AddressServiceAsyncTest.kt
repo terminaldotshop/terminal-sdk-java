@@ -7,8 +7,6 @@ import org.junit.jupiter.api.extension.ExtendWith
 import shop.terminal.api.TestServerExtension
 import shop.terminal.api.client.okhttp.TerminalOkHttpClientAsync
 import shop.terminal.api.models.address.AddressCreateParams
-import shop.terminal.api.models.address.AddressDeleteParams
-import shop.terminal.api.models.address.AddressGetParams
 
 @ExtendWith(TestServerExtension::class)
 internal class AddressServiceAsyncTest {
@@ -64,10 +62,7 @@ internal class AddressServiceAsyncTest {
                 .build()
         val addressServiceAsync = client.address()
 
-        val addressFuture =
-            addressServiceAsync.delete(
-                AddressDeleteParams.builder().id("shp_XXXXXXXXXXXXXXXXXXXXXXXXX").build()
-            )
+        val addressFuture = addressServiceAsync.delete("shp_XXXXXXXXXXXXXXXXXXXXXXXXX")
 
         val address = addressFuture.get()
         address.validate()
@@ -82,10 +77,7 @@ internal class AddressServiceAsyncTest {
                 .build()
         val addressServiceAsync = client.address()
 
-        val addressFuture =
-            addressServiceAsync.get(
-                AddressGetParams.builder().id("shp_XXXXXXXXXXXXXXXXXXXXXXXXX").build()
-            )
+        val addressFuture = addressServiceAsync.get("shp_XXXXXXXXXXXXXXXXXXXXXXXXX")
 
         val address = addressFuture.get()
         address.validate()

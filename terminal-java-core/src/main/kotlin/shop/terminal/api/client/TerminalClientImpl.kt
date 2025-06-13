@@ -2,6 +2,7 @@
 
 package shop.terminal.api.client
 
+import java.util.function.Consumer
 import shop.terminal.api.core.ClientOptions
 import shop.terminal.api.core.getPackageVersion
 import shop.terminal.api.services.blocking.AddressService
@@ -71,6 +72,9 @@ class TerminalClientImpl(private val clientOptions: ClientOptions) : TerminalCli
     override fun async(): TerminalClientAsync = async
 
     override fun withRawResponse(): TerminalClient.WithRawResponse = withRawResponse
+
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): TerminalClient =
+        TerminalClientImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun product(): ProductService = product
 
@@ -142,6 +146,13 @@ class TerminalClientImpl(private val clientOptions: ClientOptions) : TerminalCli
         private val view: ViewService.WithRawResponse by lazy {
             ViewServiceImpl.WithRawResponseImpl(clientOptions)
         }
+
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): TerminalClient.WithRawResponse =
+            TerminalClientImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
 
         override fun product(): ProductService.WithRawResponse = product
 

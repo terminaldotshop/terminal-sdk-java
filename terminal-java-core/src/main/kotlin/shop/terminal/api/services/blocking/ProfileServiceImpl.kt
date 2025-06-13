@@ -2,6 +2,7 @@
 
 package shop.terminal.api.services.blocking
 
+import java.util.function.Consumer
 import shop.terminal.api.core.ClientOptions
 import shop.terminal.api.core.JsonValue
 import shop.terminal.api.core.RequestOptions
@@ -29,6 +30,9 @@ class ProfileServiceImpl internal constructor(private val clientOptions: ClientO
 
     override fun withRawResponse(): ProfileService.WithRawResponse = withRawResponse
 
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): ProfileService =
+        ProfileServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+
     override fun update(
         params: ProfileUpdateParams,
         requestOptions: RequestOptions,
@@ -45,6 +49,13 @@ class ProfileServiceImpl internal constructor(private val clientOptions: ClientO
 
         private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
 
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): ProfileService.WithRawResponse =
+            ProfileServiceImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
+
         private val updateHandler: Handler<ProfileUpdateResponse> =
             jsonHandler<ProfileUpdateResponse>(clientOptions.jsonMapper)
                 .withErrorHandler(errorHandler)
@@ -56,6 +67,7 @@ class ProfileServiceImpl internal constructor(private val clientOptions: ClientO
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.PUT)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("profile")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -83,6 +95,7 @@ class ProfileServiceImpl internal constructor(private val clientOptions: ClientO
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("profile")
                     .build()
                     .prepare(clientOptions, params)

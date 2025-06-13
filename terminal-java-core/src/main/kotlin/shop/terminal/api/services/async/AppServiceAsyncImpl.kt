@@ -3,9 +3,12 @@
 package shop.terminal.api.services.async
 
 import java.util.concurrent.CompletableFuture
+import java.util.function.Consumer
+import kotlin.jvm.optionals.getOrNull
 import shop.terminal.api.core.ClientOptions
 import shop.terminal.api.core.JsonValue
 import shop.terminal.api.core.RequestOptions
+import shop.terminal.api.core.checkRequired
 import shop.terminal.api.core.handlers.errorHandler
 import shop.terminal.api.core.handlers.jsonHandler
 import shop.terminal.api.core.handlers.withErrorHandler
@@ -33,6 +36,9 @@ class AppServiceAsyncImpl internal constructor(private val clientOptions: Client
     }
 
     override fun withRawResponse(): AppServiceAsync.WithRawResponse = withRawResponse
+
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): AppServiceAsync =
+        AppServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun create(
         params: AppCreateParams,
@@ -67,6 +73,13 @@ class AppServiceAsyncImpl internal constructor(private val clientOptions: Client
 
         private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
 
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): AppServiceAsync.WithRawResponse =
+            AppServiceAsyncImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
+
         private val createHandler: Handler<AppCreateResponse> =
             jsonHandler<AppCreateResponse>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
 
@@ -77,6 +90,7 @@ class AppServiceAsyncImpl internal constructor(private val clientOptions: Client
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("app")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -107,6 +121,7 @@ class AppServiceAsyncImpl internal constructor(private val clientOptions: Client
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("app")
                     .build()
                     .prepareAsync(clientOptions, params)
@@ -133,9 +148,13 @@ class AppServiceAsyncImpl internal constructor(private val clientOptions: Client
             params: AppDeleteParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<AppDeleteResponse>> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.DELETE)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("app", params._pathParam(0))
                     .apply { params._body().ifPresent { body(json(clientOptions.jsonMapper, it)) } }
                     .build()
@@ -163,9 +182,13 @@ class AppServiceAsyncImpl internal constructor(private val clientOptions: Client
             params: AppGetParams,
             requestOptions: RequestOptions,
         ): CompletableFuture<HttpResponseFor<AppGetResponse>> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("app", params._pathParam(0))
                     .build()
                     .prepareAsync(clientOptions, params)

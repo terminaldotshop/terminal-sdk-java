@@ -2,8 +2,9 @@
 
 package shop.terminal.api.services.async
 
-import com.google.errorprone.annotations.MustBeClosed
 import java.util.concurrent.CompletableFuture
+import java.util.function.Consumer
+import shop.terminal.api.core.ClientOptions
 import shop.terminal.api.core.RequestOptions
 import shop.terminal.api.core.http.HttpResponseFor
 import shop.terminal.api.models.token.TokenCreateParams
@@ -21,6 +22,13 @@ interface TokenServiceAsync {
      * Returns a view of this service that provides access to raw HTTP responses for each method.
      */
     fun withRawResponse(): WithRawResponse
+
+    /**
+     * Returns a view of this service with the given option modifications applied.
+     *
+     * The original service is not modified.
+     */
+    fun withOptions(modifier: Consumer<ClientOptions.Builder>): TokenServiceAsync
 
     /** Create a personal access token. */
     fun create(): CompletableFuture<TokenCreateResponse> = create(TokenCreateParams.none())
@@ -59,8 +67,22 @@ interface TokenServiceAsync {
         list(TokenListParams.none(), requestOptions)
 
     /** Delete the personal access token with the given ID. */
-    fun delete(params: TokenDeleteParams): CompletableFuture<TokenDeleteResponse> =
-        delete(params, RequestOptions.none())
+    fun delete(id: String): CompletableFuture<TokenDeleteResponse> =
+        delete(id, TokenDeleteParams.none())
+
+    /** @see [delete] */
+    fun delete(
+        id: String,
+        params: TokenDeleteParams = TokenDeleteParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<TokenDeleteResponse> =
+        delete(params.toBuilder().id(id).build(), requestOptions)
+
+    /** @see [delete] */
+    fun delete(
+        id: String,
+        params: TokenDeleteParams = TokenDeleteParams.none(),
+    ): CompletableFuture<TokenDeleteResponse> = delete(id, params, RequestOptions.none())
 
     /** @see [delete] */
     fun delete(
@@ -68,9 +90,29 @@ interface TokenServiceAsync {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<TokenDeleteResponse>
 
+    /** @see [delete] */
+    fun delete(params: TokenDeleteParams): CompletableFuture<TokenDeleteResponse> =
+        delete(params, RequestOptions.none())
+
+    /** @see [delete] */
+    fun delete(id: String, requestOptions: RequestOptions): CompletableFuture<TokenDeleteResponse> =
+        delete(id, TokenDeleteParams.none(), requestOptions)
+
     /** Get the personal access token with the given ID. */
-    fun get(params: TokenGetParams): CompletableFuture<TokenGetResponse> =
-        get(params, RequestOptions.none())
+    fun get(id: String): CompletableFuture<TokenGetResponse> = get(id, TokenGetParams.none())
+
+    /** @see [get] */
+    fun get(
+        id: String,
+        params: TokenGetParams = TokenGetParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<TokenGetResponse> = get(params.toBuilder().id(id).build(), requestOptions)
+
+    /** @see [get] */
+    fun get(
+        id: String,
+        params: TokenGetParams = TokenGetParams.none(),
+    ): CompletableFuture<TokenGetResponse> = get(id, params, RequestOptions.none())
 
     /** @see [get] */
     fun get(
@@ -78,33 +120,46 @@ interface TokenServiceAsync {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<TokenGetResponse>
 
+    /** @see [get] */
+    fun get(params: TokenGetParams): CompletableFuture<TokenGetResponse> =
+        get(params, RequestOptions.none())
+
+    /** @see [get] */
+    fun get(id: String, requestOptions: RequestOptions): CompletableFuture<TokenGetResponse> =
+        get(id, TokenGetParams.none(), requestOptions)
+
     /** A view of [TokenServiceAsync] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
+
+        /**
+         * Returns a view of this service with the given option modifications applied.
+         *
+         * The original service is not modified.
+         */
+        fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): TokenServiceAsync.WithRawResponse
 
         /**
          * Returns a raw HTTP response for `post /token`, but is otherwise the same as
          * [TokenServiceAsync.create].
          */
-        @MustBeClosed
         fun create(): CompletableFuture<HttpResponseFor<TokenCreateResponse>> =
             create(TokenCreateParams.none())
 
         /** @see [create] */
-        @MustBeClosed
         fun create(
             params: TokenCreateParams = TokenCreateParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<TokenCreateResponse>>
 
         /** @see [create] */
-        @MustBeClosed
         fun create(
             params: TokenCreateParams = TokenCreateParams.none()
         ): CompletableFuture<HttpResponseFor<TokenCreateResponse>> =
             create(params, RequestOptions.none())
 
         /** @see [create] */
-        @MustBeClosed
         fun create(
             requestOptions: RequestOptions
         ): CompletableFuture<HttpResponseFor<TokenCreateResponse>> =
@@ -114,26 +169,22 @@ interface TokenServiceAsync {
          * Returns a raw HTTP response for `get /token`, but is otherwise the same as
          * [TokenServiceAsync.list].
          */
-        @MustBeClosed
         fun list(): CompletableFuture<HttpResponseFor<TokenListResponse>> =
             list(TokenListParams.none())
 
         /** @see [list] */
-        @MustBeClosed
         fun list(
             params: TokenListParams = TokenListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<TokenListResponse>>
 
         /** @see [list] */
-        @MustBeClosed
         fun list(
             params: TokenListParams = TokenListParams.none()
         ): CompletableFuture<HttpResponseFor<TokenListResponse>> =
             list(params, RequestOptions.none())
 
         /** @see [list] */
-        @MustBeClosed
         fun list(
             requestOptions: RequestOptions
         ): CompletableFuture<HttpResponseFor<TokenListResponse>> =
@@ -143,32 +194,80 @@ interface TokenServiceAsync {
          * Returns a raw HTTP response for `delete /token/{id}`, but is otherwise the same as
          * [TokenServiceAsync.delete].
          */
-        @MustBeClosed
+        fun delete(id: String): CompletableFuture<HttpResponseFor<TokenDeleteResponse>> =
+            delete(id, TokenDeleteParams.none())
+
+        /** @see [delete] */
+        fun delete(
+            id: String,
+            params: TokenDeleteParams = TokenDeleteParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<TokenDeleteResponse>> =
+            delete(params.toBuilder().id(id).build(), requestOptions)
+
+        /** @see [delete] */
+        fun delete(
+            id: String,
+            params: TokenDeleteParams = TokenDeleteParams.none(),
+        ): CompletableFuture<HttpResponseFor<TokenDeleteResponse>> =
+            delete(id, params, RequestOptions.none())
+
+        /** @see [delete] */
+        fun delete(
+            params: TokenDeleteParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<TokenDeleteResponse>>
+
+        /** @see [delete] */
         fun delete(
             params: TokenDeleteParams
         ): CompletableFuture<HttpResponseFor<TokenDeleteResponse>> =
             delete(params, RequestOptions.none())
 
         /** @see [delete] */
-        @MustBeClosed
         fun delete(
-            params: TokenDeleteParams,
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<TokenDeleteResponse>>
+            id: String,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<TokenDeleteResponse>> =
+            delete(id, TokenDeleteParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `get /token/{id}`, but is otherwise the same as
          * [TokenServiceAsync.get].
          */
-        @MustBeClosed
-        fun get(params: TokenGetParams): CompletableFuture<HttpResponseFor<TokenGetResponse>> =
-            get(params, RequestOptions.none())
+        fun get(id: String): CompletableFuture<HttpResponseFor<TokenGetResponse>> =
+            get(id, TokenGetParams.none())
 
         /** @see [get] */
-        @MustBeClosed
+        fun get(
+            id: String,
+            params: TokenGetParams = TokenGetParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<TokenGetResponse>> =
+            get(params.toBuilder().id(id).build(), requestOptions)
+
+        /** @see [get] */
+        fun get(
+            id: String,
+            params: TokenGetParams = TokenGetParams.none(),
+        ): CompletableFuture<HttpResponseFor<TokenGetResponse>> =
+            get(id, params, RequestOptions.none())
+
+        /** @see [get] */
         fun get(
             params: TokenGetParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<TokenGetResponse>>
+
+        /** @see [get] */
+        fun get(params: TokenGetParams): CompletableFuture<HttpResponseFor<TokenGetResponse>> =
+            get(params, RequestOptions.none())
+
+        /** @see [get] */
+        fun get(
+            id: String,
+            requestOptions: RequestOptions,
+        ): CompletableFuture<HttpResponseFor<TokenGetResponse>> =
+            get(id, TokenGetParams.none(), requestOptions)
     }
 }

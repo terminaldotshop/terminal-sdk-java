@@ -2,8 +2,8 @@
 
 <!-- x-release-please-start-version -->
 
-[![Maven Central](https://img.shields.io/maven-central/v/shop.terminal.api/terminal-java)](https://central.sonatype.com/artifact/shop.terminal.api/terminal-java/2.5.0)
-[![javadoc](https://javadoc.io/badge2/shop.terminal.api/terminal-java/2.5.0/javadoc.svg)](https://javadoc.io/doc/shop.terminal.api/terminal-java/2.5.0)
+[![Maven Central](https://img.shields.io/maven-central/v/shop.terminal.api/terminal-java)](https://central.sonatype.com/artifact/shop.terminal.api/terminal-java/3.0.0)
+[![javadoc](https://javadoc.io/badge2/shop.terminal.api/terminal-java/3.0.0/javadoc.svg)](https://javadoc.io/doc/shop.terminal.api/terminal-java/3.0.0)
 
 <!-- x-release-please-end -->
 
@@ -15,7 +15,7 @@ It is generated with [Stainless](https://www.stainless.com/).
 
 <!-- x-release-please-start-version -->
 
-The REST API documentation can be found on [terminal.shop](https://terminal.shop/docs). Javadocs are available on [javadoc.io](https://javadoc.io/doc/shop.terminal.api/terminal-java/2.5.0).
+The REST API documentation can be found on [terminal.shop](https://terminal.shop/docs). Javadocs are available on [javadoc.io](https://javadoc.io/doc/shop.terminal.api/terminal-java/3.0.0).
 
 <!-- x-release-please-end -->
 
@@ -26,7 +26,7 @@ The REST API documentation can be found on [terminal.shop](https://terminal.shop
 ### Gradle
 
 ```kotlin
-implementation("shop.terminal.api:terminal-java:2.5.0")
+implementation("shop.terminal.api:terminal-java:3.0.0")
 ```
 
 ### Maven
@@ -35,7 +35,7 @@ implementation("shop.terminal.api:terminal-java:2.5.0")
 <dependency>
   <groupId>shop.terminal.api</groupId>
   <artifactId>terminal-java</artifactId>
-  <version>2.5.0</version>
+  <version>3.0.0</version>
 </dependency>
 ```
 
@@ -105,6 +105,21 @@ See this table for the available options:
 > [!TIP]
 > Don't create more than one client in the same application. Each client has a connection pool and
 > thread pools, which are more efficient to share between requests.
+
+### Modifying configuration
+
+To temporarily use a modified client configuration, while reusing the same connection and thread pools, call `withOptions()` on any client or service:
+
+```java
+import shop.terminal.api.client.TerminalClient;
+
+TerminalClient clientWithOptions = client.withOptions(optionsBuilder -> {
+    optionsBuilder.baseUrl("https://example.com");
+    optionsBuilder.maxRetries(42);
+});
+```
+
+The `withOptions()` method does not affect the original client or service.
 
 ## Requests and responses
 
@@ -265,7 +280,6 @@ Requests time out after 1 minute by default.
 To set a custom timeout, configure the method call using the `timeout` method:
 
 ```java
-import shop.terminal.api.models.product.ProductListParams;
 import shop.terminal.api.models.product.ProductListResponse;
 
 ProductListResponse products = client.product().list(RequestOptions.builder().timeout(Duration.ofSeconds(30)).build());
@@ -507,7 +521,6 @@ ProductListResponse products = client.product().list(params).validate();
 Or configure the method call to validate the response using the `responseValidation` method:
 
 ```java
-import shop.terminal.api.models.product.ProductListParams;
 import shop.terminal.api.models.product.ProductListResponse;
 
 ProductListResponse products = client.product().list(RequestOptions.builder().responseValidation(true).build());

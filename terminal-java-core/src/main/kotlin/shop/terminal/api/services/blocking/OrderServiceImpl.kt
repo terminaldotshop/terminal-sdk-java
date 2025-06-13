@@ -2,9 +2,12 @@
 
 package shop.terminal.api.services.blocking
 
+import java.util.function.Consumer
+import kotlin.jvm.optionals.getOrNull
 import shop.terminal.api.core.ClientOptions
 import shop.terminal.api.core.JsonValue
 import shop.terminal.api.core.RequestOptions
+import shop.terminal.api.core.checkRequired
 import shop.terminal.api.core.handlers.errorHandler
 import shop.terminal.api.core.handlers.jsonHandler
 import shop.terminal.api.core.handlers.withErrorHandler
@@ -31,6 +34,9 @@ class OrderServiceImpl internal constructor(private val clientOptions: ClientOpt
 
     override fun withRawResponse(): OrderService.WithRawResponse = withRawResponse
 
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): OrderService =
+        OrderServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+
     override fun create(
         params: OrderCreateParams,
         requestOptions: RequestOptions,
@@ -51,6 +57,13 @@ class OrderServiceImpl internal constructor(private val clientOptions: ClientOpt
 
         private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
 
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): OrderService.WithRawResponse =
+            OrderServiceImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
+
         private val createHandler: Handler<OrderCreateResponse> =
             jsonHandler<OrderCreateResponse>(clientOptions.jsonMapper)
                 .withErrorHandler(errorHandler)
@@ -62,6 +75,7 @@ class OrderServiceImpl internal constructor(private val clientOptions: ClientOpt
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.POST)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("order")
                     .body(json(clientOptions.jsonMapper, params._body()))
                     .build()
@@ -89,6 +103,7 @@ class OrderServiceImpl internal constructor(private val clientOptions: ClientOpt
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("order")
                     .build()
                     .prepare(clientOptions, params)
@@ -112,9 +127,13 @@ class OrderServiceImpl internal constructor(private val clientOptions: ClientOpt
             params: OrderGetParams,
             requestOptions: RequestOptions,
         ): HttpResponseFor<OrderGetResponse> {
+            // We check here instead of in the params builder because this can be specified
+            // positionally or in the params class.
+            checkRequired("id", params.id().getOrNull())
             val request =
                 HttpRequest.builder()
                     .method(HttpMethod.GET)
+                    .baseUrl(clientOptions.baseUrl())
                     .addPathSegments("order", params._pathParam(0))
                     .build()
                     .prepare(clientOptions, params)

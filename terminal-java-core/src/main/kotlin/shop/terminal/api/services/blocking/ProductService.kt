@@ -3,6 +3,8 @@
 package shop.terminal.api.services.blocking
 
 import com.google.errorprone.annotations.MustBeClosed
+import java.util.function.Consumer
+import shop.terminal.api.core.ClientOptions
 import shop.terminal.api.core.RequestOptions
 import shop.terminal.api.core.http.HttpResponseFor
 import shop.terminal.api.models.product.ProductGetParams
@@ -16,6 +18,13 @@ interface ProductService {
      * Returns a view of this service that provides access to raw HTTP responses for each method.
      */
     fun withRawResponse(): WithRawResponse
+
+    /**
+     * Returns a view of this service with the given option modifications applied.
+     *
+     * The original service is not modified.
+     */
+    fun withOptions(modifier: Consumer<ClientOptions.Builder>): ProductService
 
     /** List all products for sale in the Terminal shop. */
     fun list(): ProductListResponse = list(ProductListParams.none())
@@ -35,7 +44,18 @@ interface ProductService {
         list(ProductListParams.none(), requestOptions)
 
     /** Get a product by ID from the Terminal shop. */
-    fun get(params: ProductGetParams): ProductGetResponse = get(params, RequestOptions.none())
+    fun get(id: String): ProductGetResponse = get(id, ProductGetParams.none())
+
+    /** @see [get] */
+    fun get(
+        id: String,
+        params: ProductGetParams = ProductGetParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): ProductGetResponse = get(params.toBuilder().id(id).build(), requestOptions)
+
+    /** @see [get] */
+    fun get(id: String, params: ProductGetParams = ProductGetParams.none()): ProductGetResponse =
+        get(id, params, RequestOptions.none())
 
     /** @see [get] */
     fun get(
@@ -43,8 +63,22 @@ interface ProductService {
         requestOptions: RequestOptions = RequestOptions.none(),
     ): ProductGetResponse
 
+    /** @see [get] */
+    fun get(params: ProductGetParams): ProductGetResponse = get(params, RequestOptions.none())
+
+    /** @see [get] */
+    fun get(id: String, requestOptions: RequestOptions): ProductGetResponse =
+        get(id, ProductGetParams.none(), requestOptions)
+
     /** A view of [ProductService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
+
+        /**
+         * Returns a view of this service with the given option modifications applied.
+         *
+         * The original service is not modified.
+         */
+        fun withOptions(modifier: Consumer<ClientOptions.Builder>): ProductService.WithRawResponse
 
         /**
          * Returns a raw HTTP response for `get /product`, but is otherwise the same as
@@ -76,8 +110,23 @@ interface ProductService {
          * [ProductService.get].
          */
         @MustBeClosed
-        fun get(params: ProductGetParams): HttpResponseFor<ProductGetResponse> =
-            get(params, RequestOptions.none())
+        fun get(id: String): HttpResponseFor<ProductGetResponse> = get(id, ProductGetParams.none())
+
+        /** @see [get] */
+        @MustBeClosed
+        fun get(
+            id: String,
+            params: ProductGetParams = ProductGetParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<ProductGetResponse> =
+            get(params.toBuilder().id(id).build(), requestOptions)
+
+        /** @see [get] */
+        @MustBeClosed
+        fun get(
+            id: String,
+            params: ProductGetParams = ProductGetParams.none(),
+        ): HttpResponseFor<ProductGetResponse> = get(id, params, RequestOptions.none())
 
         /** @see [get] */
         @MustBeClosed
@@ -85,5 +134,15 @@ interface ProductService {
             params: ProductGetParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<ProductGetResponse>
+
+        /** @see [get] */
+        @MustBeClosed
+        fun get(params: ProductGetParams): HttpResponseFor<ProductGetResponse> =
+            get(params, RequestOptions.none())
+
+        /** @see [get] */
+        @MustBeClosed
+        fun get(id: String, requestOptions: RequestOptions): HttpResponseFor<ProductGetResponse> =
+            get(id, ProductGetParams.none(), requestOptions)
     }
 }

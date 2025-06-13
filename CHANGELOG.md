@@ -1,5 +1,37 @@
 # Changelog
 
+## 3.0.0 (2025-06-13)
+
+Full Changelog: [v2.5.0...v3.0.0](https://github.com/terminaldotshop/terminal-sdk-java/compare/v2.5.0...v3.0.0)
+
+### ⚠ BREAKING CHANGES
+
+* **client:** extract auto pagination to shared classes
+* **client:** **Migration:** - If you were referencing the `AutoPager` class on a specific `*Page` or `*PageAsync` type, then you should instead reference the shared `AutoPager` and `AutoPagerAsync` types, under the `core` package
+    - `AutoPagerAsync` now has different usage. You can call `.subscribe(...)` on the returned object instead to get called back each page item. You can also call `onCompleteFuture()` to get a future that completes when all items have been processed. Finally, you can call `.close()` on the returned object to stop auto-paginating early
+    - If you were referencing `getNextPage` or `getNextPageParams`:
+       - Swap to `nextPage()` and `nextPageParams()`
+       - Note that these both now return non-optional types (use `hasNextPage()` before calling these, since they will throw if it's impossible to get another page)
+
+### Features
+
+* **client:** add a `withOptions` method ([b8a6a91](https://github.com/terminaldotshop/terminal-sdk-java/commit/b8a6a914599487057e3574f2166326c46d3fb42a))
+* **client:** allow providing some params positionally ([c437575](https://github.com/terminaldotshop/terminal-sdk-java/commit/c43757553c7b7ffb9d8c2e28d74b5a7961a8af2f))
+* **client:** extract auto pagination to shared classes ([6d266d0](https://github.com/terminaldotshop/terminal-sdk-java/commit/6d266d0989f12f9046112ed91ba3af6ff49f69f8))
+* **client:** implement per-endpoint base URL support ([10796bd](https://github.com/terminaldotshop/terminal-sdk-java/commit/10796bdedfe6914608508d9714a3115f4b3690c2))
+
+
+### Bug Fixes
+
+* **client:** remove `@MustBeClosed` for future returning methods ([780ef12](https://github.com/terminaldotshop/terminal-sdk-java/commit/780ef1223968d993b24ed7a362a28330eda6d8ba))
+
+
+### Chores
+
+* **docs:** grammar improvements ([44edb0a](https://github.com/terminaldotshop/terminal-sdk-java/commit/44edb0a8d01fb0f5a093401ee80678c22bdfbe28))
+* **internal:** remove flaky `-Xbackend-threads=0` option ([fe26d7c](https://github.com/terminaldotshop/terminal-sdk-java/commit/fe26d7caf073cb05e193aeff7195e4f7ac8dba4d))
+* **internal:** update java toolchain ([c194794](https://github.com/terminaldotshop/terminal-sdk-java/commit/c1947943417fe4b2415bca4a316c0356a1cc2f90))
+
 ## 2.5.0 (2025-04-24)
 
 Full Changelog: [v2.4.0...v2.5.0](https://github.com/terminaldotshop/terminal-sdk-java/compare/v2.4.0...v2.5.0)

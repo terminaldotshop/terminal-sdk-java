@@ -2,8 +2,9 @@
 
 package shop.terminal.api.services.async
 
-import com.google.errorprone.annotations.MustBeClosed
 import java.util.concurrent.CompletableFuture
+import java.util.function.Consumer
+import shop.terminal.api.core.ClientOptions
 import shop.terminal.api.core.RequestOptions
 import shop.terminal.api.core.http.HttpResponseFor
 import shop.terminal.api.models.profile.ProfileMeParams
@@ -17,6 +18,13 @@ interface ProfileServiceAsync {
      * Returns a view of this service that provides access to raw HTTP responses for each method.
      */
     fun withRawResponse(): WithRawResponse
+
+    /**
+     * Returns a view of this service with the given option modifications applied.
+     *
+     * The original service is not modified.
+     */
+    fun withOptions(modifier: Consumer<ClientOptions.Builder>): ProfileServiceAsync
 
     /** Update the current user's profile. */
     fun update(params: ProfileUpdateParams): CompletableFuture<ProfileUpdateResponse> =
@@ -51,17 +59,24 @@ interface ProfileServiceAsync {
     interface WithRawResponse {
 
         /**
+         * Returns a view of this service with the given option modifications applied.
+         *
+         * The original service is not modified.
+         */
+        fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): ProfileServiceAsync.WithRawResponse
+
+        /**
          * Returns a raw HTTP response for `put /profile`, but is otherwise the same as
          * [ProfileServiceAsync.update].
          */
-        @MustBeClosed
         fun update(
             params: ProfileUpdateParams
         ): CompletableFuture<HttpResponseFor<ProfileUpdateResponse>> =
             update(params, RequestOptions.none())
 
         /** @see [update] */
-        @MustBeClosed
         fun update(
             params: ProfileUpdateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
@@ -71,24 +86,20 @@ interface ProfileServiceAsync {
          * Returns a raw HTTP response for `get /profile`, but is otherwise the same as
          * [ProfileServiceAsync.me].
          */
-        @MustBeClosed
         fun me(): CompletableFuture<HttpResponseFor<ProfileMeResponse>> = me(ProfileMeParams.none())
 
         /** @see [me] */
-        @MustBeClosed
         fun me(
             params: ProfileMeParams = ProfileMeParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<ProfileMeResponse>>
 
         /** @see [me] */
-        @MustBeClosed
         fun me(
             params: ProfileMeParams = ProfileMeParams.none()
         ): CompletableFuture<HttpResponseFor<ProfileMeResponse>> = me(params, RequestOptions.none())
 
         /** @see [me] */
-        @MustBeClosed
         fun me(
             requestOptions: RequestOptions
         ): CompletableFuture<HttpResponseFor<ProfileMeResponse>> =
