@@ -3,6 +3,8 @@
 package shop.terminal.api.services.async
 
 import java.util.concurrent.CompletableFuture
+import java.util.function.Consumer
+import shop.terminal.api.core.ClientOptions
 import shop.terminal.api.core.RequestOptions
 import shop.terminal.api.core.http.HttpResponseFor
 import shop.terminal.api.models.token.TokenCreateParams
@@ -20,6 +22,13 @@ interface TokenServiceAsync {
      * Returns a view of this service that provides access to raw HTTP responses for each method.
      */
     fun withRawResponse(): WithRawResponse
+
+    /**
+     * Returns a view of this service with the given option modifications applied.
+     *
+     * The original service is not modified.
+     */
+    fun withOptions(modifier: Consumer<ClientOptions.Builder>): TokenServiceAsync
 
     /** Create a personal access token. */
     fun create(): CompletableFuture<TokenCreateResponse> = create(TokenCreateParams.none())
@@ -121,6 +130,15 @@ interface TokenServiceAsync {
 
     /** A view of [TokenServiceAsync] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
+
+        /**
+         * Returns a view of this service with the given option modifications applied.
+         *
+         * The original service is not modified.
+         */
+        fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): TokenServiceAsync.WithRawResponse
 
         /**
          * Returns a raw HTTP response for `post /token`, but is otherwise the same as

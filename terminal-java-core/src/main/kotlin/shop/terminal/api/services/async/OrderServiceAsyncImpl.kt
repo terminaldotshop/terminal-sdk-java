@@ -3,6 +3,7 @@
 package shop.terminal.api.services.async
 
 import java.util.concurrent.CompletableFuture
+import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 import shop.terminal.api.core.ClientOptions
 import shop.terminal.api.core.JsonValue
@@ -34,6 +35,9 @@ class OrderServiceAsyncImpl internal constructor(private val clientOptions: Clie
 
     override fun withRawResponse(): OrderServiceAsync.WithRawResponse = withRawResponse
 
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): OrderServiceAsync =
+        OrderServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+
     override fun create(
         params: OrderCreateParams,
         requestOptions: RequestOptions,
@@ -59,6 +63,13 @@ class OrderServiceAsyncImpl internal constructor(private val clientOptions: Clie
         OrderServiceAsync.WithRawResponse {
 
         private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
+
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): OrderServiceAsync.WithRawResponse =
+            OrderServiceAsyncImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
 
         private val createHandler: Handler<OrderCreateResponse> =
             jsonHandler<OrderCreateResponse>(clientOptions.jsonMapper)

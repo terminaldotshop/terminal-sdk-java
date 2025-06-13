@@ -3,6 +3,7 @@
 package shop.terminal.api.services.async
 
 import java.util.concurrent.CompletableFuture
+import java.util.function.Consumer
 import shop.terminal.api.core.ClientOptions
 import shop.terminal.api.core.JsonValue
 import shop.terminal.api.core.RequestOptions
@@ -37,6 +38,9 @@ class CartServiceAsyncImpl internal constructor(private val clientOptions: Clien
     }
 
     override fun withRawResponse(): CartServiceAsync.WithRawResponse = withRawResponse
+
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): CartServiceAsync =
+        CartServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
 
     override fun clear(
         params: CartClearParams,
@@ -84,6 +88,13 @@ class CartServiceAsyncImpl internal constructor(private val clientOptions: Clien
         CartServiceAsync.WithRawResponse {
 
         private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
+
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): CartServiceAsync.WithRawResponse =
+            CartServiceAsyncImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
 
         private val clearHandler: Handler<CartClearResponse> =
             jsonHandler<CartClearResponse>(clientOptions.jsonMapper).withErrorHandler(errorHandler)

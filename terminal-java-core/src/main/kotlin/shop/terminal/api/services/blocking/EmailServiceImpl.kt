@@ -2,6 +2,7 @@
 
 package shop.terminal.api.services.blocking
 
+import java.util.function.Consumer
 import shop.terminal.api.core.ClientOptions
 import shop.terminal.api.core.JsonValue
 import shop.terminal.api.core.RequestOptions
@@ -27,6 +28,9 @@ class EmailServiceImpl internal constructor(private val clientOptions: ClientOpt
 
     override fun withRawResponse(): EmailService.WithRawResponse = withRawResponse
 
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): EmailService =
+        EmailServiceImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+
     override fun create(
         params: EmailCreateParams,
         requestOptions: RequestOptions,
@@ -38,6 +42,13 @@ class EmailServiceImpl internal constructor(private val clientOptions: ClientOpt
         EmailService.WithRawResponse {
 
         private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
+
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): EmailService.WithRawResponse =
+            EmailServiceImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
 
         private val createHandler: Handler<EmailCreateResponse> =
             jsonHandler<EmailCreateResponse>(clientOptions.jsonMapper)

@@ -3,6 +3,7 @@
 package shop.terminal.api.services.async
 
 import java.util.concurrent.CompletableFuture
+import java.util.function.Consumer
 import shop.terminal.api.core.ClientOptions
 import shop.terminal.api.core.JsonValue
 import shop.terminal.api.core.RequestOptions
@@ -27,6 +28,9 @@ class ViewServiceAsyncImpl internal constructor(private val clientOptions: Clien
 
     override fun withRawResponse(): ViewServiceAsync.WithRawResponse = withRawResponse
 
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): ViewServiceAsync =
+        ViewServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+
     override fun init(
         params: ViewInitParams,
         requestOptions: RequestOptions,
@@ -38,6 +42,13 @@ class ViewServiceAsyncImpl internal constructor(private val clientOptions: Clien
         ViewServiceAsync.WithRawResponse {
 
         private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
+
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): ViewServiceAsync.WithRawResponse =
+            ViewServiceAsyncImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
 
         private val initHandler: Handler<ViewInitResponse> =
             jsonHandler<ViewInitResponse>(clientOptions.jsonMapper).withErrorHandler(errorHandler)

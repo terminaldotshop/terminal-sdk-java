@@ -3,6 +3,7 @@
 package shop.terminal.api.services.async
 
 import java.util.concurrent.CompletableFuture
+import java.util.function.Consumer
 import shop.terminal.api.core.ClientOptions
 import shop.terminal.api.core.JsonValue
 import shop.terminal.api.core.RequestOptions
@@ -28,6 +29,9 @@ class EmailServiceAsyncImpl internal constructor(private val clientOptions: Clie
 
     override fun withRawResponse(): EmailServiceAsync.WithRawResponse = withRawResponse
 
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): EmailServiceAsync =
+        EmailServiceAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+
     override fun create(
         params: EmailCreateParams,
         requestOptions: RequestOptions,
@@ -39,6 +43,13 @@ class EmailServiceAsyncImpl internal constructor(private val clientOptions: Clie
         EmailServiceAsync.WithRawResponse {
 
         private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
+
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): EmailServiceAsync.WithRawResponse =
+            EmailServiceAsyncImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
 
         private val createHandler: Handler<EmailCreateResponse> =
             jsonHandler<EmailCreateResponse>(clientOptions.jsonMapper)
