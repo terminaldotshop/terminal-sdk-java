@@ -29,25 +29,25 @@ interface ProductServiceAsync {
     /** List all products for sale in the Terminal shop. */
     fun list(): CompletableFuture<ProductListResponse> = list(ProductListParams.none())
 
-    /** @see [list] */
+    /** @see list */
     fun list(
         params: ProductListParams = ProductListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<ProductListResponse>
 
-    /** @see [list] */
+    /** @see list */
     fun list(
         params: ProductListParams = ProductListParams.none()
     ): CompletableFuture<ProductListResponse> = list(params, RequestOptions.none())
 
-    /** @see [list] */
+    /** @see list */
     fun list(requestOptions: RequestOptions): CompletableFuture<ProductListResponse> =
         list(ProductListParams.none(), requestOptions)
 
     /** Get a product by ID from the Terminal shop. */
     fun get(id: String): CompletableFuture<ProductGetResponse> = get(id, ProductGetParams.none())
 
-    /** @see [get] */
+    /** @see get */
     fun get(
         id: String,
         params: ProductGetParams = ProductGetParams.none(),
@@ -55,23 +55,23 @@ interface ProductServiceAsync {
     ): CompletableFuture<ProductGetResponse> =
         get(params.toBuilder().id(id).build(), requestOptions)
 
-    /** @see [get] */
+    /** @see get */
     fun get(
         id: String,
         params: ProductGetParams = ProductGetParams.none(),
     ): CompletableFuture<ProductGetResponse> = get(id, params, RequestOptions.none())
 
-    /** @see [get] */
+    /** @see get */
     fun get(
         params: ProductGetParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<ProductGetResponse>
 
-    /** @see [get] */
+    /** @see get */
     fun get(params: ProductGetParams): CompletableFuture<ProductGetResponse> =
         get(params, RequestOptions.none())
 
-    /** @see [get] */
+    /** @see get */
     fun get(id: String, requestOptions: RequestOptions): CompletableFuture<ProductGetResponse> =
         get(id, ProductGetParams.none(), requestOptions)
 
@@ -96,19 +96,19 @@ interface ProductServiceAsync {
         fun list(): CompletableFuture<HttpResponseFor<ProductListResponse>> =
             list(ProductListParams.none())
 
-        /** @see [list] */
+        /** @see list */
         fun list(
             params: ProductListParams = ProductListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<ProductListResponse>>
 
-        /** @see [list] */
+        /** @see list */
         fun list(
             params: ProductListParams = ProductListParams.none()
         ): CompletableFuture<HttpResponseFor<ProductListResponse>> =
             list(params, RequestOptions.none())
 
-        /** @see [list] */
+        /** @see list */
         fun list(
             requestOptions: RequestOptions
         ): CompletableFuture<HttpResponseFor<ProductListResponse>> =
@@ -121,7 +121,7 @@ interface ProductServiceAsync {
         fun get(id: String): CompletableFuture<HttpResponseFor<ProductGetResponse>> =
             get(id, ProductGetParams.none())
 
-        /** @see [get] */
+        /** @see get */
         fun get(
             id: String,
             params: ProductGetParams = ProductGetParams.none(),
@@ -129,24 +129,24 @@ interface ProductServiceAsync {
         ): CompletableFuture<HttpResponseFor<ProductGetResponse>> =
             get(params.toBuilder().id(id).build(), requestOptions)
 
-        /** @see [get] */
+        /** @see get */
         fun get(
             id: String,
             params: ProductGetParams = ProductGetParams.none(),
         ): CompletableFuture<HttpResponseFor<ProductGetResponse>> =
             get(id, params, RequestOptions.none())
 
-        /** @see [get] */
+        /** @see get */
         fun get(
             params: ProductGetParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<ProductGetResponse>>
 
-        /** @see [get] */
+        /** @see get */
         fun get(params: ProductGetParams): CompletableFuture<HttpResponseFor<ProductGetResponse>> =
             get(params, RequestOptions.none())
 
-        /** @see [get] */
+        /** @see get */
         fun get(
             id: String,
             requestOptions: RequestOptions,

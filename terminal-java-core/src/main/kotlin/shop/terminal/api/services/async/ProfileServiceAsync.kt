@@ -30,7 +30,7 @@ interface ProfileServiceAsync {
     fun update(params: ProfileUpdateParams): CompletableFuture<ProfileUpdateResponse> =
         update(params, RequestOptions.none())
 
-    /** @see [update] */
+    /** @see update */
     fun update(
         params: ProfileUpdateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -39,17 +39,17 @@ interface ProfileServiceAsync {
     /** Get the current user's profile. */
     fun me(): CompletableFuture<ProfileMeResponse> = me(ProfileMeParams.none())
 
-    /** @see [me] */
+    /** @see me */
     fun me(
         params: ProfileMeParams = ProfileMeParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<ProfileMeResponse>
 
-    /** @see [me] */
+    /** @see me */
     fun me(params: ProfileMeParams = ProfileMeParams.none()): CompletableFuture<ProfileMeResponse> =
         me(params, RequestOptions.none())
 
-    /** @see [me] */
+    /** @see me */
     fun me(requestOptions: RequestOptions): CompletableFuture<ProfileMeResponse> =
         me(ProfileMeParams.none(), requestOptions)
 
@@ -76,7 +76,7 @@ interface ProfileServiceAsync {
         ): CompletableFuture<HttpResponseFor<ProfileUpdateResponse>> =
             update(params, RequestOptions.none())
 
-        /** @see [update] */
+        /** @see update */
         fun update(
             params: ProfileUpdateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
@@ -88,18 +88,18 @@ interface ProfileServiceAsync {
          */
         fun me(): CompletableFuture<HttpResponseFor<ProfileMeResponse>> = me(ProfileMeParams.none())
 
-        /** @see [me] */
+        /** @see me */
         fun me(
             params: ProfileMeParams = ProfileMeParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<ProfileMeResponse>>
 
-        /** @see [me] */
+        /** @see me */
         fun me(
             params: ProfileMeParams = ProfileMeParams.none()
         ): CompletableFuture<HttpResponseFor<ProfileMeResponse>> = me(params, RequestOptions.none())
 
-        /** @see [me] */
+        /** @see me */
         fun me(
             requestOptions: RequestOptions
         ): CompletableFuture<HttpResponseFor<ProfileMeResponse>> =

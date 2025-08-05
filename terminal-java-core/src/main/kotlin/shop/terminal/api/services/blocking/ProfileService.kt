@@ -30,7 +30,7 @@ interface ProfileService {
     fun update(params: ProfileUpdateParams): ProfileUpdateResponse =
         update(params, RequestOptions.none())
 
-    /** @see [update] */
+    /** @see update */
     fun update(
         params: ProfileUpdateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -39,17 +39,17 @@ interface ProfileService {
     /** Get the current user's profile. */
     fun me(): ProfileMeResponse = me(ProfileMeParams.none())
 
-    /** @see [me] */
+    /** @see me */
     fun me(
         params: ProfileMeParams = ProfileMeParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): ProfileMeResponse
 
-    /** @see [me] */
+    /** @see me */
     fun me(params: ProfileMeParams = ProfileMeParams.none()): ProfileMeResponse =
         me(params, RequestOptions.none())
 
-    /** @see [me] */
+    /** @see me */
     fun me(requestOptions: RequestOptions): ProfileMeResponse =
         me(ProfileMeParams.none(), requestOptions)
 
@@ -71,7 +71,7 @@ interface ProfileService {
         fun update(params: ProfileUpdateParams): HttpResponseFor<ProfileUpdateResponse> =
             update(params, RequestOptions.none())
 
-        /** @see [update] */
+        /** @see update */
         @MustBeClosed
         fun update(
             params: ProfileUpdateParams,
@@ -84,20 +84,20 @@ interface ProfileService {
          */
         @MustBeClosed fun me(): HttpResponseFor<ProfileMeResponse> = me(ProfileMeParams.none())
 
-        /** @see [me] */
+        /** @see me */
         @MustBeClosed
         fun me(
             params: ProfileMeParams = ProfileMeParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<ProfileMeResponse>
 
-        /** @see [me] */
+        /** @see me */
         @MustBeClosed
         fun me(
             params: ProfileMeParams = ProfileMeParams.none()
         ): HttpResponseFor<ProfileMeResponse> = me(params, RequestOptions.none())
 
-        /** @see [me] */
+        /** @see me */
         @MustBeClosed
         fun me(requestOptions: RequestOptions): HttpResponseFor<ProfileMeResponse> =
             me(ProfileMeParams.none(), requestOptions)

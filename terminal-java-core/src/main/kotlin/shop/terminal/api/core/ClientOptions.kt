@@ -4,6 +4,7 @@ package shop.terminal.api.core
 
 import com.fasterxml.jackson.databind.json.JsonMapper
 import java.time.Clock
+import java.time.Duration
 import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 import shop.terminal.api.core.http.Headers
@@ -12,18 +13,73 @@ import shop.terminal.api.core.http.PhantomReachableClosingHttpClient
 import shop.terminal.api.core.http.QueryParams
 import shop.terminal.api.core.http.RetryingHttpClient
 
+/** A class representing the SDK client configuration. */
 class ClientOptions
 private constructor(
     private val originalHttpClient: HttpClient,
+    /**
+     * The HTTP client to use in the SDK.
+     *
+     * Use the one published in `terminal-java-client-okhttp` or implement your own.
+     */
     @get:JvmName("httpClient") val httpClient: HttpClient,
+    /**
+     * Whether to throw an exception if any of the Jackson versions detected at runtime are
+     * incompatible with the SDK's minimum supported Jackson version (2.13.4).
+     *
+     * Defaults to true. Use extreme caution when disabling this option. There is no guarantee that
+     * the SDK will work correctly when using an incompatible Jackson version.
+     */
     @get:JvmName("checkJacksonVersionCompatibility") val checkJacksonVersionCompatibility: Boolean,
+    /**
+     * The Jackson JSON mapper to use for serializing and deserializing JSON.
+     *
+     * Defaults to [shop.terminal.api.core.jsonMapper]. The default is usually sufficient and rarely
+     * needs to be overridden.
+     */
     @get:JvmName("jsonMapper") val jsonMapper: JsonMapper,
+    /**
+     * The clock to use for operations that require timing, like retries.
+     *
+     * This is primarily useful for using a fake clock in tests.
+     *
+     * Defaults to [Clock.systemUTC].
+     */
     @get:JvmName("clock") val clock: Clock,
     private val baseUrl: String?,
+    /** Headers to send with the request. */
     @get:JvmName("headers") val headers: Headers,
+    /** Query params to send with the request. */
     @get:JvmName("queryParams") val queryParams: QueryParams,
+    /**
+     * Whether to call `validate` on every response before returning it.
+     *
+     * Defaults to false, which means the shape of the response will not be validated upfront.
+     * Instead, validation will only occur for the parts of the response that are accessed.
+     */
     @get:JvmName("responseValidation") val responseValidation: Boolean,
+    /**
+     * Sets the maximum time allowed for various parts of an HTTP call's lifecycle, excluding
+     * retries.
+     *
+     * Defaults to [Timeout.default].
+     */
     @get:JvmName("timeout") val timeout: Timeout,
+    /**
+     * The maximum number of times to retry failed requests, with a short exponential backoff
+     * between requests.
+     *
+     * Only the following error types are retried:
+     * - Connection errors (for example, due to a network connectivity problem)
+     * - 408 Request Timeout
+     * - 409 Conflict
+     * - 429 Rate Limit
+     * - 5xx Internal
+     *
+     * The API may also explicitly instruct the SDK to retry or not retry a request.
+     *
+     * Defaults to 2.
+     */
     @get:JvmName("maxRetries") val maxRetries: Int,
     @get:JvmName("bearerToken") val bearerToken: String,
     private val appId: String?,
@@ -35,6 +91,14 @@ private constructor(
         }
     }
 
+    /**
+     * The base URL to use for every request.
+     *
+     * Defaults to the production environment: `https://api.terminal.shop`.
+     *
+     * The following other environments, with dedicated builder methods, are available:
+     * - dev: `https://api.dev.terminal.shop`
+     */
     fun baseUrl(): String = baseUrl ?: PRODUCTION_URL
 
     fun appId(): Optional<String> = Optional.ofNullable(appId)
@@ -58,6 +122,11 @@ private constructor(
          */
         @JvmStatic fun builder() = Builder()
 
+        /**
+         * Returns options configured using system properties and environment variables.
+         *
+         * @see Builder.fromEnv
+         */
         @JvmStatic fun fromEnv(): ClientOptions = builder().fromEnv().build()
     }
 
@@ -93,29 +162,101 @@ private constructor(
             appId = clientOptions.appId
         }
 
+        /**
+         * The HTTP client to use in the SDK.
+         *
+         * Use the one published in `terminal-java-client-okhttp` or implement your own.
+         */
         fun httpClient(httpClient: HttpClient) = apply {
             this.httpClient = PhantomReachableClosingHttpClient(httpClient)
         }
 
+        /**
+         * Whether to throw an exception if any of the Jackson versions detected at runtime are
+         * incompatible with the SDK's minimum supported Jackson version (2.13.4).
+         *
+         * Defaults to true. Use extreme caution when disabling this option. There is no guarantee
+         * that the SDK will work correctly when using an incompatible Jackson version.
+         */
         fun checkJacksonVersionCompatibility(checkJacksonVersionCompatibility: Boolean) = apply {
             this.checkJacksonVersionCompatibility = checkJacksonVersionCompatibility
         }
 
+        /**
+         * The Jackson JSON mapper to use for serializing and deserializing JSON.
+         *
+         * Defaults to [shop.terminal.api.core.jsonMapper]. The default is usually sufficient and
+         * rarely needs to be overridden.
+         */
         fun jsonMapper(jsonMapper: JsonMapper) = apply { this.jsonMapper = jsonMapper }
 
+        /**
+         * The clock to use for operations that require timing, like retries.
+         *
+         * This is primarily useful for using a fake clock in tests.
+         *
+         * Defaults to [Clock.systemUTC].
+         */
         fun clock(clock: Clock) = apply { this.clock = clock }
 
+        /**
+         * The base URL to use for every request.
+         *
+         * Defaults to the production environment: `https://api.terminal.shop`.
+         *
+         * The following other environments, with dedicated builder methods, are available:
+         * - dev: `https://api.dev.terminal.shop`
+         */
         fun baseUrl(baseUrl: String?) = apply { this.baseUrl = baseUrl }
 
         /** Alias for calling [Builder.baseUrl] with `baseUrl.orElse(null)`. */
         fun baseUrl(baseUrl: Optional<String>) = baseUrl(baseUrl.getOrNull())
 
+        /** Sets [baseUrl] to `https://api.dev.terminal.shop`. */
+        fun dev() = baseUrl(DEV_URL)
+
+        /**
+         * Whether to call `validate` on every response before returning it.
+         *
+         * Defaults to false, which means the shape of the response will not be validated upfront.
+         * Instead, validation will only occur for the parts of the response that are accessed.
+         */
         fun responseValidation(responseValidation: Boolean) = apply {
             this.responseValidation = responseValidation
         }
 
+        /**
+         * Sets the maximum time allowed for various parts of an HTTP call's lifecycle, excluding
+         * retries.
+         *
+         * Defaults to [Timeout.default].
+         */
         fun timeout(timeout: Timeout) = apply { this.timeout = timeout }
 
+        /**
+         * Sets the maximum time allowed for a complete HTTP call, not including retries.
+         *
+         * See [Timeout.request] for more details.
+         *
+         * For fine-grained control, pass a [Timeout] object.
+         */
+        fun timeout(timeout: Duration) = timeout(Timeout.builder().request(timeout).build())
+
+        /**
+         * The maximum number of times to retry failed requests, with a short exponential backoff
+         * between requests.
+         *
+         * Only the following error types are retried:
+         * - Connection errors (for example, due to a network connectivity problem)
+         * - 408 Request Timeout
+         * - 409 Conflict
+         * - 429 Rate Limit
+         * - 5xx Internal
+         *
+         * The API may also explicitly instruct the SDK to retry or not retry a request.
+         *
+         * Defaults to 2.
+         */
         fun maxRetries(maxRetries: Int) = apply { this.maxRetries = maxRetries }
 
         fun bearerToken(bearerToken: String) = apply { this.bearerToken = bearerToken }
@@ -205,9 +346,26 @@ private constructor(
 
         fun removeAllQueryParams(keys: Set<String>) = apply { queryParams.removeAll(keys) }
 
+        fun timeout(): Timeout = timeout
+
+        /**
+         * Updates configuration using system properties and environment variables.
+         *
+         * See this table for the available options:
+         *
+         * |Setter       |System property       |Environment variable   |Required|Default value                |
+         * |-------------|----------------------|-----------------------|--------|-----------------------------|
+         * |`bearerToken`|`terminal.bearerToken`|`TERMINAL_BEARER_TOKEN`|true    |-                            |
+         * |`baseUrl`    |`terminal.baseUrl`    |`TERMINAL_BASE_URL`    |true    |`"https://api.terminal.shop"`|
+         *
+         * System properties take precedence over environment variables.
+         */
         fun fromEnv() = apply {
-            System.getenv("TERMINAL_BASE_URL")?.let { baseUrl(it) }
-            System.getenv("TERMINAL_BEARER_TOKEN")?.let { bearerToken(it) }
+            (System.getProperty("terminal.baseUrl") ?: System.getenv("TERMINAL_BASE_URL"))?.let {
+                baseUrl(it)
+            }
+            (System.getProperty("terminal.bearerToken") ?: System.getenv("TERMINAL_BEARER_TOKEN"))
+                ?.let { bearerToken(it) }
         }
 
         /**

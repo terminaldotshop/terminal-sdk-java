@@ -6,14 +6,14 @@ import java.util.concurrent.CompletableFuture
 import java.util.function.Consumer
 import kotlin.jvm.optionals.getOrNull
 import shop.terminal.api.core.ClientOptions
-import shop.terminal.api.core.JsonValue
 import shop.terminal.api.core.RequestOptions
 import shop.terminal.api.core.checkRequired
+import shop.terminal.api.core.handlers.errorBodyHandler
 import shop.terminal.api.core.handlers.errorHandler
 import shop.terminal.api.core.handlers.jsonHandler
-import shop.terminal.api.core.handlers.withErrorHandler
 import shop.terminal.api.core.http.HttpMethod
 import shop.terminal.api.core.http.HttpRequest
+import shop.terminal.api.core.http.HttpResponse
 import shop.terminal.api.core.http.HttpResponse.Handler
 import shop.terminal.api.core.http.HttpResponseFor
 import shop.terminal.api.core.http.json
@@ -62,7 +62,8 @@ class OrderServiceAsyncImpl internal constructor(private val clientOptions: Clie
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         OrderServiceAsync.WithRawResponse {
 
-        private val errorHandler: Handler<JsonValue> = errorHandler(clientOptions.jsonMapper)
+        private val errorHandler: Handler<HttpResponse> =
+            errorHandler(errorBodyHandler(clientOptions.jsonMapper))
 
         override fun withOptions(
             modifier: Consumer<ClientOptions.Builder>
@@ -73,7 +74,6 @@ class OrderServiceAsyncImpl internal constructor(private val clientOptions: Clie
 
         private val createHandler: Handler<OrderCreateResponse> =
             jsonHandler<OrderCreateResponse>(clientOptions.jsonMapper)
-                .withErrorHandler(errorHandler)
 
         override fun create(
             params: OrderCreateParams,
@@ -91,7 +91,7 @@ class OrderServiceAsyncImpl internal constructor(private val clientOptions: Clie
             return request
                 .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
                 .thenApply { response ->
-                    response.parseable {
+                    errorHandler.handle(response).parseable {
                         response
                             .use { createHandler.handle(it) }
                             .also {
@@ -104,7 +104,7 @@ class OrderServiceAsyncImpl internal constructor(private val clientOptions: Clie
         }
 
         private val listHandler: Handler<OrderListResponse> =
-            jsonHandler<OrderListResponse>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
+            jsonHandler<OrderListResponse>(clientOptions.jsonMapper)
 
         override fun list(
             params: OrderListParams,
@@ -121,7 +121,7 @@ class OrderServiceAsyncImpl internal constructor(private val clientOptions: Clie
             return request
                 .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
                 .thenApply { response ->
-                    response.parseable {
+                    errorHandler.handle(response).parseable {
                         response
                             .use { listHandler.handle(it) }
                             .also {
@@ -134,7 +134,7 @@ class OrderServiceAsyncImpl internal constructor(private val clientOptions: Clie
         }
 
         private val getHandler: Handler<OrderGetResponse> =
-            jsonHandler<OrderGetResponse>(clientOptions.jsonMapper).withErrorHandler(errorHandler)
+            jsonHandler<OrderGetResponse>(clientOptions.jsonMapper)
 
         override fun get(
             params: OrderGetParams,
@@ -154,7 +154,7 @@ class OrderServiceAsyncImpl internal constructor(private val clientOptions: Clie
             return request
                 .thenComposeAsync { clientOptions.httpClient.executeAsync(it, requestOptions) }
                 .thenApply { response ->
-                    response.parseable {
+                    errorHandler.handle(response).parseable {
                         response
                             .use { getHandler.handle(it) }
                             .also {

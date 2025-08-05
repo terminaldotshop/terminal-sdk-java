@@ -28,7 +28,7 @@ interface EmailServiceAsync {
     fun create(params: EmailCreateParams): CompletableFuture<EmailCreateResponse> =
         create(params, RequestOptions.none())
 
-    /** @see [create] */
+    /** @see create */
     fun create(
         params: EmailCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -55,7 +55,7 @@ interface EmailServiceAsync {
         ): CompletableFuture<HttpResponseFor<EmailCreateResponse>> =
             create(params, RequestOptions.none())
 
-        /** @see [create] */
+        /** @see create */
         fun create(
             params: EmailCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),

@@ -32,7 +32,7 @@ interface OrderService {
     fun create(params: OrderCreateParams): OrderCreateResponse =
         create(params, RequestOptions.none())
 
-    /** @see [create] */
+    /** @see create */
     fun create(
         params: OrderCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -41,44 +41,44 @@ interface OrderService {
     /** List the orders associated with the current user. */
     fun list(): OrderListResponse = list(OrderListParams.none())
 
-    /** @see [list] */
+    /** @see list */
     fun list(
         params: OrderListParams = OrderListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): OrderListResponse
 
-    /** @see [list] */
+    /** @see list */
     fun list(params: OrderListParams = OrderListParams.none()): OrderListResponse =
         list(params, RequestOptions.none())
 
-    /** @see [list] */
+    /** @see list */
     fun list(requestOptions: RequestOptions): OrderListResponse =
         list(OrderListParams.none(), requestOptions)
 
     /** Get the order with the given ID. */
     fun get(id: String): OrderGetResponse = get(id, OrderGetParams.none())
 
-    /** @see [get] */
+    /** @see get */
     fun get(
         id: String,
         params: OrderGetParams = OrderGetParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): OrderGetResponse = get(params.toBuilder().id(id).build(), requestOptions)
 
-    /** @see [get] */
+    /** @see get */
     fun get(id: String, params: OrderGetParams = OrderGetParams.none()): OrderGetResponse =
         get(id, params, RequestOptions.none())
 
-    /** @see [get] */
+    /** @see get */
     fun get(
         params: OrderGetParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): OrderGetResponse
 
-    /** @see [get] */
+    /** @see get */
     fun get(params: OrderGetParams): OrderGetResponse = get(params, RequestOptions.none())
 
-    /** @see [get] */
+    /** @see get */
     fun get(id: String, requestOptions: RequestOptions): OrderGetResponse =
         get(id, OrderGetParams.none(), requestOptions)
 
@@ -100,7 +100,7 @@ interface OrderService {
         fun create(params: OrderCreateParams): HttpResponseFor<OrderCreateResponse> =
             create(params, RequestOptions.none())
 
-        /** @see [create] */
+        /** @see create */
         @MustBeClosed
         fun create(
             params: OrderCreateParams,
@@ -113,20 +113,20 @@ interface OrderService {
          */
         @MustBeClosed fun list(): HttpResponseFor<OrderListResponse> = list(OrderListParams.none())
 
-        /** @see [list] */
+        /** @see list */
         @MustBeClosed
         fun list(
             params: OrderListParams = OrderListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<OrderListResponse>
 
-        /** @see [list] */
+        /** @see list */
         @MustBeClosed
         fun list(
             params: OrderListParams = OrderListParams.none()
         ): HttpResponseFor<OrderListResponse> = list(params, RequestOptions.none())
 
-        /** @see [list] */
+        /** @see list */
         @MustBeClosed
         fun list(requestOptions: RequestOptions): HttpResponseFor<OrderListResponse> =
             list(OrderListParams.none(), requestOptions)
@@ -138,7 +138,7 @@ interface OrderService {
         @MustBeClosed
         fun get(id: String): HttpResponseFor<OrderGetResponse> = get(id, OrderGetParams.none())
 
-        /** @see [get] */
+        /** @see get */
         @MustBeClosed
         fun get(
             id: String,
@@ -147,26 +147,26 @@ interface OrderService {
         ): HttpResponseFor<OrderGetResponse> =
             get(params.toBuilder().id(id).build(), requestOptions)
 
-        /** @see [get] */
+        /** @see get */
         @MustBeClosed
         fun get(
             id: String,
             params: OrderGetParams = OrderGetParams.none(),
         ): HttpResponseFor<OrderGetResponse> = get(id, params, RequestOptions.none())
 
-        /** @see [get] */
+        /** @see get */
         @MustBeClosed
         fun get(
             params: OrderGetParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<OrderGetResponse>
 
-        /** @see [get] */
+        /** @see get */
         @MustBeClosed
         fun get(params: OrderGetParams): HttpResponseFor<OrderGetResponse> =
             get(params, RequestOptions.none())
 
-        /** @see [get] */
+        /** @see get */
         @MustBeClosed
         fun get(id: String, requestOptions: RequestOptions): HttpResponseFor<OrderGetResponse> =
             get(id, OrderGetParams.none(), requestOptions)

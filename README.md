@@ -53,7 +53,8 @@ import shop.terminal.api.client.okhttp.TerminalOkHttpClient;
 import shop.terminal.api.models.product.ProductListParams;
 import shop.terminal.api.models.product.ProductListResponse;
 
-// Configures using the `TERMINAL_BEARER_TOKEN` and `TERMINAL_BASE_URL` environment variables
+// Configures using the `terminal.bearerToken` and `terminal.baseUrl` system properties
+// Or configures using the `TERMINAL_BEARER_TOKEN` and `TERMINAL_BASE_URL` environment variables
 TerminalClient client = TerminalOkHttpClient.fromEnv();
 
 ProductListResponse products = client.product().list();
@@ -61,13 +62,14 @@ ProductListResponse products = client.product().list();
 
 ## Client configuration
 
-Configure the client using environment variables:
+Configure the client using system properties or environment variables:
 
 ```java
 import shop.terminal.api.client.TerminalClient;
 import shop.terminal.api.client.okhttp.TerminalOkHttpClient;
 
-// Configures using the `TERMINAL_BEARER_TOKEN` and `TERMINAL_BASE_URL` environment variables
+// Configures using the `terminal.bearerToken` and `terminal.baseUrl` system properties
+// Or configures using the `TERMINAL_BEARER_TOKEN` and `TERMINAL_BASE_URL` environment variables
 TerminalClient client = TerminalOkHttpClient.fromEnv();
 ```
 
@@ -89,7 +91,8 @@ import shop.terminal.api.client.TerminalClient;
 import shop.terminal.api.client.okhttp.TerminalOkHttpClient;
 
 TerminalClient client = TerminalOkHttpClient.builder()
-    // Configures using the `TERMINAL_BEARER_TOKEN` and `TERMINAL_BASE_URL` environment variables
+    // Configures using the `terminal.bearerToken` and `terminal.baseUrl` system properties
+    // Or configures using the `TERMINAL_BEARER_TOKEN` and `TERMINAL_BASE_URL` environment variables
     .fromEnv()
     .appId("My App ID")
     .build();
@@ -97,10 +100,12 @@ TerminalClient client = TerminalOkHttpClient.builder()
 
 See this table for the available options:
 
-| Setter        | Environment variable    | Required | Default value                 |
-| ------------- | ----------------------- | -------- | ----------------------------- |
-| `bearerToken` | `TERMINAL_BEARER_TOKEN` | true     | -                             |
-| `baseUrl`     | `TERMINAL_BASE_URL`     | true     | `"https://api.terminal.shop"` |
+| Setter        | System property        | Environment variable    | Required | Default value                 |
+| ------------- | ---------------------- | ----------------------- | -------- | ----------------------------- |
+| `bearerToken` | `terminal.bearerToken` | `TERMINAL_BEARER_TOKEN` | true     | -                             |
+| `baseUrl`     | `terminal.baseUrl`     | `TERMINAL_BASE_URL`     | true     | `"https://api.terminal.shop"` |
+
+System properties take precedence over environment variables.
 
 > [!TIP]
 > Don't create more than one client in the same application. Each client has a connection pool and
@@ -146,7 +151,8 @@ import shop.terminal.api.client.okhttp.TerminalOkHttpClient;
 import shop.terminal.api.models.product.ProductListParams;
 import shop.terminal.api.models.product.ProductListResponse;
 
-// Configures using the `TERMINAL_BEARER_TOKEN` and `TERMINAL_BASE_URL` environment variables
+// Configures using the `terminal.bearerToken` and `terminal.baseUrl` system properties
+// Or configures using the `TERMINAL_BEARER_TOKEN` and `TERMINAL_BASE_URL` environment variables
 TerminalClient client = TerminalOkHttpClient.fromEnv();
 
 CompletableFuture<ProductListResponse> products = client.async().product().list();
@@ -161,7 +167,8 @@ import shop.terminal.api.client.okhttp.TerminalOkHttpClientAsync;
 import shop.terminal.api.models.product.ProductListParams;
 import shop.terminal.api.models.product.ProductListResponse;
 
-// Configures using the `TERMINAL_BEARER_TOKEN` and `TERMINAL_BASE_URL` environment variables
+// Configures using the `terminal.bearerToken` and `terminal.baseUrl` system properties
+// Or configures using the `TERMINAL_BEARER_TOKEN` and `TERMINAL_BASE_URL` environment variables
 TerminalClientAsync client = TerminalOkHttpClientAsync.fromEnv();
 
 CompletableFuture<ProductListResponse> products = client.product().list();
@@ -214,6 +221,8 @@ The SDK throws custom unchecked exception types:
 
 - [`TerminalIoException`](terminal-java-core/src/main/kotlin/shop/terminal/api/errors/TerminalIoException.kt): I/O networking errors.
 
+- [`TerminalRetryableException`](terminal-java-core/src/main/kotlin/shop/terminal/api/errors/TerminalRetryableException.kt): Generic error indicating a failure that could be retried by the client.
+
 - [`TerminalInvalidDataException`](terminal-java-core/src/main/kotlin/shop/terminal/api/errors/TerminalInvalidDataException.kt): Failure to interpret successfully parsed data. For example, when accessing a property that's supposed to be required, but the API unexpectedly omitted it from the response.
 
 - [`TerminalException`](terminal-java-core/src/main/kotlin/shop/terminal/api/errors/TerminalException.kt): Base class for all exceptions. Most errors will result in one of the previously mentioned ones, but completely generic errors may be thrown using the base class.
@@ -234,6 +243,12 @@ Or to `debug` for more verbose logging:
 $ export TERMINAL_LOG=debug
 ```
 
+## ProGuard and R8
+
+Although the SDK uses reflection, it is still usable with [ProGuard](https://github.com/Guardsquare/proguard) and [R8](https://developer.android.com/topic/performance/app-optimization/enable-app-optimization) because `terminal-java-core` is published with a [configuration file](terminal-java-core/src/main/resources/META-INF/proguard/terminal-java-core.pro) containing [keep rules](https://www.guardsquare.com/manual/configuration/usage).
+
+ProGuard and R8 should automatically detect and use the published rules, but you can also manually copy the keep rules if necessary.
+
 ## Jackson
 
 The SDK depends on [Jackson](https://github.com/FasterXML/jackson) for JSON serialization/deserialization. It is compatible with version 2.13.4 or higher, but depends on version 2.18.2 by default.
@@ -249,7 +264,7 @@ If the SDK threw an exception, but you're _certain_ the version is compatible, t
 
 ### Retries
 
-The SDK automatically retries 2 times by default, with a short exponential backoff.
+The SDK automatically retries 2 times by default, with a short exponential backoff between requests.
 
 Only the following error types are retried:
 
@@ -259,7 +274,7 @@ Only the following error types are retried:
 - 429 Rate Limit
 - 5xx Internal
 
-The API may also explicitly instruct the SDK to retry or not retry a response.
+The API may also explicitly instruct the SDK to retry or not retry a request.
 
 To set a custom number of retries, configure the client using the `maxRetries` method:
 
@@ -315,6 +330,27 @@ TerminalClient client = TerminalOkHttpClient.builder()
         "https://example.com", 8080
       )
     ))
+    .build();
+```
+
+### HTTPS
+
+> [!NOTE]
+> Most applications should not call these methods, and instead use the system defaults. The defaults include
+> special optimizations that can be lost if the implementations are modified.
+
+To configure how HTTPS connections are secured, configure the client using the `sslSocketFactory`, `trustManager`, and `hostnameVerifier` methods:
+
+```java
+import shop.terminal.api.client.TerminalClient;
+import shop.terminal.api.client.okhttp.TerminalOkHttpClient;
+
+TerminalClient client = TerminalOkHttpClient.builder()
+    .fromEnv()
+    // If `sslSocketFactory` is set, then `trustManager` must be set, and vice versa.
+    .sslSocketFactory(yourSSLSocketFactory)
+    .trustManager(yourTrustManager)
+    .hostnameVerifier(yourHostnameVerifier)
     .build();
 ```
 
