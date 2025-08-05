@@ -36,7 +36,7 @@ interface CardServiceAsync {
     fun create(params: CardCreateParams): CompletableFuture<CardCreateResponse> =
         create(params, RequestOptions.none())
 
-    /** @see [create] */
+    /** @see create */
     fun create(
         params: CardCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -45,17 +45,17 @@ interface CardServiceAsync {
     /** List the credit cards associated with the current user. */
     fun list(): CompletableFuture<CardListResponse> = list(CardListParams.none())
 
-    /** @see [list] */
+    /** @see list */
     fun list(
         params: CardListParams = CardListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<CardListResponse>
 
-    /** @see [list] */
+    /** @see list */
     fun list(params: CardListParams = CardListParams.none()): CompletableFuture<CardListResponse> =
         list(params, RequestOptions.none())
 
-    /** @see [list] */
+    /** @see list */
     fun list(requestOptions: RequestOptions): CompletableFuture<CardListResponse> =
         list(CardListParams.none(), requestOptions)
 
@@ -63,7 +63,7 @@ interface CardServiceAsync {
     fun delete(id: String): CompletableFuture<CardDeleteResponse> =
         delete(id, CardDeleteParams.none())
 
-    /** @see [delete] */
+    /** @see delete */
     fun delete(
         id: String,
         params: CardDeleteParams = CardDeleteParams.none(),
@@ -71,71 +71,71 @@ interface CardServiceAsync {
     ): CompletableFuture<CardDeleteResponse> =
         delete(params.toBuilder().id(id).build(), requestOptions)
 
-    /** @see [delete] */
+    /** @see delete */
     fun delete(
         id: String,
         params: CardDeleteParams = CardDeleteParams.none(),
     ): CompletableFuture<CardDeleteResponse> = delete(id, params, RequestOptions.none())
 
-    /** @see [delete] */
+    /** @see delete */
     fun delete(
         params: CardDeleteParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<CardDeleteResponse>
 
-    /** @see [delete] */
+    /** @see delete */
     fun delete(params: CardDeleteParams): CompletableFuture<CardDeleteResponse> =
         delete(params, RequestOptions.none())
 
-    /** @see [delete] */
+    /** @see delete */
     fun delete(id: String, requestOptions: RequestOptions): CompletableFuture<CardDeleteResponse> =
         delete(id, CardDeleteParams.none(), requestOptions)
 
     /** Create a temporary URL for collecting credit card information for the current user. */
     fun collect(): CompletableFuture<CardCollectResponse> = collect(CardCollectParams.none())
 
-    /** @see [collect] */
+    /** @see collect */
     fun collect(
         params: CardCollectParams = CardCollectParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<CardCollectResponse>
 
-    /** @see [collect] */
+    /** @see collect */
     fun collect(
         params: CardCollectParams = CardCollectParams.none()
     ): CompletableFuture<CardCollectResponse> = collect(params, RequestOptions.none())
 
-    /** @see [collect] */
+    /** @see collect */
     fun collect(requestOptions: RequestOptions): CompletableFuture<CardCollectResponse> =
         collect(CardCollectParams.none(), requestOptions)
 
     /** Get a credit card by ID associated with the current user. */
     fun get(id: String): CompletableFuture<CardGetResponse> = get(id, CardGetParams.none())
 
-    /** @see [get] */
+    /** @see get */
     fun get(
         id: String,
         params: CardGetParams = CardGetParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<CardGetResponse> = get(params.toBuilder().id(id).build(), requestOptions)
 
-    /** @see [get] */
+    /** @see get */
     fun get(
         id: String,
         params: CardGetParams = CardGetParams.none(),
     ): CompletableFuture<CardGetResponse> = get(id, params, RequestOptions.none())
 
-    /** @see [get] */
+    /** @see get */
     fun get(
         params: CardGetParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<CardGetResponse>
 
-    /** @see [get] */
+    /** @see get */
     fun get(params: CardGetParams): CompletableFuture<CardGetResponse> =
         get(params, RequestOptions.none())
 
-    /** @see [get] */
+    /** @see get */
     fun get(id: String, requestOptions: RequestOptions): CompletableFuture<CardGetResponse> =
         get(id, CardGetParams.none(), requestOptions)
 
@@ -158,7 +158,7 @@ interface CardServiceAsync {
         ): CompletableFuture<HttpResponseFor<CardCreateResponse>> =
             create(params, RequestOptions.none())
 
-        /** @see [create] */
+        /** @see create */
         fun create(
             params: CardCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
@@ -171,19 +171,19 @@ interface CardServiceAsync {
         fun list(): CompletableFuture<HttpResponseFor<CardListResponse>> =
             list(CardListParams.none())
 
-        /** @see [list] */
+        /** @see list */
         fun list(
             params: CardListParams = CardListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<CardListResponse>>
 
-        /** @see [list] */
+        /** @see list */
         fun list(
             params: CardListParams = CardListParams.none()
         ): CompletableFuture<HttpResponseFor<CardListResponse>> =
             list(params, RequestOptions.none())
 
-        /** @see [list] */
+        /** @see list */
         fun list(
             requestOptions: RequestOptions
         ): CompletableFuture<HttpResponseFor<CardListResponse>> =
@@ -196,7 +196,7 @@ interface CardServiceAsync {
         fun delete(id: String): CompletableFuture<HttpResponseFor<CardDeleteResponse>> =
             delete(id, CardDeleteParams.none())
 
-        /** @see [delete] */
+        /** @see delete */
         fun delete(
             id: String,
             params: CardDeleteParams = CardDeleteParams.none(),
@@ -204,26 +204,26 @@ interface CardServiceAsync {
         ): CompletableFuture<HttpResponseFor<CardDeleteResponse>> =
             delete(params.toBuilder().id(id).build(), requestOptions)
 
-        /** @see [delete] */
+        /** @see delete */
         fun delete(
             id: String,
             params: CardDeleteParams = CardDeleteParams.none(),
         ): CompletableFuture<HttpResponseFor<CardDeleteResponse>> =
             delete(id, params, RequestOptions.none())
 
-        /** @see [delete] */
+        /** @see delete */
         fun delete(
             params: CardDeleteParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<CardDeleteResponse>>
 
-        /** @see [delete] */
+        /** @see delete */
         fun delete(
             params: CardDeleteParams
         ): CompletableFuture<HttpResponseFor<CardDeleteResponse>> =
             delete(params, RequestOptions.none())
 
-        /** @see [delete] */
+        /** @see delete */
         fun delete(
             id: String,
             requestOptions: RequestOptions,
@@ -237,19 +237,19 @@ interface CardServiceAsync {
         fun collect(): CompletableFuture<HttpResponseFor<CardCollectResponse>> =
             collect(CardCollectParams.none())
 
-        /** @see [collect] */
+        /** @see collect */
         fun collect(
             params: CardCollectParams = CardCollectParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<CardCollectResponse>>
 
-        /** @see [collect] */
+        /** @see collect */
         fun collect(
             params: CardCollectParams = CardCollectParams.none()
         ): CompletableFuture<HttpResponseFor<CardCollectResponse>> =
             collect(params, RequestOptions.none())
 
-        /** @see [collect] */
+        /** @see collect */
         fun collect(
             requestOptions: RequestOptions
         ): CompletableFuture<HttpResponseFor<CardCollectResponse>> =
@@ -262,7 +262,7 @@ interface CardServiceAsync {
         fun get(id: String): CompletableFuture<HttpResponseFor<CardGetResponse>> =
             get(id, CardGetParams.none())
 
-        /** @see [get] */
+        /** @see get */
         fun get(
             id: String,
             params: CardGetParams = CardGetParams.none(),
@@ -270,24 +270,24 @@ interface CardServiceAsync {
         ): CompletableFuture<HttpResponseFor<CardGetResponse>> =
             get(params.toBuilder().id(id).build(), requestOptions)
 
-        /** @see [get] */
+        /** @see get */
         fun get(
             id: String,
             params: CardGetParams = CardGetParams.none(),
         ): CompletableFuture<HttpResponseFor<CardGetResponse>> =
             get(id, params, RequestOptions.none())
 
-        /** @see [get] */
+        /** @see get */
         fun get(
             params: CardGetParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<CardGetResponse>>
 
-        /** @see [get] */
+        /** @see get */
         fun get(params: CardGetParams): CompletableFuture<HttpResponseFor<CardGetResponse>> =
             get(params, RequestOptions.none())
 
-        /** @see [get] */
+        /** @see get */
         fun get(
             id: String,
             requestOptions: RequestOptions,

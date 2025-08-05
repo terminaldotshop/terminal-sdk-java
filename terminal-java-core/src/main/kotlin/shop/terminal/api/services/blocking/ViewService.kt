@@ -30,17 +30,17 @@ interface ViewService {
      */
     fun init(): ViewInitResponse = init(ViewInitParams.none())
 
-    /** @see [init] */
+    /** @see init */
     fun init(
         params: ViewInitParams = ViewInitParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): ViewInitResponse
 
-    /** @see [init] */
+    /** @see init */
     fun init(params: ViewInitParams = ViewInitParams.none()): ViewInitResponse =
         init(params, RequestOptions.none())
 
-    /** @see [init] */
+    /** @see init */
     fun init(requestOptions: RequestOptions): ViewInitResponse =
         init(ViewInitParams.none(), requestOptions)
 
@@ -60,20 +60,20 @@ interface ViewService {
          */
         @MustBeClosed fun init(): HttpResponseFor<ViewInitResponse> = init(ViewInitParams.none())
 
-        /** @see [init] */
+        /** @see init */
         @MustBeClosed
         fun init(
             params: ViewInitParams = ViewInitParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<ViewInitResponse>
 
-        /** @see [init] */
+        /** @see init */
         @MustBeClosed
         fun init(
             params: ViewInitParams = ViewInitParams.none()
         ): HttpResponseFor<ViewInitResponse> = init(params, RequestOptions.none())
 
-        /** @see [init] */
+        /** @see init */
         @MustBeClosed
         fun init(requestOptions: RequestOptions): HttpResponseFor<ViewInitResponse> =
             init(ViewInitParams.none(), requestOptions)

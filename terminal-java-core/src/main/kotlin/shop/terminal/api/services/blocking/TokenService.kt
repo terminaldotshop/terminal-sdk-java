@@ -33,91 +33,91 @@ interface TokenService {
     /** Create a personal access token. */
     fun create(): TokenCreateResponse = create(TokenCreateParams.none())
 
-    /** @see [create] */
+    /** @see create */
     fun create(
         params: TokenCreateParams = TokenCreateParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): TokenCreateResponse
 
-    /** @see [create] */
+    /** @see create */
     fun create(params: TokenCreateParams = TokenCreateParams.none()): TokenCreateResponse =
         create(params, RequestOptions.none())
 
-    /** @see [create] */
+    /** @see create */
     fun create(requestOptions: RequestOptions): TokenCreateResponse =
         create(TokenCreateParams.none(), requestOptions)
 
     /** List the current user's personal access tokens. */
     fun list(): TokenListResponse = list(TokenListParams.none())
 
-    /** @see [list] */
+    /** @see list */
     fun list(
         params: TokenListParams = TokenListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): TokenListResponse
 
-    /** @see [list] */
+    /** @see list */
     fun list(params: TokenListParams = TokenListParams.none()): TokenListResponse =
         list(params, RequestOptions.none())
 
-    /** @see [list] */
+    /** @see list */
     fun list(requestOptions: RequestOptions): TokenListResponse =
         list(TokenListParams.none(), requestOptions)
 
     /** Delete the personal access token with the given ID. */
     fun delete(id: String): TokenDeleteResponse = delete(id, TokenDeleteParams.none())
 
-    /** @see [delete] */
+    /** @see delete */
     fun delete(
         id: String,
         params: TokenDeleteParams = TokenDeleteParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): TokenDeleteResponse = delete(params.toBuilder().id(id).build(), requestOptions)
 
-    /** @see [delete] */
+    /** @see delete */
     fun delete(
         id: String,
         params: TokenDeleteParams = TokenDeleteParams.none(),
     ): TokenDeleteResponse = delete(id, params, RequestOptions.none())
 
-    /** @see [delete] */
+    /** @see delete */
     fun delete(
         params: TokenDeleteParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): TokenDeleteResponse
 
-    /** @see [delete] */
+    /** @see delete */
     fun delete(params: TokenDeleteParams): TokenDeleteResponse =
         delete(params, RequestOptions.none())
 
-    /** @see [delete] */
+    /** @see delete */
     fun delete(id: String, requestOptions: RequestOptions): TokenDeleteResponse =
         delete(id, TokenDeleteParams.none(), requestOptions)
 
     /** Get the personal access token with the given ID. */
     fun get(id: String): TokenGetResponse = get(id, TokenGetParams.none())
 
-    /** @see [get] */
+    /** @see get */
     fun get(
         id: String,
         params: TokenGetParams = TokenGetParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): TokenGetResponse = get(params.toBuilder().id(id).build(), requestOptions)
 
-    /** @see [get] */
+    /** @see get */
     fun get(id: String, params: TokenGetParams = TokenGetParams.none()): TokenGetResponse =
         get(id, params, RequestOptions.none())
 
-    /** @see [get] */
+    /** @see get */
     fun get(
         params: TokenGetParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): TokenGetResponse
 
-    /** @see [get] */
+    /** @see get */
     fun get(params: TokenGetParams): TokenGetResponse = get(params, RequestOptions.none())
 
-    /** @see [get] */
+    /** @see get */
     fun get(id: String, requestOptions: RequestOptions): TokenGetResponse =
         get(id, TokenGetParams.none(), requestOptions)
 
@@ -138,20 +138,20 @@ interface TokenService {
         @MustBeClosed
         fun create(): HttpResponseFor<TokenCreateResponse> = create(TokenCreateParams.none())
 
-        /** @see [create] */
+        /** @see create */
         @MustBeClosed
         fun create(
             params: TokenCreateParams = TokenCreateParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<TokenCreateResponse>
 
-        /** @see [create] */
+        /** @see create */
         @MustBeClosed
         fun create(
             params: TokenCreateParams = TokenCreateParams.none()
         ): HttpResponseFor<TokenCreateResponse> = create(params, RequestOptions.none())
 
-        /** @see [create] */
+        /** @see create */
         @MustBeClosed
         fun create(requestOptions: RequestOptions): HttpResponseFor<TokenCreateResponse> =
             create(TokenCreateParams.none(), requestOptions)
@@ -162,20 +162,20 @@ interface TokenService {
          */
         @MustBeClosed fun list(): HttpResponseFor<TokenListResponse> = list(TokenListParams.none())
 
-        /** @see [list] */
+        /** @see list */
         @MustBeClosed
         fun list(
             params: TokenListParams = TokenListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<TokenListResponse>
 
-        /** @see [list] */
+        /** @see list */
         @MustBeClosed
         fun list(
             params: TokenListParams = TokenListParams.none()
         ): HttpResponseFor<TokenListResponse> = list(params, RequestOptions.none())
 
-        /** @see [list] */
+        /** @see list */
         @MustBeClosed
         fun list(requestOptions: RequestOptions): HttpResponseFor<TokenListResponse> =
             list(TokenListParams.none(), requestOptions)
@@ -188,7 +188,7 @@ interface TokenService {
         fun delete(id: String): HttpResponseFor<TokenDeleteResponse> =
             delete(id, TokenDeleteParams.none())
 
-        /** @see [delete] */
+        /** @see delete */
         @MustBeClosed
         fun delete(
             id: String,
@@ -197,26 +197,26 @@ interface TokenService {
         ): HttpResponseFor<TokenDeleteResponse> =
             delete(params.toBuilder().id(id).build(), requestOptions)
 
-        /** @see [delete] */
+        /** @see delete */
         @MustBeClosed
         fun delete(
             id: String,
             params: TokenDeleteParams = TokenDeleteParams.none(),
         ): HttpResponseFor<TokenDeleteResponse> = delete(id, params, RequestOptions.none())
 
-        /** @see [delete] */
+        /** @see delete */
         @MustBeClosed
         fun delete(
             params: TokenDeleteParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<TokenDeleteResponse>
 
-        /** @see [delete] */
+        /** @see delete */
         @MustBeClosed
         fun delete(params: TokenDeleteParams): HttpResponseFor<TokenDeleteResponse> =
             delete(params, RequestOptions.none())
 
-        /** @see [delete] */
+        /** @see delete */
         @MustBeClosed
         fun delete(
             id: String,
@@ -231,7 +231,7 @@ interface TokenService {
         @MustBeClosed
         fun get(id: String): HttpResponseFor<TokenGetResponse> = get(id, TokenGetParams.none())
 
-        /** @see [get] */
+        /** @see get */
         @MustBeClosed
         fun get(
             id: String,
@@ -240,26 +240,26 @@ interface TokenService {
         ): HttpResponseFor<TokenGetResponse> =
             get(params.toBuilder().id(id).build(), requestOptions)
 
-        /** @see [get] */
+        /** @see get */
         @MustBeClosed
         fun get(
             id: String,
             params: TokenGetParams = TokenGetParams.none(),
         ): HttpResponseFor<TokenGetResponse> = get(id, params, RequestOptions.none())
 
-        /** @see [get] */
+        /** @see get */
         @MustBeClosed
         fun get(
             params: TokenGetParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<TokenGetResponse>
 
-        /** @see [get] */
+        /** @see get */
         @MustBeClosed
         fun get(params: TokenGetParams): HttpResponseFor<TokenGetResponse> =
             get(params, RequestOptions.none())
 
-        /** @see [get] */
+        /** @see get */
         @MustBeClosed
         fun get(id: String, requestOptions: RequestOptions): HttpResponseFor<TokenGetResponse> =
             get(id, TokenGetParams.none(), requestOptions)

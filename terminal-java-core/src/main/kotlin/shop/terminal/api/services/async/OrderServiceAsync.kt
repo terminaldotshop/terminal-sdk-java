@@ -32,7 +32,7 @@ interface OrderServiceAsync {
     fun create(params: OrderCreateParams): CompletableFuture<OrderCreateResponse> =
         create(params, RequestOptions.none())
 
-    /** @see [create] */
+    /** @see create */
     fun create(
         params: OrderCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -41,48 +41,48 @@ interface OrderServiceAsync {
     /** List the orders associated with the current user. */
     fun list(): CompletableFuture<OrderListResponse> = list(OrderListParams.none())
 
-    /** @see [list] */
+    /** @see list */
     fun list(
         params: OrderListParams = OrderListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<OrderListResponse>
 
-    /** @see [list] */
+    /** @see list */
     fun list(
         params: OrderListParams = OrderListParams.none()
     ): CompletableFuture<OrderListResponse> = list(params, RequestOptions.none())
 
-    /** @see [list] */
+    /** @see list */
     fun list(requestOptions: RequestOptions): CompletableFuture<OrderListResponse> =
         list(OrderListParams.none(), requestOptions)
 
     /** Get the order with the given ID. */
     fun get(id: String): CompletableFuture<OrderGetResponse> = get(id, OrderGetParams.none())
 
-    /** @see [get] */
+    /** @see get */
     fun get(
         id: String,
         params: OrderGetParams = OrderGetParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<OrderGetResponse> = get(params.toBuilder().id(id).build(), requestOptions)
 
-    /** @see [get] */
+    /** @see get */
     fun get(
         id: String,
         params: OrderGetParams = OrderGetParams.none(),
     ): CompletableFuture<OrderGetResponse> = get(id, params, RequestOptions.none())
 
-    /** @see [get] */
+    /** @see get */
     fun get(
         params: OrderGetParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<OrderGetResponse>
 
-    /** @see [get] */
+    /** @see get */
     fun get(params: OrderGetParams): CompletableFuture<OrderGetResponse> =
         get(params, RequestOptions.none())
 
-    /** @see [get] */
+    /** @see get */
     fun get(id: String, requestOptions: RequestOptions): CompletableFuture<OrderGetResponse> =
         get(id, OrderGetParams.none(), requestOptions)
 
@@ -107,7 +107,7 @@ interface OrderServiceAsync {
         ): CompletableFuture<HttpResponseFor<OrderCreateResponse>> =
             create(params, RequestOptions.none())
 
-        /** @see [create] */
+        /** @see create */
         fun create(
             params: OrderCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
@@ -120,19 +120,19 @@ interface OrderServiceAsync {
         fun list(): CompletableFuture<HttpResponseFor<OrderListResponse>> =
             list(OrderListParams.none())
 
-        /** @see [list] */
+        /** @see list */
         fun list(
             params: OrderListParams = OrderListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<OrderListResponse>>
 
-        /** @see [list] */
+        /** @see list */
         fun list(
             params: OrderListParams = OrderListParams.none()
         ): CompletableFuture<HttpResponseFor<OrderListResponse>> =
             list(params, RequestOptions.none())
 
-        /** @see [list] */
+        /** @see list */
         fun list(
             requestOptions: RequestOptions
         ): CompletableFuture<HttpResponseFor<OrderListResponse>> =
@@ -145,7 +145,7 @@ interface OrderServiceAsync {
         fun get(id: String): CompletableFuture<HttpResponseFor<OrderGetResponse>> =
             get(id, OrderGetParams.none())
 
-        /** @see [get] */
+        /** @see get */
         fun get(
             id: String,
             params: OrderGetParams = OrderGetParams.none(),
@@ -153,24 +153,24 @@ interface OrderServiceAsync {
         ): CompletableFuture<HttpResponseFor<OrderGetResponse>> =
             get(params.toBuilder().id(id).build(), requestOptions)
 
-        /** @see [get] */
+        /** @see get */
         fun get(
             id: String,
             params: OrderGetParams = OrderGetParams.none(),
         ): CompletableFuture<HttpResponseFor<OrderGetResponse>> =
             get(id, params, RequestOptions.none())
 
-        /** @see [get] */
+        /** @see get */
         fun get(
             params: OrderGetParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<OrderGetResponse>>
 
-        /** @see [get] */
+        /** @see get */
         fun get(params: OrderGetParams): CompletableFuture<HttpResponseFor<OrderGetResponse>> =
             get(params, RequestOptions.none())
 
-        /** @see [get] */
+        /** @see get */
         fun get(
             id: String,
             requestOptions: RequestOptions,

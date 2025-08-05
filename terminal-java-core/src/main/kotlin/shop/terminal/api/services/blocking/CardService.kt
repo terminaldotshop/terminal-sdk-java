@@ -35,7 +35,7 @@ interface CardService {
     /** Attach a credit card (tokenized via Stripe) to the current user. */
     fun create(params: CardCreateParams): CardCreateResponse = create(params, RequestOptions.none())
 
-    /** @see [create] */
+    /** @see create */
     fun create(
         params: CardCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -44,88 +44,88 @@ interface CardService {
     /** List the credit cards associated with the current user. */
     fun list(): CardListResponse = list(CardListParams.none())
 
-    /** @see [list] */
+    /** @see list */
     fun list(
         params: CardListParams = CardListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CardListResponse
 
-    /** @see [list] */
+    /** @see list */
     fun list(params: CardListParams = CardListParams.none()): CardListResponse =
         list(params, RequestOptions.none())
 
-    /** @see [list] */
+    /** @see list */
     fun list(requestOptions: RequestOptions): CardListResponse =
         list(CardListParams.none(), requestOptions)
 
     /** Delete a credit card associated with the current user. */
     fun delete(id: String): CardDeleteResponse = delete(id, CardDeleteParams.none())
 
-    /** @see [delete] */
+    /** @see delete */
     fun delete(
         id: String,
         params: CardDeleteParams = CardDeleteParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CardDeleteResponse = delete(params.toBuilder().id(id).build(), requestOptions)
 
-    /** @see [delete] */
+    /** @see delete */
     fun delete(id: String, params: CardDeleteParams = CardDeleteParams.none()): CardDeleteResponse =
         delete(id, params, RequestOptions.none())
 
-    /** @see [delete] */
+    /** @see delete */
     fun delete(
         params: CardDeleteParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CardDeleteResponse
 
-    /** @see [delete] */
+    /** @see delete */
     fun delete(params: CardDeleteParams): CardDeleteResponse = delete(params, RequestOptions.none())
 
-    /** @see [delete] */
+    /** @see delete */
     fun delete(id: String, requestOptions: RequestOptions): CardDeleteResponse =
         delete(id, CardDeleteParams.none(), requestOptions)
 
     /** Create a temporary URL for collecting credit card information for the current user. */
     fun collect(): CardCollectResponse = collect(CardCollectParams.none())
 
-    /** @see [collect] */
+    /** @see collect */
     fun collect(
         params: CardCollectParams = CardCollectParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CardCollectResponse
 
-    /** @see [collect] */
+    /** @see collect */
     fun collect(params: CardCollectParams = CardCollectParams.none()): CardCollectResponse =
         collect(params, RequestOptions.none())
 
-    /** @see [collect] */
+    /** @see collect */
     fun collect(requestOptions: RequestOptions): CardCollectResponse =
         collect(CardCollectParams.none(), requestOptions)
 
     /** Get a credit card by ID associated with the current user. */
     fun get(id: String): CardGetResponse = get(id, CardGetParams.none())
 
-    /** @see [get] */
+    /** @see get */
     fun get(
         id: String,
         params: CardGetParams = CardGetParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CardGetResponse = get(params.toBuilder().id(id).build(), requestOptions)
 
-    /** @see [get] */
+    /** @see get */
     fun get(id: String, params: CardGetParams = CardGetParams.none()): CardGetResponse =
         get(id, params, RequestOptions.none())
 
-    /** @see [get] */
+    /** @see get */
     fun get(
         params: CardGetParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CardGetResponse
 
-    /** @see [get] */
+    /** @see get */
     fun get(params: CardGetParams): CardGetResponse = get(params, RequestOptions.none())
 
-    /** @see [get] */
+    /** @see get */
     fun get(id: String, requestOptions: RequestOptions): CardGetResponse =
         get(id, CardGetParams.none(), requestOptions)
 
@@ -147,7 +147,7 @@ interface CardService {
         fun create(params: CardCreateParams): HttpResponseFor<CardCreateResponse> =
             create(params, RequestOptions.none())
 
-        /** @see [create] */
+        /** @see create */
         @MustBeClosed
         fun create(
             params: CardCreateParams,
@@ -160,20 +160,20 @@ interface CardService {
          */
         @MustBeClosed fun list(): HttpResponseFor<CardListResponse> = list(CardListParams.none())
 
-        /** @see [list] */
+        /** @see list */
         @MustBeClosed
         fun list(
             params: CardListParams = CardListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<CardListResponse>
 
-        /** @see [list] */
+        /** @see list */
         @MustBeClosed
         fun list(
             params: CardListParams = CardListParams.none()
         ): HttpResponseFor<CardListResponse> = list(params, RequestOptions.none())
 
-        /** @see [list] */
+        /** @see list */
         @MustBeClosed
         fun list(requestOptions: RequestOptions): HttpResponseFor<CardListResponse> =
             list(CardListParams.none(), requestOptions)
@@ -186,7 +186,7 @@ interface CardService {
         fun delete(id: String): HttpResponseFor<CardDeleteResponse> =
             delete(id, CardDeleteParams.none())
 
-        /** @see [delete] */
+        /** @see delete */
         @MustBeClosed
         fun delete(
             id: String,
@@ -195,26 +195,26 @@ interface CardService {
         ): HttpResponseFor<CardDeleteResponse> =
             delete(params.toBuilder().id(id).build(), requestOptions)
 
-        /** @see [delete] */
+        /** @see delete */
         @MustBeClosed
         fun delete(
             id: String,
             params: CardDeleteParams = CardDeleteParams.none(),
         ): HttpResponseFor<CardDeleteResponse> = delete(id, params, RequestOptions.none())
 
-        /** @see [delete] */
+        /** @see delete */
         @MustBeClosed
         fun delete(
             params: CardDeleteParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<CardDeleteResponse>
 
-        /** @see [delete] */
+        /** @see delete */
         @MustBeClosed
         fun delete(params: CardDeleteParams): HttpResponseFor<CardDeleteResponse> =
             delete(params, RequestOptions.none())
 
-        /** @see [delete] */
+        /** @see delete */
         @MustBeClosed
         fun delete(
             id: String,
@@ -228,20 +228,20 @@ interface CardService {
         @MustBeClosed
         fun collect(): HttpResponseFor<CardCollectResponse> = collect(CardCollectParams.none())
 
-        /** @see [collect] */
+        /** @see collect */
         @MustBeClosed
         fun collect(
             params: CardCollectParams = CardCollectParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<CardCollectResponse>
 
-        /** @see [collect] */
+        /** @see collect */
         @MustBeClosed
         fun collect(
             params: CardCollectParams = CardCollectParams.none()
         ): HttpResponseFor<CardCollectResponse> = collect(params, RequestOptions.none())
 
-        /** @see [collect] */
+        /** @see collect */
         @MustBeClosed
         fun collect(requestOptions: RequestOptions): HttpResponseFor<CardCollectResponse> =
             collect(CardCollectParams.none(), requestOptions)
@@ -253,7 +253,7 @@ interface CardService {
         @MustBeClosed
         fun get(id: String): HttpResponseFor<CardGetResponse> = get(id, CardGetParams.none())
 
-        /** @see [get] */
+        /** @see get */
         @MustBeClosed
         fun get(
             id: String,
@@ -261,26 +261,26 @@ interface CardService {
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<CardGetResponse> = get(params.toBuilder().id(id).build(), requestOptions)
 
-        /** @see [get] */
+        /** @see get */
         @MustBeClosed
         fun get(
             id: String,
             params: CardGetParams = CardGetParams.none(),
         ): HttpResponseFor<CardGetResponse> = get(id, params, RequestOptions.none())
 
-        /** @see [get] */
+        /** @see get */
         @MustBeClosed
         fun get(
             params: CardGetParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<CardGetResponse>
 
-        /** @see [get] */
+        /** @see get */
         @MustBeClosed
         fun get(params: CardGetParams): HttpResponseFor<CardGetResponse> =
             get(params, RequestOptions.none())
 
-        /** @see [get] */
+        /** @see get */
         @MustBeClosed
         fun get(id: String, requestOptions: RequestOptions): HttpResponseFor<CardGetResponse> =
             get(id, CardGetParams.none(), requestOptions)

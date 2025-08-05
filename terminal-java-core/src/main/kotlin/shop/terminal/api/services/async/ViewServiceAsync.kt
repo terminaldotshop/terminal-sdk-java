@@ -30,17 +30,17 @@ interface ViewServiceAsync {
      */
     fun init(): CompletableFuture<ViewInitResponse> = init(ViewInitParams.none())
 
-    /** @see [init] */
+    /** @see init */
     fun init(
         params: ViewInitParams = ViewInitParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<ViewInitResponse>
 
-    /** @see [init] */
+    /** @see init */
     fun init(params: ViewInitParams = ViewInitParams.none()): CompletableFuture<ViewInitResponse> =
         init(params, RequestOptions.none())
 
-    /** @see [init] */
+    /** @see init */
     fun init(requestOptions: RequestOptions): CompletableFuture<ViewInitResponse> =
         init(ViewInitParams.none(), requestOptions)
 
@@ -61,19 +61,19 @@ interface ViewServiceAsync {
         fun init(): CompletableFuture<HttpResponseFor<ViewInitResponse>> =
             init(ViewInitParams.none())
 
-        /** @see [init] */
+        /** @see init */
         fun init(
             params: ViewInitParams = ViewInitParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<ViewInitResponse>>
 
-        /** @see [init] */
+        /** @see init */
         fun init(
             params: ViewInitParams = ViewInitParams.none()
         ): CompletableFuture<HttpResponseFor<ViewInitResponse>> =
             init(params, RequestOptions.none())
 
-        /** @see [init] */
+        /** @see init */
         fun init(
             requestOptions: RequestOptions
         ): CompletableFuture<HttpResponseFor<ViewInitResponse>> =

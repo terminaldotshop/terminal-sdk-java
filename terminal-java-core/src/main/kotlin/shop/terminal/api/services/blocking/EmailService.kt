@@ -28,7 +28,7 @@ interface EmailService {
     fun create(params: EmailCreateParams): EmailCreateResponse =
         create(params, RequestOptions.none())
 
-    /** @see [create] */
+    /** @see create */
     fun create(
         params: EmailCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -52,7 +52,7 @@ interface EmailService {
         fun create(params: EmailCreateParams): HttpResponseFor<EmailCreateResponse> =
             create(params, RequestOptions.none())
 
-        /** @see [create] */
+        /** @see create */
         @MustBeClosed
         fun create(
             params: EmailCreateParams,

@@ -35,126 +35,126 @@ interface SubscriptionService {
     /** Create a subscription for the current user. */
     fun create(): SubscriptionCreateResponse = create(SubscriptionCreateParams.none())
 
-    /** @see [create] */
+    /** @see create */
     fun create(
         params: SubscriptionCreateParams = SubscriptionCreateParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): SubscriptionCreateResponse
 
-    /** @see [create] */
+    /** @see create */
     fun create(
         params: SubscriptionCreateParams = SubscriptionCreateParams.none()
     ): SubscriptionCreateResponse = create(params, RequestOptions.none())
 
-    /** @see [create] */
+    /** @see create */
     fun create(requestOptions: RequestOptions): SubscriptionCreateResponse =
         create(SubscriptionCreateParams.none(), requestOptions)
 
     /** Update card, address, or interval for an existing subscription. */
     fun update(id: String): SubscriptionUpdateResponse = update(id, SubscriptionUpdateParams.none())
 
-    /** @see [update] */
+    /** @see update */
     fun update(
         id: String,
         params: SubscriptionUpdateParams = SubscriptionUpdateParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): SubscriptionUpdateResponse = update(params.toBuilder().id(id).build(), requestOptions)
 
-    /** @see [update] */
+    /** @see update */
     fun update(
         id: String,
         params: SubscriptionUpdateParams = SubscriptionUpdateParams.none(),
     ): SubscriptionUpdateResponse = update(id, params, RequestOptions.none())
 
-    /** @see [update] */
+    /** @see update */
     fun update(
         params: SubscriptionUpdateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): SubscriptionUpdateResponse
 
-    /** @see [update] */
+    /** @see update */
     fun update(params: SubscriptionUpdateParams): SubscriptionUpdateResponse =
         update(params, RequestOptions.none())
 
-    /** @see [update] */
+    /** @see update */
     fun update(id: String, requestOptions: RequestOptions): SubscriptionUpdateResponse =
         update(id, SubscriptionUpdateParams.none(), requestOptions)
 
     /** List the subscriptions associated with the current user. */
     fun list(): SubscriptionListResponse = list(SubscriptionListParams.none())
 
-    /** @see [list] */
+    /** @see list */
     fun list(
         params: SubscriptionListParams = SubscriptionListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): SubscriptionListResponse
 
-    /** @see [list] */
+    /** @see list */
     fun list(
         params: SubscriptionListParams = SubscriptionListParams.none()
     ): SubscriptionListResponse = list(params, RequestOptions.none())
 
-    /** @see [list] */
+    /** @see list */
     fun list(requestOptions: RequestOptions): SubscriptionListResponse =
         list(SubscriptionListParams.none(), requestOptions)
 
     /** Cancel a subscription for the current user. */
     fun delete(id: String): SubscriptionDeleteResponse = delete(id, SubscriptionDeleteParams.none())
 
-    /** @see [delete] */
+    /** @see delete */
     fun delete(
         id: String,
         params: SubscriptionDeleteParams = SubscriptionDeleteParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): SubscriptionDeleteResponse = delete(params.toBuilder().id(id).build(), requestOptions)
 
-    /** @see [delete] */
+    /** @see delete */
     fun delete(
         id: String,
         params: SubscriptionDeleteParams = SubscriptionDeleteParams.none(),
     ): SubscriptionDeleteResponse = delete(id, params, RequestOptions.none())
 
-    /** @see [delete] */
+    /** @see delete */
     fun delete(
         params: SubscriptionDeleteParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): SubscriptionDeleteResponse
 
-    /** @see [delete] */
+    /** @see delete */
     fun delete(params: SubscriptionDeleteParams): SubscriptionDeleteResponse =
         delete(params, RequestOptions.none())
 
-    /** @see [delete] */
+    /** @see delete */
     fun delete(id: String, requestOptions: RequestOptions): SubscriptionDeleteResponse =
         delete(id, SubscriptionDeleteParams.none(), requestOptions)
 
     /** Get the subscription with the given ID. */
     fun get(id: String): SubscriptionGetResponse = get(id, SubscriptionGetParams.none())
 
-    /** @see [get] */
+    /** @see get */
     fun get(
         id: String,
         params: SubscriptionGetParams = SubscriptionGetParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): SubscriptionGetResponse = get(params.toBuilder().id(id).build(), requestOptions)
 
-    /** @see [get] */
+    /** @see get */
     fun get(
         id: String,
         params: SubscriptionGetParams = SubscriptionGetParams.none(),
     ): SubscriptionGetResponse = get(id, params, RequestOptions.none())
 
-    /** @see [get] */
+    /** @see get */
     fun get(
         params: SubscriptionGetParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): SubscriptionGetResponse
 
-    /** @see [get] */
+    /** @see get */
     fun get(params: SubscriptionGetParams): SubscriptionGetResponse =
         get(params, RequestOptions.none())
 
-    /** @see [get] */
+    /** @see get */
     fun get(id: String, requestOptions: RequestOptions): SubscriptionGetResponse =
         get(id, SubscriptionGetParams.none(), requestOptions)
 
@@ -180,20 +180,20 @@ interface SubscriptionService {
         fun create(): HttpResponseFor<SubscriptionCreateResponse> =
             create(SubscriptionCreateParams.none())
 
-        /** @see [create] */
+        /** @see create */
         @MustBeClosed
         fun create(
             params: SubscriptionCreateParams = SubscriptionCreateParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<SubscriptionCreateResponse>
 
-        /** @see [create] */
+        /** @see create */
         @MustBeClosed
         fun create(
             params: SubscriptionCreateParams = SubscriptionCreateParams.none()
         ): HttpResponseFor<SubscriptionCreateResponse> = create(params, RequestOptions.none())
 
-        /** @see [create] */
+        /** @see create */
         @MustBeClosed
         fun create(requestOptions: RequestOptions): HttpResponseFor<SubscriptionCreateResponse> =
             create(SubscriptionCreateParams.none(), requestOptions)
@@ -206,7 +206,7 @@ interface SubscriptionService {
         fun update(id: String): HttpResponseFor<SubscriptionUpdateResponse> =
             update(id, SubscriptionUpdateParams.none())
 
-        /** @see [update] */
+        /** @see update */
         @MustBeClosed
         fun update(
             id: String,
@@ -215,26 +215,26 @@ interface SubscriptionService {
         ): HttpResponseFor<SubscriptionUpdateResponse> =
             update(params.toBuilder().id(id).build(), requestOptions)
 
-        /** @see [update] */
+        /** @see update */
         @MustBeClosed
         fun update(
             id: String,
             params: SubscriptionUpdateParams = SubscriptionUpdateParams.none(),
         ): HttpResponseFor<SubscriptionUpdateResponse> = update(id, params, RequestOptions.none())
 
-        /** @see [update] */
+        /** @see update */
         @MustBeClosed
         fun update(
             params: SubscriptionUpdateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<SubscriptionUpdateResponse>
 
-        /** @see [update] */
+        /** @see update */
         @MustBeClosed
         fun update(params: SubscriptionUpdateParams): HttpResponseFor<SubscriptionUpdateResponse> =
             update(params, RequestOptions.none())
 
-        /** @see [update] */
+        /** @see update */
         @MustBeClosed
         fun update(
             id: String,
@@ -249,20 +249,20 @@ interface SubscriptionService {
         @MustBeClosed
         fun list(): HttpResponseFor<SubscriptionListResponse> = list(SubscriptionListParams.none())
 
-        /** @see [list] */
+        /** @see list */
         @MustBeClosed
         fun list(
             params: SubscriptionListParams = SubscriptionListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<SubscriptionListResponse>
 
-        /** @see [list] */
+        /** @see list */
         @MustBeClosed
         fun list(
             params: SubscriptionListParams = SubscriptionListParams.none()
         ): HttpResponseFor<SubscriptionListResponse> = list(params, RequestOptions.none())
 
-        /** @see [list] */
+        /** @see list */
         @MustBeClosed
         fun list(requestOptions: RequestOptions): HttpResponseFor<SubscriptionListResponse> =
             list(SubscriptionListParams.none(), requestOptions)
@@ -275,7 +275,7 @@ interface SubscriptionService {
         fun delete(id: String): HttpResponseFor<SubscriptionDeleteResponse> =
             delete(id, SubscriptionDeleteParams.none())
 
-        /** @see [delete] */
+        /** @see delete */
         @MustBeClosed
         fun delete(
             id: String,
@@ -284,26 +284,26 @@ interface SubscriptionService {
         ): HttpResponseFor<SubscriptionDeleteResponse> =
             delete(params.toBuilder().id(id).build(), requestOptions)
 
-        /** @see [delete] */
+        /** @see delete */
         @MustBeClosed
         fun delete(
             id: String,
             params: SubscriptionDeleteParams = SubscriptionDeleteParams.none(),
         ): HttpResponseFor<SubscriptionDeleteResponse> = delete(id, params, RequestOptions.none())
 
-        /** @see [delete] */
+        /** @see delete */
         @MustBeClosed
         fun delete(
             params: SubscriptionDeleteParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<SubscriptionDeleteResponse>
 
-        /** @see [delete] */
+        /** @see delete */
         @MustBeClosed
         fun delete(params: SubscriptionDeleteParams): HttpResponseFor<SubscriptionDeleteResponse> =
             delete(params, RequestOptions.none())
 
-        /** @see [delete] */
+        /** @see delete */
         @MustBeClosed
         fun delete(
             id: String,
@@ -319,7 +319,7 @@ interface SubscriptionService {
         fun get(id: String): HttpResponseFor<SubscriptionGetResponse> =
             get(id, SubscriptionGetParams.none())
 
-        /** @see [get] */
+        /** @see get */
         @MustBeClosed
         fun get(
             id: String,
@@ -328,26 +328,26 @@ interface SubscriptionService {
         ): HttpResponseFor<SubscriptionGetResponse> =
             get(params.toBuilder().id(id).build(), requestOptions)
 
-        /** @see [get] */
+        /** @see get */
         @MustBeClosed
         fun get(
             id: String,
             params: SubscriptionGetParams = SubscriptionGetParams.none(),
         ): HttpResponseFor<SubscriptionGetResponse> = get(id, params, RequestOptions.none())
 
-        /** @see [get] */
+        /** @see get */
         @MustBeClosed
         fun get(
             params: SubscriptionGetParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<SubscriptionGetResponse>
 
-        /** @see [get] */
+        /** @see get */
         @MustBeClosed
         fun get(params: SubscriptionGetParams): HttpResponseFor<SubscriptionGetResponse> =
             get(params, RequestOptions.none())
 
-        /** @see [get] */
+        /** @see get */
         @MustBeClosed
         fun get(
             id: String,
