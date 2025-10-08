@@ -7,6 +7,7 @@ import java.util.function.Consumer
 import shop.terminal.api.core.ClientOptions
 import shop.terminal.api.core.RequestOptions
 import shop.terminal.api.core.http.HttpResponseFor
+import shop.terminal.api.models.subscription.Subscription
 import shop.terminal.api.models.subscription.SubscriptionCreateParams
 import shop.terminal.api.models.subscription.SubscriptionCreateResponse
 import shop.terminal.api.models.subscription.SubscriptionDeleteParams
@@ -45,6 +46,20 @@ interface SubscriptionService {
     fun create(
         params: SubscriptionCreateParams = SubscriptionCreateParams.none()
     ): SubscriptionCreateResponse = create(params, RequestOptions.none())
+
+    /** @see create */
+    fun create(
+        subscription: Subscription,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): SubscriptionCreateResponse =
+        create(
+            SubscriptionCreateParams.builder().subscription(subscription).build(),
+            requestOptions,
+        )
+
+    /** @see create */
+    fun create(subscription: Subscription): SubscriptionCreateResponse =
+        create(subscription, RequestOptions.none())
 
     /** @see create */
     fun create(requestOptions: RequestOptions): SubscriptionCreateResponse =
@@ -192,6 +207,22 @@ interface SubscriptionService {
         fun create(
             params: SubscriptionCreateParams = SubscriptionCreateParams.none()
         ): HttpResponseFor<SubscriptionCreateResponse> = create(params, RequestOptions.none())
+
+        /** @see create */
+        @MustBeClosed
+        fun create(
+            subscription: Subscription,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<SubscriptionCreateResponse> =
+            create(
+                SubscriptionCreateParams.builder().subscription(subscription).build(),
+                requestOptions,
+            )
+
+        /** @see create */
+        @MustBeClosed
+        fun create(subscription: Subscription): HttpResponseFor<SubscriptionCreateResponse> =
+            create(subscription, RequestOptions.none())
 
         /** @see create */
         @MustBeClosed

@@ -7,6 +7,7 @@ import java.util.function.Consumer
 import shop.terminal.api.core.ClientOptions
 import shop.terminal.api.core.RequestOptions
 import shop.terminal.api.core.http.HttpResponseFor
+import shop.terminal.api.models.subscription.Subscription
 import shop.terminal.api.models.subscription.SubscriptionCreateParams
 import shop.terminal.api.models.subscription.SubscriptionCreateResponse
 import shop.terminal.api.models.subscription.SubscriptionDeleteParams
@@ -46,6 +47,20 @@ interface SubscriptionServiceAsync {
     fun create(
         params: SubscriptionCreateParams = SubscriptionCreateParams.none()
     ): CompletableFuture<SubscriptionCreateResponse> = create(params, RequestOptions.none())
+
+    /** @see create */
+    fun create(
+        subscription: Subscription,
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): CompletableFuture<SubscriptionCreateResponse> =
+        create(
+            SubscriptionCreateParams.builder().subscription(subscription).build(),
+            requestOptions,
+        )
+
+    /** @see create */
+    fun create(subscription: Subscription): CompletableFuture<SubscriptionCreateResponse> =
+        create(subscription, RequestOptions.none())
 
     /** @see create */
     fun create(requestOptions: RequestOptions): CompletableFuture<SubscriptionCreateResponse> =
@@ -207,6 +222,22 @@ interface SubscriptionServiceAsync {
             params: SubscriptionCreateParams = SubscriptionCreateParams.none()
         ): CompletableFuture<HttpResponseFor<SubscriptionCreateResponse>> =
             create(params, RequestOptions.none())
+
+        /** @see create */
+        fun create(
+            subscription: Subscription,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<SubscriptionCreateResponse>> =
+            create(
+                SubscriptionCreateParams.builder().subscription(subscription).build(),
+                requestOptions,
+            )
+
+        /** @see create */
+        fun create(
+            subscription: Subscription
+        ): CompletableFuture<HttpResponseFor<SubscriptionCreateResponse>> =
+            create(subscription, RequestOptions.none())
 
         /** @see create */
         fun create(

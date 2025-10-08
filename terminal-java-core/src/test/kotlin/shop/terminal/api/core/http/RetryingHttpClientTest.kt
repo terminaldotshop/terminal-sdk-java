@@ -14,6 +14,7 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 import shop.terminal.api.client.okhttp.OkHttpClient
 import shop.terminal.api.core.RequestOptions
+import shop.terminal.api.core.Sleeper
 import shop.terminal.api.errors.TerminalRetryableException
 
 @WireMockTest
@@ -294,12 +295,14 @@ internal class RetryingHttpClientTest {
                 .httpClient(failingHttpClient)
                 .maxRetries(2)
                 .sleeper(
-                    object : RetryingHttpClient.Sleeper {
+                    object : Sleeper {
 
                         override fun sleep(duration: Duration) {}
 
                         override fun sleepAsync(duration: Duration): CompletableFuture<Void> =
                             CompletableFuture.completedFuture(null)
+
+                        override fun close() {}
                     }
                 )
                 .build()
@@ -333,12 +336,14 @@ internal class RetryingHttpClientTest {
             .httpClient(httpClient)
             // Use a no-op `Sleeper` to make the test fast.
             .sleeper(
-                object : RetryingHttpClient.Sleeper {
+                object : Sleeper {
 
                     override fun sleep(duration: Duration) {}
 
                     override fun sleepAsync(duration: Duration): CompletableFuture<Void> =
                         CompletableFuture.completedFuture(null)
+
+                    override fun close() {}
                 }
             )
 

@@ -110,7 +110,7 @@ class TerminalClientAsyncImpl(private val clientOptions: ClientOptions) : Termin
 
     override fun view(): ViewServiceAsync = view
 
-    override fun close() = clientOptions.httpClient.close()
+    override fun close() = clientOptions.close()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         TerminalClientAsync.WithRawResponse {

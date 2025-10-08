@@ -1,7 +1,14 @@
 rootProject.name = "terminal-java-root"
 
-include("terminal-java")
-include("terminal-java-client-okhttp")
-include("terminal-java-core")
-include("terminal-java-proguard-test")
-include("terminal-java-example")
+val projectNames = rootDir.listFiles()
+    ?.asSequence()
+    .orEmpty()
+    .filter { file ->
+        file.isDirectory &&
+        file.name.startsWith("terminal-java") &&
+        file.listFiles()?.asSequence().orEmpty().any { it.name == "build.gradle.kts" }
+    }
+    .map { it.name }
+    .toList()
+println("projects: $projectNames")
+projectNames.forEach { include(it) }
