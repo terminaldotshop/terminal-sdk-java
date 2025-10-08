@@ -17,6 +17,7 @@ import shop.terminal.api.core.checkRequired
 import shop.terminal.api.errors.TerminalInvalidDataException
 
 class TokenCreateResponse
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val data: JsonField<Data>,
     private val additionalProperties: MutableMap<String, JsonValue>,
@@ -149,6 +150,7 @@ private constructor(
     @JvmSynthetic internal fun validity(): Int = (data.asKnown().getOrNull()?.validity() ?: 0)
 
     class Data
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val id: JsonField<String>,
         private val token: JsonField<String>,
@@ -334,12 +336,13 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is Data && id == other.id && token == other.token && additionalProperties == other.additionalProperties /* spotless:on */
+            return other is Data &&
+                id == other.id &&
+                token == other.token &&
+                additionalProperties == other.additionalProperties
         }
 
-        /* spotless:off */
         private val hashCode: Int by lazy { Objects.hash(id, token, additionalProperties) }
-        /* spotless:on */
 
         override fun hashCode(): Int = hashCode
 
@@ -352,12 +355,12 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is TokenCreateResponse && data == other.data && additionalProperties == other.additionalProperties /* spotless:on */
+        return other is TokenCreateResponse &&
+            data == other.data &&
+            additionalProperties == other.additionalProperties
     }
 
-    /* spotless:off */
     private val hashCode: Int by lazy { Objects.hash(data, additionalProperties) }
-    /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 

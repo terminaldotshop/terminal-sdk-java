@@ -17,6 +17,7 @@ import shop.terminal.api.core.checkRequired
 import shop.terminal.api.errors.TerminalInvalidDataException
 
 class ProfileMeResponse
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val data: JsonField<Profile>,
     private val additionalProperties: MutableMap<String, JsonValue>,
@@ -156,12 +157,12 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is ProfileMeResponse && data == other.data && additionalProperties == other.additionalProperties /* spotless:on */
+        return other is ProfileMeResponse &&
+            data == other.data &&
+            additionalProperties == other.additionalProperties
     }
 
-    /* spotless:off */
     private val hashCode: Int by lazy { Objects.hash(data, additionalProperties) }
-    /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 
