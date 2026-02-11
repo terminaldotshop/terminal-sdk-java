@@ -34,18 +34,14 @@ interface SubscriptionService {
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): SubscriptionService
 
     /** Create a subscription for the current user. */
-    fun create(): SubscriptionCreateResponse = create(SubscriptionCreateParams.none())
+    fun create(params: SubscriptionCreateParams): SubscriptionCreateResponse =
+        create(params, RequestOptions.none())
 
     /** @see create */
     fun create(
-        params: SubscriptionCreateParams = SubscriptionCreateParams.none(),
+        params: SubscriptionCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): SubscriptionCreateResponse
-
-    /** @see create */
-    fun create(
-        params: SubscriptionCreateParams = SubscriptionCreateParams.none()
-    ): SubscriptionCreateResponse = create(params, RequestOptions.none())
 
     /** @see create */
     fun create(
@@ -60,10 +56,6 @@ interface SubscriptionService {
     /** @see create */
     fun create(subscription: Subscription): SubscriptionCreateResponse =
         create(subscription, RequestOptions.none())
-
-    /** @see create */
-    fun create(requestOptions: RequestOptions): SubscriptionCreateResponse =
-        create(SubscriptionCreateParams.none(), requestOptions)
 
     /** Update card, address, or interval for an existing subscription. */
     fun update(id: String): SubscriptionUpdateResponse = update(id, SubscriptionUpdateParams.none())
@@ -192,21 +184,15 @@ interface SubscriptionService {
          * [SubscriptionService.create].
          */
         @MustBeClosed
-        fun create(): HttpResponseFor<SubscriptionCreateResponse> =
-            create(SubscriptionCreateParams.none())
+        fun create(params: SubscriptionCreateParams): HttpResponseFor<SubscriptionCreateResponse> =
+            create(params, RequestOptions.none())
 
         /** @see create */
         @MustBeClosed
         fun create(
-            params: SubscriptionCreateParams = SubscriptionCreateParams.none(),
+            params: SubscriptionCreateParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<SubscriptionCreateResponse>
-
-        /** @see create */
-        @MustBeClosed
-        fun create(
-            params: SubscriptionCreateParams = SubscriptionCreateParams.none()
-        ): HttpResponseFor<SubscriptionCreateResponse> = create(params, RequestOptions.none())
 
         /** @see create */
         @MustBeClosed
@@ -223,11 +209,6 @@ interface SubscriptionService {
         @MustBeClosed
         fun create(subscription: Subscription): HttpResponseFor<SubscriptionCreateResponse> =
             create(subscription, RequestOptions.none())
-
-        /** @see create */
-        @MustBeClosed
-        fun create(requestOptions: RequestOptions): HttpResponseFor<SubscriptionCreateResponse> =
-            create(SubscriptionCreateParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `put /subscription/{id}`, but is otherwise the same as

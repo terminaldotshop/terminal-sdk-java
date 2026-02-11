@@ -34,19 +34,14 @@ interface SubscriptionServiceAsync {
     fun withOptions(modifier: Consumer<ClientOptions.Builder>): SubscriptionServiceAsync
 
     /** Create a subscription for the current user. */
-    fun create(): CompletableFuture<SubscriptionCreateResponse> =
-        create(SubscriptionCreateParams.none())
+    fun create(params: SubscriptionCreateParams): CompletableFuture<SubscriptionCreateResponse> =
+        create(params, RequestOptions.none())
 
     /** @see create */
     fun create(
-        params: SubscriptionCreateParams = SubscriptionCreateParams.none(),
+        params: SubscriptionCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<SubscriptionCreateResponse>
-
-    /** @see create */
-    fun create(
-        params: SubscriptionCreateParams = SubscriptionCreateParams.none()
-    ): CompletableFuture<SubscriptionCreateResponse> = create(params, RequestOptions.none())
 
     /** @see create */
     fun create(
@@ -61,10 +56,6 @@ interface SubscriptionServiceAsync {
     /** @see create */
     fun create(subscription: Subscription): CompletableFuture<SubscriptionCreateResponse> =
         create(subscription, RequestOptions.none())
-
-    /** @see create */
-    fun create(requestOptions: RequestOptions): CompletableFuture<SubscriptionCreateResponse> =
-        create(SubscriptionCreateParams.none(), requestOptions)
 
     /** Update card, address, or interval for an existing subscription. */
     fun update(id: String): CompletableFuture<SubscriptionUpdateResponse> =
@@ -208,20 +199,16 @@ interface SubscriptionServiceAsync {
          * Returns a raw HTTP response for `post /subscription`, but is otherwise the same as
          * [SubscriptionServiceAsync.create].
          */
-        fun create(): CompletableFuture<HttpResponseFor<SubscriptionCreateResponse>> =
-            create(SubscriptionCreateParams.none())
-
-        /** @see create */
         fun create(
-            params: SubscriptionCreateParams = SubscriptionCreateParams.none(),
-            requestOptions: RequestOptions = RequestOptions.none(),
-        ): CompletableFuture<HttpResponseFor<SubscriptionCreateResponse>>
-
-        /** @see create */
-        fun create(
-            params: SubscriptionCreateParams = SubscriptionCreateParams.none()
+            params: SubscriptionCreateParams
         ): CompletableFuture<HttpResponseFor<SubscriptionCreateResponse>> =
             create(params, RequestOptions.none())
+
+        /** @see create */
+        fun create(
+            params: SubscriptionCreateParams,
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): CompletableFuture<HttpResponseFor<SubscriptionCreateResponse>>
 
         /** @see create */
         fun create(
@@ -238,12 +225,6 @@ interface SubscriptionServiceAsync {
             subscription: Subscription
         ): CompletableFuture<HttpResponseFor<SubscriptionCreateResponse>> =
             create(subscription, RequestOptions.none())
-
-        /** @see create */
-        fun create(
-            requestOptions: RequestOptions
-        ): CompletableFuture<HttpResponseFor<SubscriptionCreateResponse>> =
-            create(SubscriptionCreateParams.none(), requestOptions)
 
         /**
          * Returns a raw HTTP response for `put /subscription/{id}`, but is otherwise the same as
