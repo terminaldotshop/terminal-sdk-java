@@ -7,6 +7,7 @@ import kotlin.jvm.optionals.getOrNull
 import shop.terminal.api.core.JsonValue
 import shop.terminal.api.core.checkRequired
 import shop.terminal.api.core.http.Headers
+import shop.terminal.api.core.jsonMapper
 
 class InternalServerException
 private constructor(
@@ -14,7 +15,11 @@ private constructor(
     private val headers: Headers,
     private val body: JsonValue,
     cause: Throwable?,
-) : TerminalServiceException("$statusCode: $body", cause) {
+) :
+    TerminalServiceException(
+        "$statusCode: ${if (body.isMissing()) "Unknown" else jsonMapper().writeValueAsString(body)}",
+        cause,
+    ) {
 
     override fun statusCode(): Int = statusCode
 
