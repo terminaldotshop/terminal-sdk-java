@@ -7,10 +7,14 @@ import kotlin.jvm.optionals.getOrNull
 import shop.terminal.api.core.JsonValue
 import shop.terminal.api.core.checkRequired
 import shop.terminal.api.core.http.Headers
+import shop.terminal.api.core.jsonMapper
 
 class UnauthorizedException
 private constructor(private val headers: Headers, private val body: JsonValue, cause: Throwable?) :
-    TerminalServiceException("401: $body", cause) {
+    TerminalServiceException(
+        "401: ${if (body.isMissing()) "Unknown" else jsonMapper().writeValueAsString(body)}",
+        cause,
+    ) {
 
     override fun statusCode(): Int = 401
 
