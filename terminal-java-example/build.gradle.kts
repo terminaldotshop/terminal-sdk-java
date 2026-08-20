@@ -17,5 +17,12 @@ tasks.withType<JavaCompile>().configureEach {
 }
 
 application {
-    mainClass = "shop.terminal.api.example.Main"
+    // Use `./gradlew :terminal-java-example:run` to run `Main`
+    // Use `./gradlew :terminal-java-example:run -Pexample=Something` to run `SomethingExample`
+    mainClass = "shop.terminal.api.example.${
+        if (project.hasProperty("example"))
+            "${project.property("example")}Example"
+        else
+            "Main"
+    }"
 }

@@ -3,6 +3,8 @@
 package shop.terminal.api.services.blocking
 
 import com.google.errorprone.annotations.MustBeClosed
+import java.util.function.Consumer
+import shop.terminal.api.core.ClientOptions
 import shop.terminal.api.core.RequestOptions
 import shop.terminal.api.core.http.HttpResponseFor
 import shop.terminal.api.models.address.AddressCreateParams
@@ -21,11 +23,18 @@ interface AddressService {
      */
     fun withRawResponse(): WithRawResponse
 
+    /**
+     * Returns a view of this service with the given option modifications applied.
+     *
+     * The original service is not modified.
+     */
+    fun withOptions(modifier: Consumer<ClientOptions.Builder>): AddressService
+
     /** Create and add a shipping address to the current user. */
     fun create(params: AddressCreateParams): AddressCreateResponse =
         create(params, RequestOptions.none())
 
-    /** @see [create] */
+    /** @see create */
     fun create(
         params: AddressCreateParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -34,41 +43,86 @@ interface AddressService {
     /** Get the shipping addresses associated with the current user. */
     fun list(): AddressListResponse = list(AddressListParams.none())
 
-    /** @see [list] */
+    /** @see list */
     fun list(
         params: AddressListParams = AddressListParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): AddressListResponse
 
-    /** @see [list] */
+    /** @see list */
     fun list(params: AddressListParams = AddressListParams.none()): AddressListResponse =
         list(params, RequestOptions.none())
 
-    /** @see [list] */
+    /** @see list */
     fun list(requestOptions: RequestOptions): AddressListResponse =
         list(AddressListParams.none(), requestOptions)
 
     /** Delete a shipping address from the current user. */
-    fun delete(params: AddressDeleteParams): AddressDeleteResponse =
-        delete(params, RequestOptions.none())
+    fun delete(id: String): AddressDeleteResponse = delete(id, AddressDeleteParams.none())
 
-    /** @see [delete] */
+    /** @see delete */
+    fun delete(
+        id: String,
+        params: AddressDeleteParams = AddressDeleteParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): AddressDeleteResponse = delete(params.toBuilder().id(id).build(), requestOptions)
+
+    /** @see delete */
+    fun delete(
+        id: String,
+        params: AddressDeleteParams = AddressDeleteParams.none(),
+    ): AddressDeleteResponse = delete(id, params, RequestOptions.none())
+
+    /** @see delete */
     fun delete(
         params: AddressDeleteParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): AddressDeleteResponse
 
-    /** Get the shipping address with the given ID. */
-    fun get(params: AddressGetParams): AddressGetResponse = get(params, RequestOptions.none())
+    /** @see delete */
+    fun delete(params: AddressDeleteParams): AddressDeleteResponse =
+        delete(params, RequestOptions.none())
 
-    /** @see [get] */
+    /** @see delete */
+    fun delete(id: String, requestOptions: RequestOptions): AddressDeleteResponse =
+        delete(id, AddressDeleteParams.none(), requestOptions)
+
+    /** Get the shipping address with the given ID. */
+    fun get(id: String): AddressGetResponse = get(id, AddressGetParams.none())
+
+    /** @see get */
+    fun get(
+        id: String,
+        params: AddressGetParams = AddressGetParams.none(),
+        requestOptions: RequestOptions = RequestOptions.none(),
+    ): AddressGetResponse = get(params.toBuilder().id(id).build(), requestOptions)
+
+    /** @see get */
+    fun get(id: String, params: AddressGetParams = AddressGetParams.none()): AddressGetResponse =
+        get(id, params, RequestOptions.none())
+
+    /** @see get */
     fun get(
         params: AddressGetParams,
         requestOptions: RequestOptions = RequestOptions.none(),
     ): AddressGetResponse
 
+    /** @see get */
+    fun get(params: AddressGetParams): AddressGetResponse = get(params, RequestOptions.none())
+
+    /** @see get */
+    fun get(id: String, requestOptions: RequestOptions): AddressGetResponse =
+        get(id, AddressGetParams.none(), requestOptions)
+
     /** A view of [AddressService] that provides access to raw HTTP responses for each method. */
     interface WithRawResponse {
+
+        /**
+         * Returns a view of this service with the given option modifications applied.
+         *
+         * The original service is not modified.
+         */
+        fun withOptions(modifier: Consumer<ClientOptions.Builder>): AddressService.WithRawResponse
 
         /**
          * Returns a raw HTTP response for `post /address`, but is otherwise the same as
@@ -78,7 +132,7 @@ interface AddressService {
         fun create(params: AddressCreateParams): HttpResponseFor<AddressCreateResponse> =
             create(params, RequestOptions.none())
 
-        /** @see [create] */
+        /** @see create */
         @MustBeClosed
         fun create(
             params: AddressCreateParams,
@@ -92,20 +146,20 @@ interface AddressService {
         @MustBeClosed
         fun list(): HttpResponseFor<AddressListResponse> = list(AddressListParams.none())
 
-        /** @see [list] */
+        /** @see list */
         @MustBeClosed
         fun list(
             params: AddressListParams = AddressListParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<AddressListResponse>
 
-        /** @see [list] */
+        /** @see list */
         @MustBeClosed
         fun list(
             params: AddressListParams = AddressListParams.none()
         ): HttpResponseFor<AddressListResponse> = list(params, RequestOptions.none())
 
-        /** @see [list] */
+        /** @see list */
         @MustBeClosed
         fun list(requestOptions: RequestOptions): HttpResponseFor<AddressListResponse> =
             list(AddressListParams.none(), requestOptions)
@@ -115,29 +169,83 @@ interface AddressService {
          * [AddressService.delete].
          */
         @MustBeClosed
-        fun delete(params: AddressDeleteParams): HttpResponseFor<AddressDeleteResponse> =
-            delete(params, RequestOptions.none())
+        fun delete(id: String): HttpResponseFor<AddressDeleteResponse> =
+            delete(id, AddressDeleteParams.none())
 
-        /** @see [delete] */
+        /** @see delete */
+        @MustBeClosed
+        fun delete(
+            id: String,
+            params: AddressDeleteParams = AddressDeleteParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<AddressDeleteResponse> =
+            delete(params.toBuilder().id(id).build(), requestOptions)
+
+        /** @see delete */
+        @MustBeClosed
+        fun delete(
+            id: String,
+            params: AddressDeleteParams = AddressDeleteParams.none(),
+        ): HttpResponseFor<AddressDeleteResponse> = delete(id, params, RequestOptions.none())
+
+        /** @see delete */
         @MustBeClosed
         fun delete(
             params: AddressDeleteParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<AddressDeleteResponse>
 
+        /** @see delete */
+        @MustBeClosed
+        fun delete(params: AddressDeleteParams): HttpResponseFor<AddressDeleteResponse> =
+            delete(params, RequestOptions.none())
+
+        /** @see delete */
+        @MustBeClosed
+        fun delete(
+            id: String,
+            requestOptions: RequestOptions,
+        ): HttpResponseFor<AddressDeleteResponse> =
+            delete(id, AddressDeleteParams.none(), requestOptions)
+
         /**
          * Returns a raw HTTP response for `get /address/{id}`, but is otherwise the same as
          * [AddressService.get].
          */
         @MustBeClosed
-        fun get(params: AddressGetParams): HttpResponseFor<AddressGetResponse> =
-            get(params, RequestOptions.none())
+        fun get(id: String): HttpResponseFor<AddressGetResponse> = get(id, AddressGetParams.none())
 
-        /** @see [get] */
+        /** @see get */
+        @MustBeClosed
+        fun get(
+            id: String,
+            params: AddressGetParams = AddressGetParams.none(),
+            requestOptions: RequestOptions = RequestOptions.none(),
+        ): HttpResponseFor<AddressGetResponse> =
+            get(params.toBuilder().id(id).build(), requestOptions)
+
+        /** @see get */
+        @MustBeClosed
+        fun get(
+            id: String,
+            params: AddressGetParams = AddressGetParams.none(),
+        ): HttpResponseFor<AddressGetResponse> = get(id, params, RequestOptions.none())
+
+        /** @see get */
         @MustBeClosed
         fun get(
             params: AddressGetParams,
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<AddressGetResponse>
+
+        /** @see get */
+        @MustBeClosed
+        fun get(params: AddressGetParams): HttpResponseFor<AddressGetResponse> =
+            get(params, RequestOptions.none())
+
+        /** @see get */
+        @MustBeClosed
+        fun get(id: String, requestOptions: RequestOptions): HttpResponseFor<AddressGetResponse> =
+            get(id, AddressGetParams.none(), requestOptions)
     }
 }

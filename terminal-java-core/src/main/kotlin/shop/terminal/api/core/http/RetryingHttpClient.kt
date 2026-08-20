@@ -1,3 +1,5 @@
+// File generated from our OpenAPI spec by Stainless.
+
 package shop.terminal.api.core.http
 
 import java.io.IOException
@@ -7,8 +9,6 @@ import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 import java.time.temporal.ChronoUnit
-import java.util.Timer
-import java.util.TimerTask
 import java.util.UUID
 import java.util.concurrent.CompletableFuture
 import java.util.concurrent.ThreadLocalRandom
@@ -16,9 +16,12 @@ import java.util.concurrent.TimeUnit
 import java.util.function.Function
 import kotlin.math.min
 import kotlin.math.pow
+import shop.terminal.api.core.DefaultSleeper
 import shop.terminal.api.core.RequestOptions
+import shop.terminal.api.core.Sleeper
 import shop.terminal.api.core.checkRequired
 import shop.terminal.api.errors.TerminalIoException
+import shop.terminal.api.errors.TerminalRetryableException
 
 class RetryingHttpClient
 private constructor(
@@ -30,10 +33,6 @@ private constructor(
 ) : HttpClient {
 
     override fun execute(request: HttpRequest, requestOptions: RequestOptions): HttpResponse {
-        if (!isRetryable(request) || maxRetries <= 0) {
-            return httpClient.execute(request, requestOptions)
-        }
-
         var modifiedRequest = maybeAddIdempotencyHeader(request)
 
         // Don't send the current retry count in the headers if the caller set their own value.
@@ -45,6 +44,10 @@ private constructor(
         while (true) {
             if (shouldSendRetryCount) {
                 modifiedRequest = setRetryCountHeader(modifiedRequest, retries)
+            }
+
+            if (!isRetryable(modifiedRequest)) {
+                return httpClient.execute(modifiedRequest, requestOptions)
             }
 
             val response =
@@ -74,10 +77,6 @@ private constructor(
         request: HttpRequest,
         requestOptions: RequestOptions,
     ): CompletableFuture<HttpResponse> {
-        if (!isRetryable(request) || maxRetries <= 0) {
-            return httpClient.executeAsync(request, requestOptions)
-        }
-
         val modifiedRequest = maybeAddIdempotencyHeader(request)
 
         // Don't send the current retry count in the headers if the caller set their own value.
@@ -93,8 +92,12 @@ private constructor(
             val requestWithRetryCount =
                 if (shouldSendRetryCount) setRetryCountHeader(request, retries) else request
 
-            return httpClient
-                .executeAsync(requestWithRetryCount, requestOptions)
+            val responseFuture = httpClient.executeAsync(requestWithRetryCount, requestOptions)
+            if (!isRetryable(requestWithRetryCount)) {
+                return responseFuture
+            }
+
+            return responseFuture
                 .handleAsync(
                     fun(
                         response: HttpResponse?,
@@ -129,7 +132,10 @@ private constructor(
         return executeWithRetries(modifiedRequest, requestOptions)
     }
 
-    override fun close() = httpClient.close()
+    override fun close() {
+        httpClient.close()
+        sleeper.close()
+    }
 
     private fun isRetryable(request: HttpRequest): Boolean =
         // Some requests, such as when a request body is being streamed, cannot be retried because
@@ -176,9 +182,10 @@ private constructor(
     }
 
     private fun shouldRetry(throwable: Throwable): Boolean =
-        // Only retry IOException and TerminalIoException, other exceptions are not intended to be
-        // retried.
-        throwable is IOException || throwable is TerminalIoException
+        // Only retry known retryable exceptions, other exceptions are not intended to be retried.
+        throwable is IOException ||
+            throwable is TerminalIoException ||
+            throwable is TerminalRetryableException
 
     private fun getRetryBackoffDuration(retries: Int, response: HttpResponse?): Duration {
         // About the Retry-After header:
@@ -194,7 +201,7 @@ private constructor(
                     ?: headers.values("Retry-After").getOrNull(0)?.let { retryAfter ->
                         retryAfter.toFloatOrNull()?.times(TimeUnit.SECONDS.toNanos(1))
                             ?: try {
-                                ChronoUnit.MILLIS.between(
+                                ChronoUnit.NANOS.between(
                                     OffsetDateTime.now(clock),
                                     OffsetDateTime.parse(
                                         retryAfter,
@@ -207,13 +214,8 @@ private constructor(
                     }
             }
             ?.let { retryAfterNanos ->
-                // If the API asks us to wait a certain amount of time (and it's a reasonable
-                // amount), just
-                // do what it says.
-                val retryAfter = Duration.ofNanos(retryAfterNanos.toLong())
-                if (retryAfter in Duration.ofNanos(0)..Duration.ofMinutes(1)) {
-                    return retryAfter
-                }
+                // If the API asks us to wait a certain amount of time, do what it says.
+                return Duration.ofNanos(retryAfterNanos.toLong())
             }
 
         // Apply exponential backoff, but not more than the max.
@@ -233,33 +235,14 @@ private constructor(
     class Builder internal constructor() {
 
         private var httpClient: HttpClient? = null
-        private var sleeper: Sleeper =
-            object : Sleeper {
-
-                private val timer = Timer("RetryingHttpClient", true)
-
-                override fun sleep(duration: Duration) = Thread.sleep(duration.toMillis())
-
-                override fun sleepAsync(duration: Duration): CompletableFuture<Void> {
-                    val future = CompletableFuture<Void>()
-                    timer.schedule(
-                        object : TimerTask() {
-                            override fun run() {
-                                future.complete(null)
-                            }
-                        },
-                        duration.toMillis(),
-                    )
-                    return future
-                }
-            }
+        private var sleeper: Sleeper? = null
         private var clock: Clock = Clock.systemUTC()
         private var maxRetries: Int = 2
         private var idempotencyHeader: String? = null
 
         fun httpClient(httpClient: HttpClient) = apply { this.httpClient = httpClient }
 
-        @JvmSynthetic internal fun sleeper(sleeper: Sleeper) = apply { this.sleeper = sleeper }
+        fun sleeper(sleeper: Sleeper) = apply { this.sleeper = sleeper }
 
         fun clock(clock: Clock) = apply { this.clock = clock }
 
@@ -270,17 +253,10 @@ private constructor(
         fun build(): HttpClient =
             RetryingHttpClient(
                 checkRequired("httpClient", httpClient),
-                sleeper,
+                sleeper ?: DefaultSleeper(),
                 clock,
                 maxRetries,
                 idempotencyHeader,
             )
-    }
-
-    internal interface Sleeper {
-
-        fun sleep(duration: Duration)
-
-        fun sleepAsync(duration: Duration): CompletableFuture<Void>
     }
 }

@@ -2,6 +2,7 @@
 
 package shop.terminal.api.client
 
+import java.util.function.Consumer
 import shop.terminal.api.core.ClientOptions
 import shop.terminal.api.core.getPackageVersion
 import shop.terminal.api.services.async.AddressServiceAsync
@@ -84,6 +85,9 @@ class TerminalClientAsyncImpl(private val clientOptions: ClientOptions) : Termin
 
     override fun withRawResponse(): TerminalClientAsync.WithRawResponse = withRawResponse
 
+    override fun withOptions(modifier: Consumer<ClientOptions.Builder>): TerminalClientAsync =
+        TerminalClientAsyncImpl(clientOptions.toBuilder().apply(modifier::accept).build())
+
     override fun product(): ProductServiceAsync = product
 
     override fun profile(): ProfileServiceAsync = profile
@@ -106,7 +110,7 @@ class TerminalClientAsyncImpl(private val clientOptions: ClientOptions) : Termin
 
     override fun view(): ViewServiceAsync = view
 
-    override fun close() = clientOptions.httpClient.close()
+    override fun close() = clientOptions.close()
 
     class WithRawResponseImpl internal constructor(private val clientOptions: ClientOptions) :
         TerminalClientAsync.WithRawResponse {
@@ -154,6 +158,13 @@ class TerminalClientAsyncImpl(private val clientOptions: ClientOptions) : Termin
         private val view: ViewServiceAsync.WithRawResponse by lazy {
             ViewServiceAsyncImpl.WithRawResponseImpl(clientOptions)
         }
+
+        override fun withOptions(
+            modifier: Consumer<ClientOptions.Builder>
+        ): TerminalClientAsync.WithRawResponse =
+            TerminalClientAsyncImpl.WithRawResponseImpl(
+                clientOptions.toBuilder().apply(modifier::accept).build()
+            )
 
         override fun product(): ProductServiceAsync.WithRawResponse = product
 

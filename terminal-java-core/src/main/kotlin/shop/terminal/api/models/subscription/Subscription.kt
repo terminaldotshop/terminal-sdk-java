@@ -19,7 +19,6 @@ import java.util.Optional
 import kotlin.jvm.optionals.getOrNull
 import shop.terminal.api.core.BaseDeserializer
 import shop.terminal.api.core.BaseSerializer
-import shop.terminal.api.core.Enum
 import shop.terminal.api.core.ExcludeMissing
 import shop.terminal.api.core.JsonField
 import shop.terminal.api.core.JsonMissing
@@ -31,6 +30,7 @@ import shop.terminal.api.errors.TerminalInvalidDataException
 
 /** Subscription to a Terminal shop product. */
 class Subscription
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val id: JsonField<String>,
     private val addressId: JsonField<String>,
@@ -372,8 +372,8 @@ private constructor(
          */
         fun schedule(schedule: JsonField<Schedule>) = apply { this.schedule = schedule }
 
-        /** Alias for calling [schedule] with `Schedule.ofFixed(fixed)`. */
-        fun schedule(fixed: Schedule.Fixed) = schedule(Schedule.ofFixed(fixed))
+        /** Alias for calling [schedule] with `Schedule.ofFixed()`. */
+        fun scheduleFixed() = schedule(Schedule.ofFixed())
 
         /** Alias for calling [schedule] with `Schedule.ofWeekly(weekly)`. */
         fun schedule(weekly: Schedule.Weekly) = schedule(Schedule.ofWeekly(weekly))
@@ -432,6 +432,14 @@ private constructor(
 
     private var validated: Boolean = false
 
+    /**
+     * Validates that the types of all values in this object match their expected types recursively.
+     *
+     * This method is _not_ forwards compatible with new types from the API for existing fields.
+     *
+     * @throws TerminalInvalidDataException if any value type in this object doesn't match its
+     *   expected type.
+     */
     fun validate(): Subscription = apply {
         if (validated) {
             return@apply
@@ -479,12 +487,12 @@ private constructor(
     @JsonSerialize(using = Schedule.Serializer::class)
     class Schedule
     private constructor(
-        private val fixed: Fixed? = null,
+        private val fixed: JsonValue? = null,
         private val weekly: Weekly? = null,
         private val _json: JsonValue? = null,
     ) {
 
-        fun fixed(): Optional<Fixed> = Optional.ofNullable(fixed)
+        fun fixed(): Optional<JsonValue> = Optional.ofNullable(fixed)
 
         fun weekly(): Optional<Weekly> = Optional.ofNullable(weekly)
 
@@ -492,12 +500,41 @@ private constructor(
 
         fun isWeekly(): Boolean = weekly != null
 
-        fun asFixed(): Fixed = fixed.getOrThrow("fixed")
+        fun asFixed(): JsonValue = fixed.getOrThrow("fixed")
 
         fun asWeekly(): Weekly = weekly.getOrThrow("weekly")
 
         fun _json(): Optional<JsonValue> = Optional.ofNullable(_json)
 
+        /**
+         * Maps this instance's current variant to a value of type [T] using the given [visitor].
+         *
+         * Note that this method is _not_ forwards compatible with new variants from the API, unless
+         * [visitor] overrides [Visitor.unknown]. To handle variants not known to this version of
+         * the SDK gracefully, consider overriding [Visitor.unknown]:
+         * ```java
+         * import java.util.Optional;
+         * import shop.terminal.api.core.JsonValue;
+         *
+         * Optional<String> result = schedule.accept(new Schedule.Visitor<Optional<String>>() {
+         *     @Override
+         *     public Optional<String> visitFixed(JsonValue fixed) {
+         *         return Optional.of(fixed.toString());
+         *     }
+         *
+         *     // ...
+         *
+         *     @Override
+         *     public Optional<String> unknown(JsonValue json) {
+         *         // Or inspect the `json`.
+         *         return Optional.empty();
+         *     }
+         * });
+         * ```
+         *
+         * @throws TerminalInvalidDataException if [Visitor.unknown] is not overridden in [visitor]
+         *   and the current variant is unknown.
+         */
         fun <T> accept(visitor: Visitor<T>): T =
             when {
                 fixed != null -> visitor.visitFixed(fixed)
@@ -507,6 +544,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws TerminalInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): Schedule = apply {
             if (validated) {
                 return@apply
@@ -514,8 +560,14 @@ private constructor(
 
             accept(
                 object : Visitor<Unit> {
-                    override fun visitFixed(fixed: Fixed) {
-                        fixed.validate()
+                    override fun visitFixed(fixed: JsonValue) {
+                        fixed.let {
+                            if (it != JsonValue.from(mapOf("type" to "fixed"))) {
+                                throw TerminalInvalidDataException(
+                                    "'fixed' is invalid, received $it"
+                                )
+                            }
+                        }
                     }
 
                     override fun visitWeekly(weekly: Weekly) {
@@ -544,7 +596,8 @@ private constructor(
         internal fun validity(): Int =
             accept(
                 object : Visitor<Int> {
-                    override fun visitFixed(fixed: Fixed) = fixed.validity()
+                    override fun visitFixed(fixed: JsonValue) =
+                        fixed.let { if (it == JsonValue.from(mapOf("type" to "fixed"))) 1 else 0 }
 
                     override fun visitWeekly(weekly: Weekly) = weekly.validity()
 
@@ -557,10 +610,10 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is Schedule && fixed == other.fixed && weekly == other.weekly /* spotless:on */
+            return other is Schedule && fixed == other.fixed && weekly == other.weekly
         }
 
-        override fun hashCode(): Int = /* spotless:off */ Objects.hash(fixed, weekly) /* spotless:on */
+        override fun hashCode(): Int = Objects.hash(fixed, weekly)
 
         override fun toString(): String =
             when {
@@ -572,7 +625,7 @@ private constructor(
 
         companion object {
 
-            @JvmStatic fun ofFixed(fixed: Fixed) = Schedule(fixed = fixed)
+            @JvmStatic fun ofFixed() = Schedule(fixed = JsonValue.from(mapOf("type" to "fixed")))
 
             @JvmStatic fun ofWeekly(weekly: Weekly) = Schedule(weekly = weekly)
         }
@@ -582,7 +635,7 @@ private constructor(
          */
         interface Visitor<out T> {
 
-            fun visitFixed(fixed: Fixed): T
+            fun visitFixed(fixed: JsonValue): T
 
             fun visitWeekly(weekly: Weekly): T
 
@@ -608,9 +661,9 @@ private constructor(
 
                 val bestMatches =
                     sequenceOf(
-                            tryDeserialize(node, jacksonTypeRef<Fixed>())?.let {
-                                Schedule(fixed = it, _json = json)
-                            },
+                            tryDeserialize(node, jacksonTypeRef<JsonValue>())
+                                ?.let { Schedule(fixed = it, _json = json) }
+                                ?.takeIf { it.isValid() },
                             tryDeserialize(node, jacksonTypeRef<Weekly>())?.let {
                                 Schedule(weekly = it, _json = json)
                             },
@@ -647,291 +700,11 @@ private constructor(
             }
         }
 
-        class Fixed
-        private constructor(
-            private val type: JsonField<Type>,
-            private val additionalProperties: MutableMap<String, JsonValue>,
-        ) {
-
-            @JsonCreator
-            private constructor(
-                @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of()
-            ) : this(type, mutableMapOf())
-
-            /**
-             * @throws TerminalInvalidDataException if the JSON field has an unexpected type or is
-             *   unexpectedly missing or null (e.g. if the server responded with an unexpected
-             *   value).
-             */
-            fun type(): Type = type.getRequired("type")
-
-            /**
-             * Returns the raw JSON value of [type].
-             *
-             * Unlike [type], this method doesn't throw if the JSON field has an unexpected type.
-             */
-            @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
-
-            @JsonAnySetter
-            private fun putAdditionalProperty(key: String, value: JsonValue) {
-                additionalProperties.put(key, value)
-            }
-
-            @JsonAnyGetter
-            @ExcludeMissing
-            fun _additionalProperties(): Map<String, JsonValue> =
-                Collections.unmodifiableMap(additionalProperties)
-
-            fun toBuilder() = Builder().from(this)
-
-            companion object {
-
-                /**
-                 * Returns a mutable builder for constructing an instance of [Fixed].
-                 *
-                 * The following fields are required:
-                 * ```java
-                 * .type()
-                 * ```
-                 */
-                @JvmStatic fun builder() = Builder()
-            }
-
-            /** A builder for [Fixed]. */
-            class Builder internal constructor() {
-
-                private var type: JsonField<Type>? = null
-                private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
-
-                @JvmSynthetic
-                internal fun from(fixed: Fixed) = apply {
-                    type = fixed.type
-                    additionalProperties = fixed.additionalProperties.toMutableMap()
-                }
-
-                fun type(type: Type) = type(JsonField.of(type))
-
-                /**
-                 * Sets [Builder.type] to an arbitrary JSON value.
-                 *
-                 * You should usually call [Builder.type] with a well-typed [Type] value instead.
-                 * This method is primarily for setting the field to an undocumented or not yet
-                 * supported value.
-                 */
-                fun type(type: JsonField<Type>) = apply { this.type = type }
-
-                fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
-                    this.additionalProperties.clear()
-                    putAllAdditionalProperties(additionalProperties)
-                }
-
-                fun putAdditionalProperty(key: String, value: JsonValue) = apply {
-                    additionalProperties.put(key, value)
-                }
-
-                fun putAllAdditionalProperties(additionalProperties: Map<String, JsonValue>) =
-                    apply {
-                        this.additionalProperties.putAll(additionalProperties)
-                    }
-
-                fun removeAdditionalProperty(key: String) = apply {
-                    additionalProperties.remove(key)
-                }
-
-                fun removeAllAdditionalProperties(keys: Set<String>) = apply {
-                    keys.forEach(::removeAdditionalProperty)
-                }
-
-                /**
-                 * Returns an immutable instance of [Fixed].
-                 *
-                 * Further updates to this [Builder] will not mutate the returned instance.
-                 *
-                 * The following fields are required:
-                 * ```java
-                 * .type()
-                 * ```
-                 *
-                 * @throws IllegalStateException if any required field is unset.
-                 */
-                fun build(): Fixed =
-                    Fixed(checkRequired("type", type), additionalProperties.toMutableMap())
-            }
-
-            private var validated: Boolean = false
-
-            fun validate(): Fixed = apply {
-                if (validated) {
-                    return@apply
-                }
-
-                type().validate()
-                validated = true
-            }
-
-            fun isValid(): Boolean =
-                try {
-                    validate()
-                    true
-                } catch (e: TerminalInvalidDataException) {
-                    false
-                }
-
-            /**
-             * Returns a score indicating how many valid values are contained in this object
-             * recursively.
-             *
-             * Used for best match union deserialization.
-             */
-            @JvmSynthetic
-            internal fun validity(): Int = (type.asKnown().getOrNull()?.validity() ?: 0)
-
-            class Type @JsonCreator private constructor(private val value: JsonField<String>) :
-                Enum {
-
-                /**
-                 * Returns this class instance's raw value.
-                 *
-                 * This is usually only useful if this instance was deserialized from data that
-                 * doesn't match any known member, and you want to know that value. For example, if
-                 * the SDK is on an older version than the API, then the API may respond with new
-                 * members that the SDK is unaware of.
-                 */
-                @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
-
-                companion object {
-
-                    @JvmField val FIXED = of("fixed")
-
-                    @JvmStatic fun of(value: String) = Type(JsonField.of(value))
-                }
-
-                /** An enum containing [Type]'s known values. */
-                enum class Known {
-                    FIXED
-                }
-
-                /**
-                 * An enum containing [Type]'s known values, as well as an [_UNKNOWN] member.
-                 *
-                 * An instance of [Type] can contain an unknown value in a couple of cases:
-                 * - It was deserialized from data that doesn't match any known member. For example,
-                 *   if the SDK is on an older version than the API, then the API may respond with
-                 *   new members that the SDK is unaware of.
-                 * - It was constructed with an arbitrary value using the [of] method.
-                 */
-                enum class Value {
-                    FIXED,
-                    /**
-                     * An enum member indicating that [Type] was instantiated with an unknown value.
-                     */
-                    _UNKNOWN,
-                }
-
-                /**
-                 * Returns an enum member corresponding to this class instance's value, or
-                 * [Value._UNKNOWN] if the class was instantiated with an unknown value.
-                 *
-                 * Use the [known] method instead if you're certain the value is always known or if
-                 * you want to throw for the unknown case.
-                 */
-                fun value(): Value =
-                    when (this) {
-                        FIXED -> Value.FIXED
-                        else -> Value._UNKNOWN
-                    }
-
-                /**
-                 * Returns an enum member corresponding to this class instance's value.
-                 *
-                 * Use the [value] method instead if you're uncertain the value is always known and
-                 * don't want to throw for the unknown case.
-                 *
-                 * @throws TerminalInvalidDataException if this class instance's value is a not a
-                 *   known member.
-                 */
-                fun known(): Known =
-                    when (this) {
-                        FIXED -> Known.FIXED
-                        else -> throw TerminalInvalidDataException("Unknown Type: $value")
-                    }
-
-                /**
-                 * Returns this class instance's primitive wire representation.
-                 *
-                 * This differs from the [toString] method because that method is primarily for
-                 * debugging and generally doesn't throw.
-                 *
-                 * @throws TerminalInvalidDataException if this class instance's value does not have
-                 *   the expected primitive type.
-                 */
-                fun asString(): String =
-                    _value().asString().orElseThrow {
-                        TerminalInvalidDataException("Value is not a String")
-                    }
-
-                private var validated: Boolean = false
-
-                fun validate(): Type = apply {
-                    if (validated) {
-                        return@apply
-                    }
-
-                    known()
-                    validated = true
-                }
-
-                fun isValid(): Boolean =
-                    try {
-                        validate()
-                        true
-                    } catch (e: TerminalInvalidDataException) {
-                        false
-                    }
-
-                /**
-                 * Returns a score indicating how many valid values are contained in this object
-                 * recursively.
-                 *
-                 * Used for best match union deserialization.
-                 */
-                @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-                override fun equals(other: Any?): Boolean {
-                    if (this === other) {
-                        return true
-                    }
-
-                    return /* spotless:off */ other is Type && value == other.value /* spotless:on */
-                }
-
-                override fun hashCode() = value.hashCode()
-
-                override fun toString() = value.toString()
-            }
-
-            override fun equals(other: Any?): Boolean {
-                if (this === other) {
-                    return true
-                }
-
-                return /* spotless:off */ other is Fixed && type == other.type && additionalProperties == other.additionalProperties /* spotless:on */
-            }
-
-            /* spotless:off */
-            private val hashCode: Int by lazy { Objects.hash(type, additionalProperties) }
-            /* spotless:on */
-
-            override fun hashCode(): Int = hashCode
-
-            override fun toString() =
-                "Fixed{type=$type, additionalProperties=$additionalProperties}"
-        }
-
         class Weekly
+        @JsonCreator(mode = JsonCreator.Mode.DISABLED)
         private constructor(
             private val interval: JsonField<Long>,
-            private val type: JsonField<Type>,
+            private val type: JsonValue,
             private val additionalProperties: MutableMap<String, JsonValue>,
         ) {
 
@@ -940,7 +713,7 @@ private constructor(
                 @JsonProperty("interval")
                 @ExcludeMissing
                 interval: JsonField<Long> = JsonMissing.of(),
-                @JsonProperty("type") @ExcludeMissing type: JsonField<Type> = JsonMissing.of(),
+                @JsonProperty("type") @ExcludeMissing type: JsonValue = JsonMissing.of(),
             ) : this(interval, type, mutableMapOf())
 
             /**
@@ -951,11 +724,15 @@ private constructor(
             fun interval(): Long = interval.getRequired("interval")
 
             /**
-             * @throws TerminalInvalidDataException if the JSON field has an unexpected type or is
-             *   unexpectedly missing or null (e.g. if the server responded with an unexpected
-             *   value).
+             * Expected to always return the following:
+             * ```java
+             * JsonValue.from("weekly")
+             * ```
+             *
+             * However, this method can be useful for debugging and logging (e.g. if the server
+             * responded with an unexpected value).
              */
-            fun type(): Type = type.getRequired("type")
+            @JsonProperty("type") @ExcludeMissing fun _type(): JsonValue = type
 
             /**
              * Returns the raw JSON value of [interval].
@@ -964,13 +741,6 @@ private constructor(
              * type.
              */
             @JsonProperty("interval") @ExcludeMissing fun _interval(): JsonField<Long> = interval
-
-            /**
-             * Returns the raw JSON value of [type].
-             *
-             * Unlike [type], this method doesn't throw if the JSON field has an unexpected type.
-             */
-            @JsonProperty("type") @ExcludeMissing fun _type(): JsonField<Type> = type
 
             @JsonAnySetter
             private fun putAdditionalProperty(key: String, value: JsonValue) {
@@ -992,7 +762,6 @@ private constructor(
                  * The following fields are required:
                  * ```java
                  * .interval()
-                 * .type()
                  * ```
                  */
                 @JvmStatic fun builder() = Builder()
@@ -1002,7 +771,7 @@ private constructor(
             class Builder internal constructor() {
 
                 private var interval: JsonField<Long>? = null
-                private var type: JsonField<Type>? = null
+                private var type: JsonValue = JsonValue.from("weekly")
                 private var additionalProperties: MutableMap<String, JsonValue> = mutableMapOf()
 
                 @JvmSynthetic
@@ -1023,16 +792,19 @@ private constructor(
                  */
                 fun interval(interval: JsonField<Long>) = apply { this.interval = interval }
 
-                fun type(type: Type) = type(JsonField.of(type))
-
                 /**
-                 * Sets [Builder.type] to an arbitrary JSON value.
+                 * Sets the field to an arbitrary JSON value.
                  *
-                 * You should usually call [Builder.type] with a well-typed [Type] value instead.
+                 * It is usually unnecessary to call this method because the field defaults to the
+                 * following:
+                 * ```java
+                 * JsonValue.from("weekly")
+                 * ```
+                 *
                  * This method is primarily for setting the field to an undocumented or not yet
                  * supported value.
                  */
-                fun type(type: JsonField<Type>) = apply { this.type = type }
+                fun type(type: JsonValue) = apply { this.type = type }
 
                 fun additionalProperties(additionalProperties: Map<String, JsonValue>) = apply {
                     this.additionalProperties.clear()
@@ -1064,7 +836,6 @@ private constructor(
                  * The following fields are required:
                  * ```java
                  * .interval()
-                 * .type()
                  * ```
                  *
                  * @throws IllegalStateException if any required field is unset.
@@ -1072,20 +843,34 @@ private constructor(
                 fun build(): Weekly =
                     Weekly(
                         checkRequired("interval", interval),
-                        checkRequired("type", type),
+                        type,
                         additionalProperties.toMutableMap(),
                     )
             }
 
             private var validated: Boolean = false
 
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws TerminalInvalidDataException if any value type in this object doesn't match
+             *   its expected type.
+             */
             fun validate(): Weekly = apply {
                 if (validated) {
                     return@apply
                 }
 
                 interval()
-                type().validate()
+                _type().let {
+                    if (it != JsonValue.from("weekly")) {
+                        throw TerminalInvalidDataException("'type' is invalid, received $it")
+                    }
+                }
                 validated = true
             }
 
@@ -1106,143 +891,20 @@ private constructor(
             @JvmSynthetic
             internal fun validity(): Int =
                 (if (interval.asKnown().isPresent) 1 else 0) +
-                    (type.asKnown().getOrNull()?.validity() ?: 0)
-
-            class Type @JsonCreator private constructor(private val value: JsonField<String>) :
-                Enum {
-
-                /**
-                 * Returns this class instance's raw value.
-                 *
-                 * This is usually only useful if this instance was deserialized from data that
-                 * doesn't match any known member, and you want to know that value. For example, if
-                 * the SDK is on an older version than the API, then the API may respond with new
-                 * members that the SDK is unaware of.
-                 */
-                @com.fasterxml.jackson.annotation.JsonValue fun _value(): JsonField<String> = value
-
-                companion object {
-
-                    @JvmField val WEEKLY = of("weekly")
-
-                    @JvmStatic fun of(value: String) = Type(JsonField.of(value))
-                }
-
-                /** An enum containing [Type]'s known values. */
-                enum class Known {
-                    WEEKLY
-                }
-
-                /**
-                 * An enum containing [Type]'s known values, as well as an [_UNKNOWN] member.
-                 *
-                 * An instance of [Type] can contain an unknown value in a couple of cases:
-                 * - It was deserialized from data that doesn't match any known member. For example,
-                 *   if the SDK is on an older version than the API, then the API may respond with
-                 *   new members that the SDK is unaware of.
-                 * - It was constructed with an arbitrary value using the [of] method.
-                 */
-                enum class Value {
-                    WEEKLY,
-                    /**
-                     * An enum member indicating that [Type] was instantiated with an unknown value.
-                     */
-                    _UNKNOWN,
-                }
-
-                /**
-                 * Returns an enum member corresponding to this class instance's value, or
-                 * [Value._UNKNOWN] if the class was instantiated with an unknown value.
-                 *
-                 * Use the [known] method instead if you're certain the value is always known or if
-                 * you want to throw for the unknown case.
-                 */
-                fun value(): Value =
-                    when (this) {
-                        WEEKLY -> Value.WEEKLY
-                        else -> Value._UNKNOWN
-                    }
-
-                /**
-                 * Returns an enum member corresponding to this class instance's value.
-                 *
-                 * Use the [value] method instead if you're uncertain the value is always known and
-                 * don't want to throw for the unknown case.
-                 *
-                 * @throws TerminalInvalidDataException if this class instance's value is a not a
-                 *   known member.
-                 */
-                fun known(): Known =
-                    when (this) {
-                        WEEKLY -> Known.WEEKLY
-                        else -> throw TerminalInvalidDataException("Unknown Type: $value")
-                    }
-
-                /**
-                 * Returns this class instance's primitive wire representation.
-                 *
-                 * This differs from the [toString] method because that method is primarily for
-                 * debugging and generally doesn't throw.
-                 *
-                 * @throws TerminalInvalidDataException if this class instance's value does not have
-                 *   the expected primitive type.
-                 */
-                fun asString(): String =
-                    _value().asString().orElseThrow {
-                        TerminalInvalidDataException("Value is not a String")
-                    }
-
-                private var validated: Boolean = false
-
-                fun validate(): Type = apply {
-                    if (validated) {
-                        return@apply
-                    }
-
-                    known()
-                    validated = true
-                }
-
-                fun isValid(): Boolean =
-                    try {
-                        validate()
-                        true
-                    } catch (e: TerminalInvalidDataException) {
-                        false
-                    }
-
-                /**
-                 * Returns a score indicating how many valid values are contained in this object
-                 * recursively.
-                 *
-                 * Used for best match union deserialization.
-                 */
-                @JvmSynthetic internal fun validity(): Int = if (value() == Value._UNKNOWN) 0 else 1
-
-                override fun equals(other: Any?): Boolean {
-                    if (this === other) {
-                        return true
-                    }
-
-                    return /* spotless:off */ other is Type && value == other.value /* spotless:on */
-                }
-
-                override fun hashCode() = value.hashCode()
-
-                override fun toString() = value.toString()
-            }
+                    type.let { if (it == JsonValue.from("weekly")) 1 else 0 }
 
             override fun equals(other: Any?): Boolean {
                 if (this === other) {
                     return true
                 }
 
-                return /* spotless:off */ other is Weekly && interval == other.interval && type == other.type && additionalProperties == other.additionalProperties /* spotless:on */
+                return other is Weekly &&
+                    interval == other.interval &&
+                    type == other.type &&
+                    additionalProperties == other.additionalProperties
             }
 
-            /* spotless:off */
             private val hashCode: Int by lazy { Objects.hash(interval, type, additionalProperties) }
-            /* spotless:on */
 
             override fun hashCode(): Int = hashCode
 
@@ -1256,12 +918,33 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is Subscription && id == other.id && addressId == other.addressId && cardId == other.cardId && created == other.created && price == other.price && productVariantId == other.productVariantId && quantity == other.quantity && next == other.next && schedule == other.schedule && additionalProperties == other.additionalProperties /* spotless:on */
+        return other is Subscription &&
+            id == other.id &&
+            addressId == other.addressId &&
+            cardId == other.cardId &&
+            created == other.created &&
+            price == other.price &&
+            productVariantId == other.productVariantId &&
+            quantity == other.quantity &&
+            next == other.next &&
+            schedule == other.schedule &&
+            additionalProperties == other.additionalProperties
     }
 
-    /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(id, addressId, cardId, created, price, productVariantId, quantity, next, schedule, additionalProperties) }
-    /* spotless:on */
+    private val hashCode: Int by lazy {
+        Objects.hash(
+            id,
+            addressId,
+            cardId,
+            created,
+            price,
+            productVariantId,
+            quantity,
+            next,
+            schedule,
+            additionalProperties,
+        )
+    }
 
     override fun hashCode(): Int = hashCode
 

@@ -19,6 +19,7 @@ import shop.terminal.api.errors.TerminalInvalidDataException
 
 /** A Terminal shop user's profile. (We have users, btw.) */
 class Profile
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val user: JsonField<User>,
     private val additionalProperties: MutableMap<String, JsonValue>,
@@ -129,6 +130,14 @@ private constructor(
 
     private var validated: Boolean = false
 
+    /**
+     * Validates that the types of all values in this object match their expected types recursively.
+     *
+     * This method is _not_ forwards compatible with new types from the API for existing fields.
+     *
+     * @throws TerminalInvalidDataException if any value type in this object doesn't match its
+     *   expected type.
+     */
     fun validate(): Profile = apply {
         if (validated) {
             return@apply
@@ -155,6 +164,7 @@ private constructor(
 
     /** A Terminal shop user. (We have users, btw.) */
     class User
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val id: JsonField<String>,
         private val email: JsonField<String>,
@@ -428,6 +438,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws TerminalInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): User = apply {
             if (validated) {
                 return@apply
@@ -468,12 +487,18 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is User && id == other.id && email == other.email && fingerprint == other.fingerprint && name == other.name && stripeCustomerId == other.stripeCustomerId && additionalProperties == other.additionalProperties /* spotless:on */
+            return other is User &&
+                id == other.id &&
+                email == other.email &&
+                fingerprint == other.fingerprint &&
+                name == other.name &&
+                stripeCustomerId == other.stripeCustomerId &&
+                additionalProperties == other.additionalProperties
         }
 
-        /* spotless:off */
-        private val hashCode: Int by lazy { Objects.hash(id, email, fingerprint, name, stripeCustomerId, additionalProperties) }
-        /* spotless:on */
+        private val hashCode: Int by lazy {
+            Objects.hash(id, email, fingerprint, name, stripeCustomerId, additionalProperties)
+        }
 
         override fun hashCode(): Int = hashCode
 
@@ -486,12 +511,12 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is Profile && user == other.user && additionalProperties == other.additionalProperties /* spotless:on */
+        return other is Profile &&
+            user == other.user &&
+            additionalProperties == other.additionalProperties
     }
 
-    /* spotless:off */
     private val hashCode: Int by lazy { Objects.hash(user, additionalProperties) }
-    /* spotless:on */
 
     override fun hashCode(): Int = hashCode
 

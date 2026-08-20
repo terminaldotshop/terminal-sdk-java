@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import shop.terminal.api.TestServerExtension
 import shop.terminal.api.client.okhttp.TerminalOkHttpClientAsync
-import shop.terminal.api.models.product.ProductGetParams
 
 @ExtendWith(TestServerExtension::class)
 internal class ProductServiceAsyncTest {
@@ -35,10 +34,7 @@ internal class ProductServiceAsyncTest {
                 .build()
         val productServiceAsync = client.product()
 
-        val productFuture =
-            productServiceAsync.get(
-                ProductGetParams.builder().id("prd_XXXXXXXXXXXXXXXXXXXXXXXXX").build()
-            )
+        val productFuture = productServiceAsync.get("prd_XXXXXXXXXXXXXXXXXXXXXXXXX")
 
         val product = productFuture.get()
         product.validate()

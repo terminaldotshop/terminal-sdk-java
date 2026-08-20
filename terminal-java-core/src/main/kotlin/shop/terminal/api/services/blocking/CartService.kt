@@ -3,6 +3,8 @@
 package shop.terminal.api.services.blocking
 
 import com.google.errorprone.annotations.MustBeClosed
+import java.util.function.Consumer
+import shop.terminal.api.core.ClientOptions
 import shop.terminal.api.core.RequestOptions
 import shop.terminal.api.core.http.HttpResponseFor
 import shop.terminal.api.models.cart.CartClearParams
@@ -25,54 +27,61 @@ interface CartService {
      */
     fun withRawResponse(): WithRawResponse
 
+    /**
+     * Returns a view of this service with the given option modifications applied.
+     *
+     * The original service is not modified.
+     */
+    fun withOptions(modifier: Consumer<ClientOptions.Builder>): CartService
+
     /** Clear the current user's cart. */
     fun clear(): CartClearResponse = clear(CartClearParams.none())
 
-    /** @see [clear] */
+    /** @see clear */
     fun clear(
         params: CartClearParams = CartClearParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CartClearResponse
 
-    /** @see [clear] */
+    /** @see clear */
     fun clear(params: CartClearParams = CartClearParams.none()): CartClearResponse =
         clear(params, RequestOptions.none())
 
-    /** @see [clear] */
+    /** @see clear */
     fun clear(requestOptions: RequestOptions): CartClearResponse =
         clear(CartClearParams.none(), requestOptions)
 
     /** Convert the current user's cart to an order. */
     fun convert(): CartConvertResponse = convert(CartConvertParams.none())
 
-    /** @see [convert] */
+    /** @see convert */
     fun convert(
         params: CartConvertParams = CartConvertParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CartConvertResponse
 
-    /** @see [convert] */
+    /** @see convert */
     fun convert(params: CartConvertParams = CartConvertParams.none()): CartConvertResponse =
         convert(params, RequestOptions.none())
 
-    /** @see [convert] */
+    /** @see convert */
     fun convert(requestOptions: RequestOptions): CartConvertResponse =
         convert(CartConvertParams.none(), requestOptions)
 
     /** Get the current user's cart. */
     fun get(): CartGetResponse = get(CartGetParams.none())
 
-    /** @see [get] */
+    /** @see get */
     fun get(
         params: CartGetParams = CartGetParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CartGetResponse
 
-    /** @see [get] */
+    /** @see get */
     fun get(params: CartGetParams = CartGetParams.none()): CartGetResponse =
         get(params, RequestOptions.none())
 
-    /** @see [get] */
+    /** @see get */
     fun get(requestOptions: RequestOptions): CartGetResponse =
         get(CartGetParams.none(), requestOptions)
 
@@ -80,7 +89,7 @@ interface CartService {
     fun setAddress(params: CartSetAddressParams): CartSetAddressResponse =
         setAddress(params, RequestOptions.none())
 
-    /** @see [setAddress] */
+    /** @see setAddress */
     fun setAddress(
         params: CartSetAddressParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -90,7 +99,7 @@ interface CartService {
     fun setCard(params: CartSetCardParams): CartSetCardResponse =
         setCard(params, RequestOptions.none())
 
-    /** @see [setCard] */
+    /** @see setCard */
     fun setCard(
         params: CartSetCardParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -100,7 +109,7 @@ interface CartService {
     fun setItem(params: CartSetItemParams): CartSetItemResponse =
         setItem(params, RequestOptions.none())
 
-    /** @see [setItem] */
+    /** @see setItem */
     fun setItem(
         params: CartSetItemParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -110,26 +119,33 @@ interface CartService {
     interface WithRawResponse {
 
         /**
+         * Returns a view of this service with the given option modifications applied.
+         *
+         * The original service is not modified.
+         */
+        fun withOptions(modifier: Consumer<ClientOptions.Builder>): CartService.WithRawResponse
+
+        /**
          * Returns a raw HTTP response for `delete /cart`, but is otherwise the same as
          * [CartService.clear].
          */
         @MustBeClosed
         fun clear(): HttpResponseFor<CartClearResponse> = clear(CartClearParams.none())
 
-        /** @see [clear] */
+        /** @see clear */
         @MustBeClosed
         fun clear(
             params: CartClearParams = CartClearParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<CartClearResponse>
 
-        /** @see [clear] */
+        /** @see clear */
         @MustBeClosed
         fun clear(
             params: CartClearParams = CartClearParams.none()
         ): HttpResponseFor<CartClearResponse> = clear(params, RequestOptions.none())
 
-        /** @see [clear] */
+        /** @see clear */
         @MustBeClosed
         fun clear(requestOptions: RequestOptions): HttpResponseFor<CartClearResponse> =
             clear(CartClearParams.none(), requestOptions)
@@ -141,20 +157,20 @@ interface CartService {
         @MustBeClosed
         fun convert(): HttpResponseFor<CartConvertResponse> = convert(CartConvertParams.none())
 
-        /** @see [convert] */
+        /** @see convert */
         @MustBeClosed
         fun convert(
             params: CartConvertParams = CartConvertParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<CartConvertResponse>
 
-        /** @see [convert] */
+        /** @see convert */
         @MustBeClosed
         fun convert(
             params: CartConvertParams = CartConvertParams.none()
         ): HttpResponseFor<CartConvertResponse> = convert(params, RequestOptions.none())
 
-        /** @see [convert] */
+        /** @see convert */
         @MustBeClosed
         fun convert(requestOptions: RequestOptions): HttpResponseFor<CartConvertResponse> =
             convert(CartConvertParams.none(), requestOptions)
@@ -165,19 +181,19 @@ interface CartService {
          */
         @MustBeClosed fun get(): HttpResponseFor<CartGetResponse> = get(CartGetParams.none())
 
-        /** @see [get] */
+        /** @see get */
         @MustBeClosed
         fun get(
             params: CartGetParams = CartGetParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): HttpResponseFor<CartGetResponse>
 
-        /** @see [get] */
+        /** @see get */
         @MustBeClosed
         fun get(params: CartGetParams = CartGetParams.none()): HttpResponseFor<CartGetResponse> =
             get(params, RequestOptions.none())
 
-        /** @see [get] */
+        /** @see get */
         @MustBeClosed
         fun get(requestOptions: RequestOptions): HttpResponseFor<CartGetResponse> =
             get(CartGetParams.none(), requestOptions)
@@ -190,7 +206,7 @@ interface CartService {
         fun setAddress(params: CartSetAddressParams): HttpResponseFor<CartSetAddressResponse> =
             setAddress(params, RequestOptions.none())
 
-        /** @see [setAddress] */
+        /** @see setAddress */
         @MustBeClosed
         fun setAddress(
             params: CartSetAddressParams,
@@ -205,7 +221,7 @@ interface CartService {
         fun setCard(params: CartSetCardParams): HttpResponseFor<CartSetCardResponse> =
             setCard(params, RequestOptions.none())
 
-        /** @see [setCard] */
+        /** @see setCard */
         @MustBeClosed
         fun setCard(
             params: CartSetCardParams,
@@ -220,7 +236,7 @@ interface CartService {
         fun setItem(params: CartSetItemParams): HttpResponseFor<CartSetItemResponse> =
             setItem(params, RequestOptions.none())
 
-        /** @see [setItem] */
+        /** @see setItem */
         @MustBeClosed
         fun setItem(
             params: CartSetItemParams,

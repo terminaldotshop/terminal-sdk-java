@@ -2,8 +2,9 @@
 
 package shop.terminal.api.services.async
 
-import com.google.errorprone.annotations.MustBeClosed
 import java.util.concurrent.CompletableFuture
+import java.util.function.Consumer
+import shop.terminal.api.core.ClientOptions
 import shop.terminal.api.core.RequestOptions
 import shop.terminal.api.core.http.HttpResponseFor
 import shop.terminal.api.models.cart.CartClearParams
@@ -26,56 +27,63 @@ interface CartServiceAsync {
      */
     fun withRawResponse(): WithRawResponse
 
+    /**
+     * Returns a view of this service with the given option modifications applied.
+     *
+     * The original service is not modified.
+     */
+    fun withOptions(modifier: Consumer<ClientOptions.Builder>): CartServiceAsync
+
     /** Clear the current user's cart. */
     fun clear(): CompletableFuture<CartClearResponse> = clear(CartClearParams.none())
 
-    /** @see [clear] */
+    /** @see clear */
     fun clear(
         params: CartClearParams = CartClearParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<CartClearResponse>
 
-    /** @see [clear] */
+    /** @see clear */
     fun clear(
         params: CartClearParams = CartClearParams.none()
     ): CompletableFuture<CartClearResponse> = clear(params, RequestOptions.none())
 
-    /** @see [clear] */
+    /** @see clear */
     fun clear(requestOptions: RequestOptions): CompletableFuture<CartClearResponse> =
         clear(CartClearParams.none(), requestOptions)
 
     /** Convert the current user's cart to an order. */
     fun convert(): CompletableFuture<CartConvertResponse> = convert(CartConvertParams.none())
 
-    /** @see [convert] */
+    /** @see convert */
     fun convert(
         params: CartConvertParams = CartConvertParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<CartConvertResponse>
 
-    /** @see [convert] */
+    /** @see convert */
     fun convert(
         params: CartConvertParams = CartConvertParams.none()
     ): CompletableFuture<CartConvertResponse> = convert(params, RequestOptions.none())
 
-    /** @see [convert] */
+    /** @see convert */
     fun convert(requestOptions: RequestOptions): CompletableFuture<CartConvertResponse> =
         convert(CartConvertParams.none(), requestOptions)
 
     /** Get the current user's cart. */
     fun get(): CompletableFuture<CartGetResponse> = get(CartGetParams.none())
 
-    /** @see [get] */
+    /** @see get */
     fun get(
         params: CartGetParams = CartGetParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<CartGetResponse>
 
-    /** @see [get] */
+    /** @see get */
     fun get(params: CartGetParams = CartGetParams.none()): CompletableFuture<CartGetResponse> =
         get(params, RequestOptions.none())
 
-    /** @see [get] */
+    /** @see get */
     fun get(requestOptions: RequestOptions): CompletableFuture<CartGetResponse> =
         get(CartGetParams.none(), requestOptions)
 
@@ -83,7 +91,7 @@ interface CartServiceAsync {
     fun setAddress(params: CartSetAddressParams): CompletableFuture<CartSetAddressResponse> =
         setAddress(params, RequestOptions.none())
 
-    /** @see [setAddress] */
+    /** @see setAddress */
     fun setAddress(
         params: CartSetAddressParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -93,7 +101,7 @@ interface CartServiceAsync {
     fun setCard(params: CartSetCardParams): CompletableFuture<CartSetCardResponse> =
         setCard(params, RequestOptions.none())
 
-    /** @see [setCard] */
+    /** @see setCard */
     fun setCard(
         params: CartSetCardParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -103,7 +111,7 @@ interface CartServiceAsync {
     fun setItem(params: CartSetItemParams): CompletableFuture<CartSetItemResponse> =
         setItem(params, RequestOptions.none())
 
-    /** @see [setItem] */
+    /** @see setItem */
     fun setItem(
         params: CartSetItemParams,
         requestOptions: RequestOptions = RequestOptions.none(),
@@ -113,29 +121,32 @@ interface CartServiceAsync {
     interface WithRawResponse {
 
         /**
+         * Returns a view of this service with the given option modifications applied.
+         *
+         * The original service is not modified.
+         */
+        fun withOptions(modifier: Consumer<ClientOptions.Builder>): CartServiceAsync.WithRawResponse
+
+        /**
          * Returns a raw HTTP response for `delete /cart`, but is otherwise the same as
          * [CartServiceAsync.clear].
          */
-        @MustBeClosed
         fun clear(): CompletableFuture<HttpResponseFor<CartClearResponse>> =
             clear(CartClearParams.none())
 
-        /** @see [clear] */
-        @MustBeClosed
+        /** @see clear */
         fun clear(
             params: CartClearParams = CartClearParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<CartClearResponse>>
 
-        /** @see [clear] */
-        @MustBeClosed
+        /** @see clear */
         fun clear(
             params: CartClearParams = CartClearParams.none()
         ): CompletableFuture<HttpResponseFor<CartClearResponse>> =
             clear(params, RequestOptions.none())
 
-        /** @see [clear] */
-        @MustBeClosed
+        /** @see clear */
         fun clear(
             requestOptions: RequestOptions
         ): CompletableFuture<HttpResponseFor<CartClearResponse>> =
@@ -145,26 +156,22 @@ interface CartServiceAsync {
          * Returns a raw HTTP response for `post /cart/convert`, but is otherwise the same as
          * [CartServiceAsync.convert].
          */
-        @MustBeClosed
         fun convert(): CompletableFuture<HttpResponseFor<CartConvertResponse>> =
             convert(CartConvertParams.none())
 
-        /** @see [convert] */
-        @MustBeClosed
+        /** @see convert */
         fun convert(
             params: CartConvertParams = CartConvertParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<CartConvertResponse>>
 
-        /** @see [convert] */
-        @MustBeClosed
+        /** @see convert */
         fun convert(
             params: CartConvertParams = CartConvertParams.none()
         ): CompletableFuture<HttpResponseFor<CartConvertResponse>> =
             convert(params, RequestOptions.none())
 
-        /** @see [convert] */
-        @MustBeClosed
+        /** @see convert */
         fun convert(
             requestOptions: RequestOptions
         ): CompletableFuture<HttpResponseFor<CartConvertResponse>> =
@@ -174,24 +181,20 @@ interface CartServiceAsync {
          * Returns a raw HTTP response for `get /cart`, but is otherwise the same as
          * [CartServiceAsync.get].
          */
-        @MustBeClosed
         fun get(): CompletableFuture<HttpResponseFor<CartGetResponse>> = get(CartGetParams.none())
 
-        /** @see [get] */
-        @MustBeClosed
+        /** @see get */
         fun get(
             params: CartGetParams = CartGetParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<CartGetResponse>>
 
-        /** @see [get] */
-        @MustBeClosed
+        /** @see get */
         fun get(
             params: CartGetParams = CartGetParams.none()
         ): CompletableFuture<HttpResponseFor<CartGetResponse>> = get(params, RequestOptions.none())
 
-        /** @see [get] */
-        @MustBeClosed
+        /** @see get */
         fun get(
             requestOptions: RequestOptions
         ): CompletableFuture<HttpResponseFor<CartGetResponse>> =
@@ -201,14 +204,12 @@ interface CartServiceAsync {
          * Returns a raw HTTP response for `put /cart/address`, but is otherwise the same as
          * [CartServiceAsync.setAddress].
          */
-        @MustBeClosed
         fun setAddress(
             params: CartSetAddressParams
         ): CompletableFuture<HttpResponseFor<CartSetAddressResponse>> =
             setAddress(params, RequestOptions.none())
 
-        /** @see [setAddress] */
-        @MustBeClosed
+        /** @see setAddress */
         fun setAddress(
             params: CartSetAddressParams,
             requestOptions: RequestOptions = RequestOptions.none(),
@@ -218,14 +219,12 @@ interface CartServiceAsync {
          * Returns a raw HTTP response for `put /cart/card`, but is otherwise the same as
          * [CartServiceAsync.setCard].
          */
-        @MustBeClosed
         fun setCard(
             params: CartSetCardParams
         ): CompletableFuture<HttpResponseFor<CartSetCardResponse>> =
             setCard(params, RequestOptions.none())
 
-        /** @see [setCard] */
-        @MustBeClosed
+        /** @see setCard */
         fun setCard(
             params: CartSetCardParams,
             requestOptions: RequestOptions = RequestOptions.none(),
@@ -235,14 +234,12 @@ interface CartServiceAsync {
          * Returns a raw HTTP response for `put /cart/item`, but is otherwise the same as
          * [CartServiceAsync.setItem].
          */
-        @MustBeClosed
         fun setItem(
             params: CartSetItemParams
         ): CompletableFuture<HttpResponseFor<CartSetItemResponse>> =
             setItem(params, RequestOptions.none())
 
-        /** @see [setItem] */
-        @MustBeClosed
+        /** @see setItem */
         fun setItem(
             params: CartSetItemParams,
             requestOptions: RequestOptions = RequestOptions.none(),

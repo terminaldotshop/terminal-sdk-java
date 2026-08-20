@@ -22,6 +22,7 @@ import shop.terminal.api.errors.TerminalInvalidDataException
 
 /** An order from the Terminal shop. */
 class Order
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val id: JsonField<String>,
     private val amount: JsonField<Amount>,
@@ -346,6 +347,14 @@ private constructor(
 
     private var validated: Boolean = false
 
+    /**
+     * Validates that the types of all values in this object match their expected types recursively.
+     *
+     * This method is _not_ forwards compatible with new types from the API for existing fields.
+     *
+     * @throws TerminalInvalidDataException if any value type in this object doesn't match its
+     *   expected type.
+     */
     fun validate(): Order = apply {
         if (validated) {
             return@apply
@@ -386,6 +395,7 @@ private constructor(
 
     /** The subtotal and shipping amounts of the order. */
     class Amount
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val shipping: JsonField<Long>,
         private val subtotal: JsonField<Long>,
@@ -534,6 +544,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws TerminalInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): Amount = apply {
             if (validated) {
                 return@apply
@@ -568,12 +587,13 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is Amount && shipping == other.shipping && subtotal == other.subtotal && additionalProperties == other.additionalProperties /* spotless:on */
+            return other is Amount &&
+                shipping == other.shipping &&
+                subtotal == other.subtotal &&
+                additionalProperties == other.additionalProperties
         }
 
-        /* spotless:off */
         private val hashCode: Int by lazy { Objects.hash(shipping, subtotal, additionalProperties) }
-        /* spotless:on */
 
         override fun hashCode(): Int = hashCode
 
@@ -582,6 +602,7 @@ private constructor(
     }
 
     class Item
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val id: JsonField<String>,
         private val amount: JsonField<Long>,
@@ -842,6 +863,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws TerminalInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): Item = apply {
             if (validated) {
                 return@apply
@@ -882,12 +912,18 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is Item && id == other.id && amount == other.amount && quantity == other.quantity && description == other.description && productVariantId == other.productVariantId && additionalProperties == other.additionalProperties /* spotless:on */
+            return other is Item &&
+                id == other.id &&
+                amount == other.amount &&
+                quantity == other.quantity &&
+                description == other.description &&
+                productVariantId == other.productVariantId &&
+                additionalProperties == other.additionalProperties
         }
 
-        /* spotless:off */
-        private val hashCode: Int by lazy { Objects.hash(id, amount, quantity, description, productVariantId, additionalProperties) }
-        /* spotless:on */
+        private val hashCode: Int by lazy {
+            Objects.hash(id, amount, quantity, description, productVariantId, additionalProperties)
+        }
 
         override fun hashCode(): Int = hashCode
 
@@ -897,6 +933,7 @@ private constructor(
 
     /** Shipping address of the order. */
     class Shipping
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val city: JsonField<String>,
         private val country: JsonField<String>,
@@ -1245,6 +1282,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws TerminalInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): Shipping = apply {
             if (validated) {
                 return@apply
@@ -1291,12 +1337,31 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is Shipping && city == other.city && country == other.country && name == other.name && street1 == other.street1 && zip == other.zip && phone == other.phone && province == other.province && street2 == other.street2 && additionalProperties == other.additionalProperties /* spotless:on */
+            return other is Shipping &&
+                city == other.city &&
+                country == other.country &&
+                name == other.name &&
+                street1 == other.street1 &&
+                zip == other.zip &&
+                phone == other.phone &&
+                province == other.province &&
+                street2 == other.street2 &&
+                additionalProperties == other.additionalProperties
         }
 
-        /* spotless:off */
-        private val hashCode: Int by lazy { Objects.hash(city, country, name, street1, zip, phone, province, street2, additionalProperties) }
-        /* spotless:on */
+        private val hashCode: Int by lazy {
+            Objects.hash(
+                city,
+                country,
+                name,
+                street1,
+                zip,
+                phone,
+                province,
+                street2,
+                additionalProperties,
+            )
+        }
 
         override fun hashCode(): Int = hashCode
 
@@ -1306,6 +1371,7 @@ private constructor(
 
     /** Tracking information of the order. */
     class Tracking
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val number: JsonField<String>,
         private val service: JsonField<String>,
@@ -1581,6 +1647,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws TerminalInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): Tracking = apply {
             if (validated) {
                 return@apply
@@ -1734,6 +1809,16 @@ private constructor(
 
             private var validated: Boolean = false
 
+            /**
+             * Validates that the types of all values in this object match their expected types
+             * recursively.
+             *
+             * This method is _not_ forwards compatible with new types from the API for existing
+             * fields.
+             *
+             * @throws TerminalInvalidDataException if any value type in this object doesn't match
+             *   its expected type.
+             */
             fun validate(): Status = apply {
                 if (validated) {
                     return@apply
@@ -1764,7 +1849,7 @@ private constructor(
                     return true
                 }
 
-                return /* spotless:off */ other is Status && value == other.value /* spotless:on */
+                return other is Status && value == other.value
             }
 
             override fun hashCode() = value.hashCode()
@@ -1777,12 +1862,27 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is Tracking && number == other.number && service == other.service && status == other.status && statusDetails == other.statusDetails && statusUpdatedAt == other.statusUpdatedAt && url == other.url && additionalProperties == other.additionalProperties /* spotless:on */
+            return other is Tracking &&
+                number == other.number &&
+                service == other.service &&
+                status == other.status &&
+                statusDetails == other.statusDetails &&
+                statusUpdatedAt == other.statusUpdatedAt &&
+                url == other.url &&
+                additionalProperties == other.additionalProperties
         }
 
-        /* spotless:off */
-        private val hashCode: Int by lazy { Objects.hash(number, service, status, statusDetails, statusUpdatedAt, url, additionalProperties) }
-        /* spotless:on */
+        private val hashCode: Int by lazy {
+            Objects.hash(
+                number,
+                service,
+                status,
+                statusDetails,
+                statusUpdatedAt,
+                url,
+                additionalProperties,
+            )
+        }
 
         override fun hashCode(): Int = hashCode
 
@@ -1795,12 +1895,20 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is Order && id == other.id && amount == other.amount && created == other.created && items == other.items && shipping == other.shipping && tracking == other.tracking && index == other.index && additionalProperties == other.additionalProperties /* spotless:on */
+        return other is Order &&
+            id == other.id &&
+            amount == other.amount &&
+            created == other.created &&
+            items == other.items &&
+            shipping == other.shipping &&
+            tracking == other.tracking &&
+            index == other.index &&
+            additionalProperties == other.additionalProperties
     }
 
-    /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(id, amount, created, items, shipping, tracking, index, additionalProperties) }
-    /* spotless:on */
+    private val hashCode: Int by lazy {
+        Objects.hash(id, amount, created, items, shipping, tracking, index, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 

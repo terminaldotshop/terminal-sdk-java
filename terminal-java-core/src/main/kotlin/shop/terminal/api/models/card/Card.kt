@@ -18,6 +18,7 @@ import shop.terminal.api.errors.TerminalInvalidDataException
 
 /** Credit card used for payments in the Terminal shop. */
 class Card
+@JsonCreator(mode = JsonCreator.Mode.DISABLED)
 private constructor(
     private val id: JsonField<String>,
     private val brand: JsonField<String>,
@@ -268,6 +269,14 @@ private constructor(
 
     private var validated: Boolean = false
 
+    /**
+     * Validates that the types of all values in this object match their expected types recursively.
+     *
+     * This method is _not_ forwards compatible with new types from the API for existing fields.
+     *
+     * @throws TerminalInvalidDataException if any value type in this object doesn't match its
+     *   expected type.
+     */
     fun validate(): Card = apply {
         if (validated) {
             return@apply
@@ -304,6 +313,7 @@ private constructor(
 
     /** Expiration of the card. */
     class Expiration
+    @JsonCreator(mode = JsonCreator.Mode.DISABLED)
     private constructor(
         private val month: JsonField<Long>,
         private val year: JsonField<Long>,
@@ -452,6 +462,15 @@ private constructor(
 
         private var validated: Boolean = false
 
+        /**
+         * Validates that the types of all values in this object match their expected types
+         * recursively.
+         *
+         * This method is _not_ forwards compatible with new types from the API for existing fields.
+         *
+         * @throws TerminalInvalidDataException if any value type in this object doesn't match its
+         *   expected type.
+         */
         fun validate(): Expiration = apply {
             if (validated) {
                 return@apply
@@ -485,12 +504,13 @@ private constructor(
                 return true
             }
 
-            return /* spotless:off */ other is Expiration && month == other.month && year == other.year && additionalProperties == other.additionalProperties /* spotless:on */
+            return other is Expiration &&
+                month == other.month &&
+                year == other.year &&
+                additionalProperties == other.additionalProperties
         }
 
-        /* spotless:off */
         private val hashCode: Int by lazy { Objects.hash(month, year, additionalProperties) }
-        /* spotless:on */
 
         override fun hashCode(): Int = hashCode
 
@@ -503,12 +523,18 @@ private constructor(
             return true
         }
 
-        return /* spotless:off */ other is Card && id == other.id && brand == other.brand && created == other.created && expiration == other.expiration && last4 == other.last4 && additionalProperties == other.additionalProperties /* spotless:on */
+        return other is Card &&
+            id == other.id &&
+            brand == other.brand &&
+            created == other.created &&
+            expiration == other.expiration &&
+            last4 == other.last4 &&
+            additionalProperties == other.additionalProperties
     }
 
-    /* spotless:off */
-    private val hashCode: Int by lazy { Objects.hash(id, brand, created, expiration, last4, additionalProperties) }
-    /* spotless:on */
+    private val hashCode: Int by lazy {
+        Objects.hash(id, brand, created, expiration, last4, additionalProperties)
+    }
 
     override fun hashCode(): Int = hashCode
 

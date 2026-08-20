@@ -2,8 +2,9 @@
 
 package shop.terminal.api.services.async
 
-import com.google.errorprone.annotations.MustBeClosed
 import java.util.concurrent.CompletableFuture
+import java.util.function.Consumer
+import shop.terminal.api.core.ClientOptions
 import shop.terminal.api.core.RequestOptions
 import shop.terminal.api.core.http.HttpResponseFor
 import shop.terminal.api.models.view.ViewInitParams
@@ -17,22 +18,29 @@ interface ViewServiceAsync {
     fun withRawResponse(): WithRawResponse
 
     /**
+     * Returns a view of this service with the given option modifications applied.
+     *
+     * The original service is not modified.
+     */
+    fun withOptions(modifier: Consumer<ClientOptions.Builder>): ViewServiceAsync
+
+    /**
      * Get initial app data, including user, products, cart, addresses, cards, subscriptions, and
      * orders.
      */
     fun init(): CompletableFuture<ViewInitResponse> = init(ViewInitParams.none())
 
-    /** @see [init] */
+    /** @see init */
     fun init(
         params: ViewInitParams = ViewInitParams.none(),
         requestOptions: RequestOptions = RequestOptions.none(),
     ): CompletableFuture<ViewInitResponse>
 
-    /** @see [init] */
+    /** @see init */
     fun init(params: ViewInitParams = ViewInitParams.none()): CompletableFuture<ViewInitResponse> =
         init(params, RequestOptions.none())
 
-    /** @see [init] */
+    /** @see init */
     fun init(requestOptions: RequestOptions): CompletableFuture<ViewInitResponse> =
         init(ViewInitParams.none(), requestOptions)
 
@@ -40,29 +48,32 @@ interface ViewServiceAsync {
     interface WithRawResponse {
 
         /**
+         * Returns a view of this service with the given option modifications applied.
+         *
+         * The original service is not modified.
+         */
+        fun withOptions(modifier: Consumer<ClientOptions.Builder>): ViewServiceAsync.WithRawResponse
+
+        /**
          * Returns a raw HTTP response for `get /view/init`, but is otherwise the same as
          * [ViewServiceAsync.init].
          */
-        @MustBeClosed
         fun init(): CompletableFuture<HttpResponseFor<ViewInitResponse>> =
             init(ViewInitParams.none())
 
-        /** @see [init] */
-        @MustBeClosed
+        /** @see init */
         fun init(
             params: ViewInitParams = ViewInitParams.none(),
             requestOptions: RequestOptions = RequestOptions.none(),
         ): CompletableFuture<HttpResponseFor<ViewInitResponse>>
 
-        /** @see [init] */
-        @MustBeClosed
+        /** @see init */
         fun init(
             params: ViewInitParams = ViewInitParams.none()
         ): CompletableFuture<HttpResponseFor<ViewInitResponse>> =
             init(params, RequestOptions.none())
 
-        /** @see [init] */
-        @MustBeClosed
+        /** @see init */
         fun init(
             requestOptions: RequestOptions
         ): CompletableFuture<HttpResponseFor<ViewInitResponse>> =
