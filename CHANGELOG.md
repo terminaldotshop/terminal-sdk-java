@@ -1,5 +1,94 @@
 # Changelog
 
+## 3.0.0 (2026-08-20)
+
+Full Changelog: [v2.5.0...v3.0.0](https://github.com/terminaldotshop/terminal-sdk-java/compare/v2.5.0...v3.0.0)
+
+### ⚠ BREAKING CHANGES
+
+* **client:** extract auto pagination to shared classes
+* **client:** **Migration:** - If you were referencing the `AutoPager` class on a specific `*Page` or `*PageAsync` type, then you should instead reference the shared `AutoPager` and `AutoPagerAsync` types, under the `core` package
+    - `AutoPagerAsync` now has different usage. You can call `.subscribe(...)` on the returned object instead to get called back each page item. You can also call `onCompleteFuture()` to get a future that completes when all items have been processed. Finally, you can call `.close()` on the returned object to stop auto-paginating early
+    - If you were referencing `getNextPage` or `getNextPageParams`:
+       - Swap to `nextPage()` and `nextPageParams()`
+       - Note that these both now return non-optional types (use `hasNextPage()` before calling these, since they will throw if it's impossible to get another page)
+
+### Features
+
+* **api:** manual updates ([cb1a836](https://github.com/terminaldotshop/terminal-sdk-java/commit/cb1a836d366cd702284499671ca76c28cb429a7c))
+* **api:** manual updates ([831368d](https://github.com/terminaldotshop/terminal-sdk-java/commit/831368d4a3bcab05e2a1d960c1013db9f68a58ea))
+* **client:** add a `withOptions` method ([b8a6a91](https://github.com/terminaldotshop/terminal-sdk-java/commit/b8a6a914599487057e3574f2166326c46d3fb42a))
+* **client:** allow providing some params positionally ([c437575](https://github.com/terminaldotshop/terminal-sdk-java/commit/c43757553c7b7ffb9d8c2e28d74b5a7961a8af2f))
+* **client:** extract auto pagination to shared classes ([6d266d0](https://github.com/terminaldotshop/terminal-sdk-java/commit/6d266d0989f12f9046112ed91ba3af6ff49f69f8))
+* **client:** implement per-endpoint base URL support ([10796bd](https://github.com/terminaldotshop/terminal-sdk-java/commit/10796bdedfe6914608508d9714a3115f4b3690c2))
+* **client:** improve logging ([89e7e65](https://github.com/terminaldotshop/terminal-sdk-java/commit/89e7e658a3dddf38920fef6ab1e976788789bff3))
+* **stlc:** configurable CI runner and private-production-repo support in workflow templates ([32557d5](https://github.com/terminaldotshop/terminal-sdk-java/commit/32557d530a9b111eae7401579c5cee76f238412e))
+
+
+### Bug Fixes
+
+* **client:** bump max requests per host to max requests (5 -&gt; 64) ([71af423](https://github.com/terminaldotshop/terminal-sdk-java/commit/71af4239f7302643d873b01edd36da5043545eec))
+* **client:** remove `@MustBeClosed` for future returning methods ([780ef12](https://github.com/terminaldotshop/terminal-sdk-java/commit/780ef1223968d993b24ed7a362a28330eda6d8ba))
+
+
+### Chores
+
+* **ci:** enable for pull requests ([b3b99cf](https://github.com/terminaldotshop/terminal-sdk-java/commit/b3b99cf9d559ac6273f4ff387d3fb886253248c5))
+* **ci:** only run for pushes and fork pull requests ([d2f4d8f](https://github.com/terminaldotshop/terminal-sdk-java/commit/d2f4d8f75db4733e09970efb36568c8e92607239))
+* **docs:** grammar improvements ([44edb0a](https://github.com/terminaldotshop/terminal-sdk-java/commit/44edb0a8d01fb0f5a093401ee80678c22bdfbe28))
+* **example:** fix run example comment ([afd8349](https://github.com/terminaldotshop/terminal-sdk-java/commit/afd83490bee98657f74ea3bb5fb29bf527c2855b))
+* **internal:** allow the mock server port to be set with STAINLESS_MOCK_PORT ([463f82d](https://github.com/terminaldotshop/terminal-sdk-java/commit/463f82d90c21a8ee372772dc2da6e48d2967465d))
+* **internal:** codegen related update ([e7e3d8f](https://github.com/terminaldotshop/terminal-sdk-java/commit/e7e3d8f2bafed18d9bcec76cf2e468d30c9a0a40))
+* **internal:** codegen related update ([5d8e8c0](https://github.com/terminaldotshop/terminal-sdk-java/commit/5d8e8c0ee70a18c793aafbb897f371ef6e16ebff))
+* **internal:** codegen related update ([728053b](https://github.com/terminaldotshop/terminal-sdk-java/commit/728053b80ddef89561cd4b8da5118151632dd35e))
+* **internal:** codegen related update ([8ef8d94](https://github.com/terminaldotshop/terminal-sdk-java/commit/8ef8d94034f66d6dcda472ff25e4e5e4610cbdbc))
+* **internal:** codegen related update ([149dd8d](https://github.com/terminaldotshop/terminal-sdk-java/commit/149dd8de83c43dae87205b47731002ed59e5b6c4))
+* **internal:** codegen related update ([910544c](https://github.com/terminaldotshop/terminal-sdk-java/commit/910544c6bc1c75aabb4c4526e28be9037bb6a6e7))
+* **internal:** codegen related update ([134caad](https://github.com/terminaldotshop/terminal-sdk-java/commit/134caadd08c6d783eddfb05db08f91989c1e45ad))
+* **internal:** codegen related update ([fe9d487](https://github.com/terminaldotshop/terminal-sdk-java/commit/fe9d4876306aebd16e06eeb6bc3b61e68e3f3d3b))
+* **internal:** codegen related update ([e39b158](https://github.com/terminaldotshop/terminal-sdk-java/commit/e39b15895d60084af17bccae8b1620a3f4d24b34))
+* **internal:** codegen related update ([1a73f38](https://github.com/terminaldotshop/terminal-sdk-java/commit/1a73f38a11874c32d5bc85865ee2e13041d1b595))
+* **internal:** codegen related update ([24ee5a1](https://github.com/terminaldotshop/terminal-sdk-java/commit/24ee5a1fa20fd8538d7fd056afeb89a7df8cea84))
+* **internal:** codegen related update ([121c40a](https://github.com/terminaldotshop/terminal-sdk-java/commit/121c40a972332b89573a78fd7bb5085081d70e79))
+* **internal:** codegen related update ([1bf092e](https://github.com/terminaldotshop/terminal-sdk-java/commit/1bf092eb546ac41f20ed66102752044573734445))
+* **internal:** codegen related update ([9590d70](https://github.com/terminaldotshop/terminal-sdk-java/commit/9590d707d854946d47591aaec2b8681478ca6013))
+* **internal:** codegen related update ([0fbd32a](https://github.com/terminaldotshop/terminal-sdk-java/commit/0fbd32a05d6011c13ec854239dfc2cc8d37b9502))
+* **internal:** codegen related update ([265cf0c](https://github.com/terminaldotshop/terminal-sdk-java/commit/265cf0c20627a9d7904fda93763cf715d5726642))
+* **internal:** codegen related update ([9003f6a](https://github.com/terminaldotshop/terminal-sdk-java/commit/9003f6a2662d25a309c62a69d40904aa1d379071))
+* **internal:** codegen related update ([29ca68f](https://github.com/terminaldotshop/terminal-sdk-java/commit/29ca68f097259e9bc3619462c850c7cbe69be4c3))
+* **internal:** codegen related update ([716c0d9](https://github.com/terminaldotshop/terminal-sdk-java/commit/716c0d9b1eab56af270a0fc92f64e708f724db11))
+* **internal:** codegen related update ([5253be5](https://github.com/terminaldotshop/terminal-sdk-java/commit/5253be5da35cbbf928f88aaf64d4b1673b40977f))
+* **internal:** codegen related update ([b6b97c8](https://github.com/terminaldotshop/terminal-sdk-java/commit/b6b97c89d0e73aac3d4f16474138a147f58def5b))
+* **internal:** codegen related update ([48684f4](https://github.com/terminaldotshop/terminal-sdk-java/commit/48684f4aba3e4928cd94100f2ca991580c12683a))
+* **internal:** codegen related update ([f9d00ed](https://github.com/terminaldotshop/terminal-sdk-java/commit/f9d00ed2ff937659213226f317df1de506878bdd))
+* **internal:** codegen related update ([dc58a43](https://github.com/terminaldotshop/terminal-sdk-java/commit/dc58a432fc17e896dbd2df8a598d2d074abaa29d))
+* **internal:** codegen related update ([06b5fc6](https://github.com/terminaldotshop/terminal-sdk-java/commit/06b5fc6161b6a6784b4c5c6feca92e9d8ffdca37))
+* **internal:** codegen related update ([7178da2](https://github.com/terminaldotshop/terminal-sdk-java/commit/7178da2d8d62ffdf3e5e5b0638c7bc4b744115e2))
+* **internal:** codegen related update ([92bf96f](https://github.com/terminaldotshop/terminal-sdk-java/commit/92bf96f564fb81fed18bfe74f33caeeb70a91883))
+* **internal:** codegen related update ([9d468d8](https://github.com/terminaldotshop/terminal-sdk-java/commit/9d468d870d5c62918ad0a121c719ffbcdad4071c))
+* **internal:** codegen related update ([ca7f818](https://github.com/terminaldotshop/terminal-sdk-java/commit/ca7f818ec8187dede7730ffeec1d5a50dcf879d5))
+* **internal:** codegen related update ([643b605](https://github.com/terminaldotshop/terminal-sdk-java/commit/643b60594dcc28e04e9ea9e45badfcb4be067722))
+* **internal:** codegen related update ([77533f7](https://github.com/terminaldotshop/terminal-sdk-java/commit/77533f712c86b2535a07dbc4055025fdb5012c16))
+* **internal:** codegen related update ([837063b](https://github.com/terminaldotshop/terminal-sdk-java/commit/837063baa8dfc121d780d38cac172dad4b3d9029))
+* **internal:** codegen related update ([3b267d4](https://github.com/terminaldotshop/terminal-sdk-java/commit/3b267d492d5640b701543fb3f7337a65e9aa458e))
+* **internal:** codegen related update ([31aed43](https://github.com/terminaldotshop/terminal-sdk-java/commit/31aed434e2555a4235be5a7afbe63fed7ce53240))
+* **internal:** codegen related update ([f5422b7](https://github.com/terminaldotshop/terminal-sdk-java/commit/f5422b7a1c310c3f3ac39215954f2773e0fbddfc))
+* **internal:** codegen related update ([fc6f1e3](https://github.com/terminaldotshop/terminal-sdk-java/commit/fc6f1e3e9dbf855f45bdda2652ccb3ce19b372d1))
+* **internal:** codegen related update ([1dbb15f](https://github.com/terminaldotshop/terminal-sdk-java/commit/1dbb15fed7d5a3749f9a1f8ec29b439719c677e2))
+* **internal:** codegen related update ([00ad9b1](https://github.com/terminaldotshop/terminal-sdk-java/commit/00ad9b1c7313fd90976d5204625df9caee689c00))
+* **internal:** codegen related update ([daee5ae](https://github.com/terminaldotshop/terminal-sdk-java/commit/daee5ae9ad92258ab36f51f011960d6be0a22c41))
+* **internal:** codegen related update ([d594397](https://github.com/terminaldotshop/terminal-sdk-java/commit/d594397c8e1fbf2fae12fd2cdd97c915e0e7415b))
+* **internal:** codegen related update ([6ec85dd](https://github.com/terminaldotshop/terminal-sdk-java/commit/6ec85dd0832c0b428d44e273e228691691da261e))
+* **internal:** codegen related update ([6831464](https://github.com/terminaldotshop/terminal-sdk-java/commit/683146499ff953278fb1ea47082a9496dc55f50e))
+* **internal:** codegen related update ([7d5f84d](https://github.com/terminaldotshop/terminal-sdk-java/commit/7d5f84df2eb3ecf4675318369cdfe69dd7f1c330))
+* **internal:** remove flaky `-Xbackend-threads=0` option ([fe26d7c](https://github.com/terminaldotshop/terminal-sdk-java/commit/fe26d7caf073cb05e193aeff7195e4f7ac8dba4d))
+* **internal:** update java toolchain ([c194794](https://github.com/terminaldotshop/terminal-sdk-java/commit/c1947943417fe4b2415bca4a316c0356a1cc2f90))
+
+
+### Refactors
+
+* **internal:** minor `ClientOptionsTest` change ([e9e1bf7](https://github.com/terminaldotshop/terminal-sdk-java/commit/e9e1bf751b9628a9ec2ff983a833fb2dcd28cf88))
+
 ## 2.5.0 (2025-04-24)
 
 Full Changelog: [v2.4.0...v2.5.0](https://github.com/terminaldotshop/terminal-sdk-java/compare/v2.4.0...v2.5.0)

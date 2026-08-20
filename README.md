@@ -2,8 +2,8 @@
 
 <!-- x-release-please-start-version -->
 
-[![Maven Central](https://img.shields.io/maven-central/v/shop.terminal.api/terminal-java)](https://central.sonatype.com/artifact/shop.terminal.api/terminal-java/2.5.0)
-[![javadoc](https://javadoc.io/badge2/shop.terminal.api/terminal-java/javadoc.svg)](https://javadoc.io/doc/shop.terminal.api/terminal-java/2.5.0)
+[![Maven Central](https://img.shields.io/maven-central/v/shop.terminal.api/terminal-java)](https://central.sonatype.com/artifact/shop.terminal.api/terminal-java/3.0.0)
+[![javadoc](https://javadoc.io/badge2/shop.terminal.api/terminal-java/javadoc.svg)](https://javadoc.io/doc/shop.terminal.api/terminal-java/3.0.0)
 
 <!-- x-release-please-end -->
 
@@ -24,7 +24,7 @@ Use the Terminal MCP Server to enable AI assistants to interact with this API, a
 
 <!-- x-release-please-start-version -->
 
-The REST API documentation can be found on [terminal.shop](https://terminal.shop/docs). Javadocs are available on [javadoc.io](https://javadoc.io/doc/shop.terminal.api/terminal-java/2.5.0).
+The REST API documentation can be found on [terminal.shop](https://terminal.shop/docs). Javadocs are available on [javadoc.io](https://javadoc.io/doc/shop.terminal.api/terminal-java/3.0.0).
 
 <!-- x-release-please-end -->
 
@@ -35,7 +35,7 @@ The REST API documentation can be found on [terminal.shop](https://terminal.shop
 ### Gradle
 
 ```kotlin
-implementation("shop.terminal.api:terminal-java:2.5.0")
+implementation("shop.terminal.api:terminal-java:3.0.0")
 ```
 
 ### Maven
@@ -44,7 +44,7 @@ implementation("shop.terminal.api:terminal-java:2.5.0")
 <dependency>
   <groupId>shop.terminal.api</groupId>
   <artifactId>terminal-java</artifactId>
-  <version>2.5.0</version>
+  <version>3.0.0</version>
 </dependency>
 ```
 
